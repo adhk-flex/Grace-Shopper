@@ -1,0 +1,26 @@
+{
+  "name": "grace_shopper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adhk-flex/Grace-Shopper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adhk-flex/Grace-Shopper/issues"
+  },
+  "homepage": "https://github.com/adhk-flex/Grace-Shopper#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "pg": "^7.10.0",
+    "react": "^16.8.6",
+    "react-redux": "^7.0.2",
+    "sequelize": "^5.7.6"
+  }
+}
