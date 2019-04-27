@@ -8,9 +8,14 @@ class Product extends Component{
 
     render(){
         return(
-            <h1>
-                Showing individual Product
-            </h1>
+            <div>
+                <h1>
+                    Showing individual Product
+                </h1>
+                <form>
+                    
+                </form>
+            </div>
         )
         
     }
