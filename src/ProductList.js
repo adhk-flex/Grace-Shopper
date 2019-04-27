@@ -8,7 +8,12 @@ const ProductList = (props) => {
             <ul>
                 {
                     Products.map(p=>{
-                        return (<li key={p.id}>{p.name}</li>)
+                        return (
+                            <li key={p.id}>
+                                {p.name}
+                                {p.description}
+                                {p.price}
+                            </li>)
                     })
                 }
             </ul>
