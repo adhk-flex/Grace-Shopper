@@ -1,4 +1,4 @@
 const { dbSyncAndSeed } = require("./db");
-const { Product } = require("./models")
+const { Product, Category } = require("./models")
 
-module.exports = { dbSyncAndSeed };
+module.exports = { dbSyncAndSeed, Product, Category };
