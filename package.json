@@ -23,7 +23,9 @@
       "stage-2"
     ]
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "faker": "4.1.0"
+  },
   "scripts": {
     "start": "node server.js",
     "postinstall": "npm run webpack",
