@@ -9,10 +9,18 @@
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-2": "6.24.1",
     "express": "4.16.4",
+<<<<<<< HEAD
     "nodemon": "^1.18.11",
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "react-router-dom": "^5.0.0",
+=======
+    "nodemon": "1.18.11",
+    "pg": "7.10.0",
+    "react": "16.8.3",
+    "react-dom": "16.8.3",
+    "sequelize": "5.7.6",
+>>>>>>> origin/dev
     "webpack": "4.29.6",
     "webpack-cli": "3.2.3"
   },
@@ -22,13 +30,15 @@
       "stage-2"
     ]
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "faker": "4.1.0"
+  },
   "scripts": {
     "start": "node server.js",
     "postinstall": "npm run webpack",
     "webpack": "webpack",
     "webpack:dev": "npm run webpack -- --mode=development --watch",
-    "start:dev": "npm run webpack:dev & nodemon server.js --ignore src/ --ignore dist/"
+    "start:dev": "npm run webpack:dev & DATABASE_URL=postgres://localhost/grace-shopper nodemon server.js --ignore src/ --ignore dist/"
   },
   "keywords": [],
   "author": "",
