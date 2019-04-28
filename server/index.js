@@ -3,12 +3,14 @@ const app = express();
 const path = require('path');
 const { dbSyncAndSeed } = require("../db");
 const productRouter = require('./routes/product');
+const categoryRouter = require('./routes/category');
 
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, '../dist')));
 app.use('/api/products', productRouter);
+app.use('/api/categories', categoryRouter);
 
 app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/style.css', (req, res, next)=> res.sendFile(path.join(__dirname, 'style.css')));

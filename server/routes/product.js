@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../../db/models');
 const Product = db.Product;
+const Category = db.Category;
 
 const router = express.Router();
 
@@ -24,6 +25,17 @@ router.delete('/:id', (req, res, next) => {
         .then(() => res.send(204))
         .catch(next);
     }
+});
+
+router.post('/', (req, res, next)=>{
+    return Promise.all([ Product.create(req.body),
+                         Category.findOne({where: {name: req.body.categoryName}}) ])
+    .then(([product, category]) => {
+        product.update({categoryId: category.id});
+        return product;
+    })
+    .then((product) => res.json(product))
+    .catch((error) => console.log(error));
 });
 
 module.exports = router;
