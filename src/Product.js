@@ -55,6 +55,8 @@ class Product extends Component{
                     </select>
                     <button className='btn btn-primary' type='submit'>Add to Cart</button>
                 </form>
+                <img className = 'shopping-cart' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKorRm0enmL_tFIgvKcNcOjb_3YkWnny-CIK0BW5F9DoGocc7DkA'/>
+                <span className = 'shopping-item-quantity'>{this.state.selectedQuantity}</span>
             </div>
         )
         
