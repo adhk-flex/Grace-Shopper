@@ -14,6 +14,6 @@ LineItem.belongsTo(Cart);
 Cart.hasMany(LineItem);
 
 Cart.belongsTo(User);
-User.hasMany(Cart);
+User.hasOne(Cart);
 
 module.exports = { Product, Category, Cart, LineItem, User };
