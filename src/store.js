@@ -15,6 +15,16 @@ export const fetchProducts = () => dispatch => {
     .then(products => dispatch(setProducts(products.data)))
 }
 
+const addProduct = product => dispatch => {
+  return axios.post('/api/products/', product)
+    .then(() => dispatch(fetchProducts()))
+}
+
+const delProduct = id => dispatch => {
+  return axios.delete(`/api/product/${id}`)
+    .then(() => dispatch(fetchProducts()))
+}
+
 const reducer = (state = [], action) => {
   switch (action.type) {
     case SET_PRODUCTS:
