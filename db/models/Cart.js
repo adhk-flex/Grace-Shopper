@@ -11,7 +11,7 @@ const Cart = db.define("cart", {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isIn: [[pending, checkout]],
+      isIn: [["pending", "checkout"]],
       notEmpty: true
     }
   }
