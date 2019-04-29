@@ -6,14 +6,11 @@ import Home from './Home';
 import ProductList from './ProductList';
 import Product from './Product';
 import Cart from './Cart';
+import CheckoutForm from './CheckoutForm'
 import { fetchProducts } from './store';
 import { connect } from 'react-redux';
 
 class App extends Component{
-    // constructor(){
-    //     super()
-    //     this.state = {}
-    // }
     
     componentDidMount() {
         this.props.fetchProducts()
@@ -28,17 +25,12 @@ class App extends Component{
                     <Route exact path = '/productList' component={ProductList}/>
                     <Route exact path = '/product/:id' component={Product}/>
                     <Route exact path = '/cart' component={Cart}/>
+                    <Route exact path = '/checkout' component={CheckoutForm}/>
                 </Switch>
             </Router>
         )
     }
 }
-
-const mapStateToProps = state => {
-    return {
-        products: state
-    }
-};
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -46,4 +38,4 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(null, mapDispatchToProps)(App);
