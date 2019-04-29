@@ -5,6 +5,7 @@ import Nav from './Nav';
 import Home from './Home'; 
 import ProductList from './ProductList';
 import Product from './Product';
+import Cart from './Cart'
 
 class App extends Component{
     constructor(){
@@ -19,7 +20,8 @@ class App extends Component{
                 <Switch>
                     <Route exact path = '/home' component={Home}/>
                     <Route exact path = '/productList' component={ProductList}/>
-                    <Route exact path = '/product' component={Product}/>
+                    <Route exact path = '/product/:id' component={Product}/>
+                    <Route exact path = '/cart' component={Cart}/>
                 </Switch>
             </Router>
         )
