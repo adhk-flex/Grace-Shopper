@@ -5,12 +5,18 @@ import Nav from './Nav';
 import Home from './Home'; 
 import ProductList from './ProductList';
 import Product from './Product';
-import Cart from './Cart'
+import Cart from './Cart';
+import { fetchProducts } from './store';
+import { connect } from 'react-redux';
 
 class App extends Component{
-    constructor(){
-        super()
-        this.state = {}
+    // constructor(){
+    //     super()
+    //     this.state = {}
+    // }
+    
+    componentDidMount() {
+        this.props.fetchProducts()
     }
 
     render(){
@@ -28,4 +34,16 @@ class App extends Component{
     }
 }
 
-export default App;
+const mapStateToProps = state => {
+    return {
+        products: state
+    }
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchProducts: () => dispatch(fetchProducts())
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

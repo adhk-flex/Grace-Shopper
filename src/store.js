@@ -2,6 +2,7 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import axios from 'axios';
 
+
 const SET_PRODUCTS = "SET_PRODUCTS";
 
 const setProducts = products => ({
@@ -10,14 +11,15 @@ const setProducts = products => ({
 });
 
 export const fetchProducts = () => dispatch => {
-  return axios.get(/* api get route */)
-    .then(products => dispatch(setProducts(products)))
+  return axios.get('api/products/')
+    .then(products => dispatch(setProducts(products.data)))
 }
 
-const reducer = (state = {}, action) => {
+const reducer = (state = [], action) => {
   switch (action.type) {
     case SET_PRODUCTS:
-      return state = action.products;
+      state = action.products
+      return state;
     default:
       return state;
   }
