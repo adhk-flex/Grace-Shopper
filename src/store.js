@@ -28,8 +28,7 @@ const delProduct = id => dispatch => {
 const reducer = (state = [], action) => {
   switch (action.type) {
     case SET_PRODUCTS:
-      state = action.products
-      return state;
+      return action.products;
     default:
       return state;
   }
