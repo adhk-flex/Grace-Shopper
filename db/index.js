@@ -1,5 +1,5 @@
 const db = require("./db");
-const { Product, Category } = require("./models");
+const { Product, Category, LineItem, Cart } = require("./models");
 const seed = require("./seed");
 
 const dbSyncAndSeed = () => {
@@ -11,4 +11,4 @@ const dbSyncAndSeed = () => {
     .then(() => console.log("DB SEEDED"));
 };
 
-module.exports = { dbSyncAndSeed, Product, Category };
+module.exports = { dbSyncAndSeed, Product, Category, LineItem, Cart };
