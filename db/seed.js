@@ -1,4 +1,5 @@
 const { Product, Category } = require("./models");
+const { dbSync } = require("./index");
 const faker = require("faker");
 
 const pnGenerator = () => {
@@ -12,15 +13,18 @@ const pnGenerator = () => {
 const statuses = ["in stock", "out of stock"];
 
 const seed = () => {
-  return Promise.all([
-    Category.create({ name: "CAT 1" }),
-    Category.create({ name: "CAT 2" }),
-    Category.create({ name: "CAT 3" })
-  ])
+  return dbSync(true)
+    .then(() =>
+      Promise.all([
+        Category.create({ name: "CAT 1" }),
+        Category.create({ name: "CAT 2" }),
+        Category.create({ name: "CAT 3" })
+      ])
+    )
     .then(categories => {
       const arr = new Array(20);
       return Promise.all(
-        [...arr].map(prod =>
+        [...arr].map(() =>
           Product.create({
             name: faker.commerce.productName(),
             description: faker.lorem.paragraph(),
@@ -34,9 +38,10 @@ const seed = () => {
         )
       );
     })
-    .catch(e => {
-      throw new Error(e.message);
-    });
+    .then(() => console.log("DB SEED COMPLETE"));
 };
 
-module.exports = seed;
+seed()
+  .catch(e => {
+    throw new Error(e.message);
+  });

@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const { dbSyncAndSeed } = require("../db");
+const { dbSync } = require("../db");
 const productRouter = require('./routes/product');
 const categoryRouter = require('./routes/category');
 
@@ -21,7 +21,7 @@ app.use((err, req, res, next) => {
     res.status(500).send(err);
 });
 
-dbSyncAndSeed()
+dbSync()
     .then(() => app.listen(port, ()=> console.log(`listening on port ${port}`)))
     .catch(e => {
         throw new Error(e.message);
