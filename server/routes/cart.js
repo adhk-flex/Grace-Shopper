@@ -11,11 +11,11 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/:id', (req, res, next) => {
-    if(req.params.id){
-        Cart.findOne({where: {id: req.params.id}})
+    
+    Cart.findOne({where: {id: req.params.id}})
         .then((cart) => res.json(cart))
         .catch(next);
-    }
+    
 });
 
 router.post('/', (req, res, next) => {
@@ -25,11 +25,10 @@ router.post('/', (req, res, next) => {
 });
 
 router.delete('/:id', (req, res, next) => {
-    if(req.params.id){
-        Cart.destroy({where: {id: req.params.id}})
+    Cart.destroy({where: {id: req.params.id}})
         .then(() => res.send(204))
         .catch(next);
-    }
+    
 });
 
 

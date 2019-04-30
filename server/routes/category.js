@@ -11,11 +11,10 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/:id', (req, res, next) => {
-    if(req.params.id){
-        Category.findOne({where: {id: req.params.id}})
+    Category.findOne({where: {id: req.params.id}})
         .then((category) => res.json(category))
         .catch(next);
-    }
+    
 });
 
 router.post('/', (req, res, next) => {
@@ -25,11 +24,10 @@ router.post('/', (req, res, next) => {
 });
 
 router.delete('/:id', (req, res, next) => {
-    if(req.params.id){
-        Category.destroy({where: {id: req.params.id}})
+    Category.destroy({where: {id: req.params.id}})
         .then(() => res.send(204))
         .catch(next);
-    }
+    
 });
 
 
