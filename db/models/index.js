@@ -7,11 +7,7 @@ const User = require("./User");
 Product.belongsTo(Category);
 Category.hasMany(Product);
 
-LineItem.belongsTo(Product);
-Product.hasMany(LineItem);
-
-LineItem.belongsTo(Cart);
-Cart.hasMany(LineItem);
+Product.belongsToMany(Cart, { through: LineItem });
 
 Cart.belongsTo(User);
 User.hasOne(Cart);
