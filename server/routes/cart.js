@@ -1,32 +1,32 @@
 const express = require('express');
 const db = require('../../db/models');
-const Category = db.Category;
+const Cart = db.Cart;
 
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
-    Category.findAll()
-    .then((categories) => res.json(categories))
+    Cart.findAll()
+    .then((carts) => res.json(carts))
     .catch(next);
 });
 
 router.get('/:id', (req, res, next) => {
     if(req.params.id){
-        Category.findOne({where: {id: req.params.id}})
-        .then((category) => res.json(category))
+        Cart.findOne({where: {id: req.params.id}})
+        .then((cart) => res.json(cart))
         .catch(next);
     }
 });
 
 router.post('/', (req, res, next) => {
-    Category.create(req.body)
-    .then((category) => res.json(category))
+    Cart.create(req.body)
+    .then((cart) => res.json(cart))
     .catch(next);
 });
 
 router.delete('/:id', (req, res, next) => {
     if(req.params.id){
-        Category.destroy({where: {id: req.params.id}})
+        Cart.destroy({where: {id: req.params.id}})
         .then(() => res.send(204))
         .catch(next);
     }
