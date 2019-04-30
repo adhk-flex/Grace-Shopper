@@ -26,7 +26,7 @@ const setLineItems = items => ({
   items
 });
 
-const lineItem = (state = [], action) => {
+const lineItems = (state = [], action) => {
   switch (action.type) {
     case SET_LINEITEMS:
       return action.items;
@@ -70,7 +70,7 @@ const delLineItem = id => dispatch => {
 
 const reducer = combineReducers({
   products,
-  lineItem
+  lineItems
 });
 
 const store = createStore(reducer, applyMiddleware(thunk));
