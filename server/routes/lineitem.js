@@ -18,8 +18,8 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.get('/:cartid', (req, res, next) => {
-    LineItem.findOne({where: {cartId: req.params.id}})
-        .then((lineitem) => res.json(lineitem))
+    LineItem.findAll({where: {cartId: req.params.id}})
+        .then((lineitems) => res.json(lineitems))
         .catch(next);
     
 });
