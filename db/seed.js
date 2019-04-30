@@ -1,4 +1,4 @@
-const { Product, Category } = require("./models");
+const { Product, Category, User } = require("./models");
 const { dbSync } = require("./index");
 const faker = require("faker");
 
@@ -11,6 +11,7 @@ const pnGenerator = () => {
 };
 
 const statuses = ["in stock", "out of stock"];
+const roles = ["shopper", "admin"];
 
 const seed = () => {
   return dbSync(true)
@@ -37,6 +38,21 @@ const seed = () => {
           })
         )
       );
+    })
+    .then(() => {
+      const arr = new Array(10);
+      return Promise.all([
+        [...arr].map(() => 
+          User.create({
+            firstName: faker.name.firstName(),
+            lastName: faker.name.lastName(),
+            userName: faker.lorem.word(),
+            email: faker.internet.email(),
+            imgUrl: faker.image.avatar(),
+            role: roles[Math.floor(Math.random() * 2)]
+          })
+        )
+      ]);
     })
     .then(() => console.log("DB SEED COMPLETE"));
 };
