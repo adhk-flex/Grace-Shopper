@@ -17,20 +17,10 @@ class Product extends Component{
         ev.preventDefault()
     }
 
-
     render(){
-        // fake data
         const id = this.props.match.params.id;
-        let product = this.props.products.filter(p => p.id === id);
-        product = product[0]
+        let product = this.props.products.find(p => p.id === id);
         const {name, quantity, imgUrl, description, price} = product;
-        //     {
-        //         name: 'Ergonomic Plastic Hat', 
-        //         quantity: '39', 
-        //         imgUrl: 'http://lorempixel.com/640/480/abstract', 
-        //         description: 'Et quidem est voluptas quis eum. Sed ut est quidem distinctio error maiores dolores amet enim. Rerum aut reprehenderit autem vel velit inventore sit. Earum ut ipsam cum quia.',
-        //         price: 112.00,
-        //     }
         const quantityRange = []
         const {selectedQuantity} = this.state
         for (let i = 0; i <= quantity; i++){
