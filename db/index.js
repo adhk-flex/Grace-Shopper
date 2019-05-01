@@ -1,14 +1,11 @@
 const db = require("./db");
 const { Product, Category, LineItem, Cart } = require("./models");
-const seed = require("./seed");
 
-const dbSyncAndSeed = () => {
+const dbSync = dropTables => {
   return db
     .authenticate()
-    .then(() => db.sync({ force: true }))
-    .then(() => console.log("DB SYNC COMPLETE"))
-    .then(() => seed())
-    .then(() => console.log("DB SEEDED"));
+    .then(() => db.sync({ force: dropTables }))
+    .then(() => console.log("DB SYNC COMPLETE"));
 };
 
-module.exports = { dbSyncAndSeed, Product, Category, LineItem, Cart };
+module.exports = { dbSync, Product, Category, LineItem, Cart };

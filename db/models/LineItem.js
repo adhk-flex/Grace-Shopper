@@ -25,6 +25,51 @@ const LineItem = db.define("lineItem", {
         msg: "Price must be a positive number"
       }
     }
+  },
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        args: true,
+        msg: "Please enter product name"
+      }
+    }
+  },
+  productNumber: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        args: true,
+        msg: "Please enter a product number."
+      }
+    }
+  },
+  stockStatus: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        args: true,
+        msg: "Please enter a stock status."
+      },
+      isIn: {
+        args: [["in stock", "out of stock"]],
+        msg: "Product stock status must be 'in stock' or 'out of stock'."
+      }
+    }
+  },
+  imgUrl: {
+    type: Sequelize.STRING,
+    validate: {
+      urlOrBlank(url) {
+        if (!Sequelize.Validator.isURL(url) && url.length > 0)
+          throw new Error(
+            "Please enter a valid Image URL or leave the field bank."
+          );
+      }
+    }
   }
 });
 

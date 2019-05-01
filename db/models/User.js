@@ -11,7 +11,7 @@ const User = db.define("user", {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: {
+      notEmpty: {
         args: true,
         msg: "User must have a first name"
       }
@@ -21,33 +21,36 @@ const User = db.define("user", {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: {
+      notEmpty: {
         args: true,
         msg: "User must have a last name"
-      }
-    }
-  },
-  userName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      isEmpty: {
-        args: true,
-        msg: "User must have a user name"
       }
     }
   },
   email: {
     type: Sequelize.STRING,
     allowNull: false,
+    unique: true,
     validate: {
-      isEmpty: {
+      notEmpty: {
         args: true,
         msg: "User must have an email address"
       },
       isEmail: {
         args: true,
         msg: "Please enter a valid email address"
+      }
+    }
+  },
+  password: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      minLength(password){
+        if(password.length < 5){
+          throw new Error("Password must be at least 5 characters.");
+        }
       }
     }
   },
@@ -59,6 +62,20 @@ const User = db.define("user", {
           throw new Error(
             "Please enter a valid Image URL or leave the field bank."
           );
+      }
+    }
+  },
+  role: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        args: true,
+        msg: "User must have a role"
+      },
+      isIn: {
+        args: [["shopper", "admin"]],
+        msg: "User role must be either 'shopper' or 'admin'"
       }
     }
   }
