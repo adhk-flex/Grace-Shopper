@@ -27,19 +27,10 @@ const User = db.define("user", {
       }
     }
   },
-  userName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: {
-        args: true,
-        msg: "User must have a user name"
-      }
-    }
-  },
   email: {
     type: Sequelize.STRING,
     allowNull: false,
+    unique: true,
     validate: {
       notEmpty: {
         args: true,
@@ -48,7 +39,19 @@ const User = db.define("user", {
       isEmail: {
         args: true,
         msg: "Please enter a valid email address"
-      },
+      }
+    }
+  },
+  password: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      minLength(password){
+        if(password.length < 5){
+          throw new Error("Password must be at least 5 characters.");
+        }
+      }
     }
   },
   imgUrl: {
@@ -75,7 +78,7 @@ const User = db.define("user", {
         msg: "User role must be either 'shopper' or 'admin'"
       }
     }
-  },
+  }
 });
 
 module.exports = User;
