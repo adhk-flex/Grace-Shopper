@@ -137,10 +137,16 @@ const delLineItem = id => dispatch => {
 };
 
 const login = formData => dispatch => {
-  return axios.post('/auth/login', formData)
+  return axios.put('/auth/login', formData)
     .then(user => dispatch(setUser(user.data)))
 };
-//the route that sets this user(formData) on session. 
+//login an existing user
+
+const loginNewUser = newUser => dispatch => {
+  return axios.post('/auth/login', newUser)
+    .then(user => dispatch(setUser(user.data)))
+}
+//this login a new created User right after creating the user. 
 
 const sessionLogin = () => dispatch => {
   return axios.get('/auth/session')
