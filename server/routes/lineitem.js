@@ -14,14 +14,12 @@ router.get('/:id', (req, res, next) => {
     LineItem.findOne({where: {id: req.params.id}})
         .then((lineitem) => res.json(lineitem))
         .catch(next);
-    
 });
 
 router.get('/:cartId', (req, res, next) => {
     LineItem.findAll({where: {cartId: req.params.cartId}})
         .then((lineitems) => res.json(lineitems))
         .catch(next);
-    
 });
 
 router.post('/', (req, res, next) => {
@@ -34,7 +32,6 @@ router.delete('/:id', (req, res, next) => {
     LineItem.destroy({where: {id: req.params.id}})
         .then(() => res.send(204))
         .catch(next);
-    
 });
 
 module.exports = router;

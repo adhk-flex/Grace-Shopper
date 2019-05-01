@@ -15,7 +15,6 @@ router.get('/:id', (req, res, next) => {
     Cart.findOne({where: {id: req.params.id}})
         .then((cart) => res.json(cart))
         .catch(next);
-    
 });
 
 router.post('/', (req, res, next) => {
@@ -28,7 +27,6 @@ router.delete('/:id', (req, res, next) => {
     Cart.destroy({where: {id: req.params.id}})
         .then(() => res.send(204))
         .catch(next);
-    
 });
 
 module.exports = router;
