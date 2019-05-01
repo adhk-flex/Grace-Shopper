@@ -2,9 +2,23 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import axios from 'axios';
 
+const SET_CATEGORY = 'SET_CATEGORY';
+
+const setCategory = category => ({
+  type: SET_CATEGORY,
+  category
+});
+
+const categories = (state = [], action) => {
+  switch (action.type) {
+    case SET_CATEGORY:
+      return action.category;
+    default:
+      return state;
+  }
+};
 
 const SET_PRODUCTS = 'SET_PRODUCTS';
-
 
 const setProducts = products => ({
   type: SET_PRODUCTS,
@@ -68,6 +82,27 @@ const cart = (state = [], action) => {
   }
 };
 
+const fetchCategories = () => dispatch => {
+  return axios.get('/api/categories')
+    .then(categories => dispatch(setCategory(categories.data)))
+}
+
+const getCategoriesWId = id => dispatch => {
+  return axios.get(`/api/categories/${id}`)
+    .then(categories => dispatch(setCategory(categories.data)))
+}
+
+const addCategory = category => dispatch => {
+  return axios.post('/api/categories', category)
+    .then(() => dispatch(fetchCategories()))
+};
+
+const delCategory = id => dispatch => {
+  return axios.delete(`/api/categories/${id}`)
+    .then(() => dispatch(fetchCategories()))
+}
+
+
 export const fetchProducts = () => dispatch => {
   return axios.get('api/products/')
     .then(products => dispatch(setProducts(products.data)))
@@ -80,46 +115,47 @@ const addProduct = product => dispatch => {
 };
 
 const delProduct = id => dispatch => {
-  return axios.delete(`/api/product/${id}`)
+  return axios.delete(`/api/products/${id}`)
     .then(() => dispatch(fetchProducts()))
 };
 
 
 const fetchLineItems = cartId => dispatch => {
-  return axios.get('lineItem route', cartId)
+  return axios.get(`/api/lineitems/${cartId}`)
     .then(items => dispatch(setLineItems(items.data)))
 };
 
 
 const addLineItem = product => dispatch => {
-  return axios.post('lineItem route', product)
+  return axios.post('/api/lineitems', product)
     .then(() => dispatch(fetchLineItems()))
 };
 
 const delLineItem = id => dispatch => {
-  return axios.delete('lineItem route', id)
+  return axios.delete(`/api/lineitems/${id}`)
     .then(() => dispatch(fetchLineItems()))
 };
 
 const login = formData => dispatch => {
-  return axios.post('auth post route', formData)
+  return axios.post('/auth/login', formData)
     .then(user => dispatch(setUser(user.data)))
 };
 //the route that sets this user(formData) on session. 
 
-const stayLogin = () => dispatch => {
-  return axios.get('auth route for session')
+const sessionLogin = () => dispatch => {
+  return axios.get('/auth/session')
     .then(user => dispatch(setUser(user.data)))
 };
 //this auth route return the current session's user. 
 
 const logout = () => dispatch => {
-  return axios.delete('auth route for delete the session')
+  return axios.delete('/auth/logout')
     .then(() => dispatch(setUser({})))
 };
 //this auth route clear the user on session. 
 
 const reducer = combineReducers({
+  categories,
   products,
   lineItems,
   user
