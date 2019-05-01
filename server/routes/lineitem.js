@@ -17,8 +17,8 @@ router.get('/:id', (req, res, next) => {
     
 });
 
-router.get('/:cartid', (req, res, next) => {
-    LineItem.findAll({where: {cartId: req.params.id}})
+router.get('/:cartId', (req, res, next) => {
+    LineItem.findAll({where: {cartId: req.params.cartId}})
         .then((lineitems) => res.json(lineitems))
         .catch(next);
     

@@ -19,7 +19,6 @@ app.use('/api/lineitems', lineItemRouter);
 app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, '../index.html')));
 app.get('/style.css', (req, res, next)=> res.sendFile(path.join(__dirname, 'style.css')));
 
-
 app.use((err, req, res, next) => {
     console.error(err, err.stack);
     res.status(500).send(err);
