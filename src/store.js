@@ -85,8 +85,8 @@ const delProduct = id => dispatch => {
 };
 
 
-const fetchLineItems = () => dispatch => {
-  return axios.get('lineItem route')
+const fetchLineItems = cartId => dispatch => {
+  return axios.get('lineItem route', cartId)
     .then(items => dispatch(setLineItems(items.data)))
 };
 
