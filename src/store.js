@@ -87,7 +87,7 @@ const delProduct = id => dispatch => {
 
 const fetchLineItems = () => dispatch => {
   return axios.get('lineItem route')
-    .then(items => dispatch(setLineItems(items)))
+    .then(items => dispatch(setLineItems(items.data)))
 };
 
 
@@ -101,12 +101,23 @@ const delLineItem = id => dispatch => {
     .then(() => dispatch(fetchLineItems()))
 };
 
-const login = () => dispatch => {
-  return axios.get('User get route', { email, password })
-    .then(user => dispatch(setUser(user)))
-}
+const login = formData => dispatch => {
+  return axios.post('auth post route', formData)
+    .then(user => dispatch(setUser(user.data)))
+};
+//the route that sets this user(formData) on session. 
 
+const stayLogin = () => dispatch => {
+  return axios.get('auth route for session')
+    .then(user => dispatch(setUser(user.data)))
+};
+//this auth route return the current session's user. 
 
+const logout = () => dispatch => {
+  return axios.delete('auth route for delete the session')
+    .then(() => dispatch(setUser({})))
+};
+//this auth route clear the user on session. 
 
 const reducer = combineReducers({
   products,
