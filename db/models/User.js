@@ -11,7 +11,7 @@ const User = db.define("user", {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: {
+      notEmpty: {
         args: true,
         msg: "User must have a first name"
       }
@@ -21,7 +21,7 @@ const User = db.define("user", {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: {
+      notEmpty: {
         args: true,
         msg: "User must have a last name"
       }
@@ -31,7 +31,7 @@ const User = db.define("user", {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: {
+      notEmpty: {
         args: true,
         msg: "User must have a user name"
       }
@@ -41,14 +41,14 @@ const User = db.define("user", {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: {
+      notEmpty: {
         args: true,
         msg: "User must have an email address"
       },
       isEmail: {
         args: true,
         msg: "Please enter a valid email address"
-      }
+      },
     }
   },
   imgUrl: {
@@ -61,7 +61,21 @@ const User = db.define("user", {
           );
       }
     }
-  }
+  },
+  role: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        args: true,
+        msg: "User must have a role"
+      },
+      isIn: {
+        args: [["shopper", "admin"]],
+        msg: "User role must be either 'shopper' or 'admin'"
+      }
+    }
+  },
 });
 
 module.exports = User;
