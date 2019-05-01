@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 
 const Cart = (props) =>{
     const Products = props.products
+    console.log('isLogin: ', props.isLogin)
     return(
         <div>
             <h1>Here are all the products in your cart!</h1>
@@ -21,9 +22,10 @@ const Cart = (props) =>{
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({products, user}) => {
     return {
-        products:  state
+        products:  products,
+        isLogin: user.id,
     }
 }
 

@@ -13,7 +13,10 @@ const Nav = ({location: {pathname}}) => {
             label: 'Checkout', to: '/checkout'
         },
         {
-            label: 'Login', to: 'login'
+            label: 'Login', to: '/login'
+        },
+        {
+            label: 'SignUp', to: '/signup'
         }
     ];
 

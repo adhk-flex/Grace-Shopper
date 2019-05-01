@@ -136,7 +136,7 @@ const delLineItem = id => dispatch => {
     .then(() => dispatch(fetchLineItems()))
 };
 
-const login = formData => dispatch => {
+export const login = formData => dispatch => {
   return axios.put('/auth/login', formData)
     .then(user => dispatch(setUser(user.data)))
 };
@@ -148,7 +148,7 @@ export const loginNewUser = newUser => dispatch => {
 }
 //this login a new created User right after creating the user. 
 
-const sessionLogin = () => dispatch => {
+export const sessionLogin = () => dispatch => {
   return axios.get('/auth/session')
     .then(user => dispatch(setUser(user.data)))
 };

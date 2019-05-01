@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 
 class Product extends Component{
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state = {
             selectedQuantity: '',
         }
@@ -56,9 +56,9 @@ class Product extends Component{
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({products}) => {
     return {
-        products: state
+        products: products
     }
 };
 

@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import { loginNewUser } from './store';
+import { loginNewUser, login } from './store';
 
 class Login extends Component{
 
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state = {
             email: '',
             password: '',
@@ -25,12 +25,12 @@ class Login extends Component{
     }
 
     render(){
-        console.log('loginNewUser: ', loginNewUser)
         const {email, password, error} =  this.state;
         const {onChange, onSave} = this;
+        const toSignup = this.props.match.path === '/signup'
         return(
             <div>
-                <h2>This is the login page</h2>
+                <h2>{`This is the ${toSignup ? 'signup' : 'login'} page`}</h2>
                 <form onSubmit={onSave}>
                     <label htmlFor = 'email'>Email</label>
                     <input name = 'email' value = {email} onChange={onChange}/>
@@ -45,7 +45,8 @@ class Login extends Component{
 
 const mapDispatchToProps = dispatch => {
     return {
-        login: user => dispatch(loginNewUser(user))
+        signup: user => dispatch(loginNewUser(user)),
+        login: user => dispatch(login(user))
     }
 }
 
