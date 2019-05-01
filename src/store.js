@@ -142,7 +142,7 @@ const login = formData => dispatch => {
 };
 //login an existing user
 
-const loginNewUser = newUser => dispatch => {
+export const loginNewUser = newUser => dispatch => {
   return axios.post('/auth/login', newUser)
     .then(user => dispatch(setUser(user.data)))
 }

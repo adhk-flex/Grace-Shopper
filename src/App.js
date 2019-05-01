@@ -9,6 +9,7 @@ import Cart from './Cart';
 import CheckoutForm from './CheckoutForm'
 import { fetchProducts } from './store';
 import { connect } from 'react-redux';
+import Login from './login';
 
 class App extends Component{
     
@@ -22,6 +23,7 @@ class App extends Component{
                 <Route path = '/' component={Nav}/>
                 <Switch>
                     <Route exact path = '/home' component={Home}/>
+                    <Route exact path = '/login' component={Login}/>
                     <Route exact path = '/productList' component={ProductList}/>
                     <Route exact path = '/product/:id' component={Product}/>
                     <Route exact path = '/cart' component={Cart}/>
