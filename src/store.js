@@ -3,7 +3,8 @@ import thunk from 'redux-thunk';
 import axios from 'axios';
 
 
-const SET_PRODUCTS = "SET_PRODUCTS";
+const SET_PRODUCTS = 'SET_PRODUCTS';
+
 
 const setProducts = products => ({
   type: SET_PRODUCTS,
@@ -19,7 +20,7 @@ const products = (state = [], action) => {
   }
 };
 
-const SET_LINEITEMS = "SET_LINEITEMS";
+const SET_LINEITEMS = 'SET_LINEITEMS';
 
 const setLineItems = items => ({
   type: SET_LINEITEMS,
@@ -30,6 +31,38 @@ const lineItems = (state = [], action) => {
   switch (action.type) {
     case SET_LINEITEMS:
       return action.items;
+    default:
+      return state;
+  }
+};
+
+const SET_USER = 'SET_USER';
+
+const setUser = user => ({
+  type: SET_USER,
+  user
+});
+
+const user = (state = [], action) => {
+  switch (action.type) {
+    case SET_USER:
+      return action.user;
+    default:
+      return state;
+  }
+};
+
+const SET_CART = 'SET_CART';
+
+const setCart = cart => ({
+  type: SET_CART,
+  cart
+});
+
+const cart = (state = [], action) => {
+  switch (action.type) {
+    case SET_CART:
+      return action.cart;
     default:
       return state;
   }
@@ -68,9 +101,17 @@ const delLineItem = id => dispatch => {
     .then(() => dispatch(fetchLineItems()))
 };
 
+const login = () => dispatch => {
+  return axios.get('User get route', { email, password })
+    .then(user => dispatch(setUser(user)))
+}
+
+
+
 const reducer = combineReducers({
   products,
-  lineItems
+  lineItems,
+  user
 });
 
 const store = createStore(reducer, applyMiddleware(thunk));
