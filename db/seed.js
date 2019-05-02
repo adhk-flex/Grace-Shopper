@@ -42,12 +42,12 @@ const seed = () => {
     .then(() => {
       const arr = new Array(10);
       return Promise.all([
-        [...arr].map(() => 
+        [...arr].map((ele, idx) => 
           User.create({
             firstName: faker.name.firstName(),
             lastName: faker.name.lastName(),
-            password: "testpassword",
-            email: 'testemail',
+            password: `testpassword`,
+            email: `test${idx}@email.com`,
             imgUrl: faker.image.avatar(),
             role: roles[Math.floor(Math.random() * 2)]
           })
