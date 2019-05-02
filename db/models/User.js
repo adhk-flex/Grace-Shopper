@@ -69,6 +69,7 @@ const User = db.define("user", {
   role: {
     type: Sequelize.STRING,
     allowNull: false,
+    defaultValue: "shopper",
     validate: {
       notEmpty: {
         args: true,

@@ -12,7 +12,7 @@ const LineItem = db.define("lineItem", {
     allowNull: false,
     validate: {
       min: {
-        args: [0],
+        args: [[0]],
         msg: "Item quantity must be a positive integer"
       }
     }
@@ -21,7 +21,7 @@ const LineItem = db.define("lineItem", {
     type: Sequelize.DECIMAL(10, 2),
     validate: {
       min: {
-        args: [0],
+        args: [[0]],
         msg: "Price must be a positive number"
       }
     }

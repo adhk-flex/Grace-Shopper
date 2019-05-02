@@ -9,15 +9,20 @@ const Order = require("./Order");
 Product.belongsTo(Category);
 Category.hasMany(Product);
 
-Product.belongsToMany(Cart, { through: LineItem });
+Product.hasMany(LineItem);
+LineItem.belongsTo(Product);
 
+Cart.hasMany(LineItem);
+LineItem.belongsTo(Cart);
+
+Order.hasMany(LineItem);
+LineItem.belongsTo(Order);
+ 
 Cart.belongsTo(User);
 User.hasOne(Cart);
 
 Order.belongsTo(User);
 User.hasMany(Order);
-
-Product.belongsToMany(Order, { through: LineItem });
 
 //hooks
 User.addHook("afterCreate", user =>
@@ -36,8 +41,14 @@ Order.addHook("afterCreate", order => {
     .then(cart =>
       LineItem.update({ orderId: order.id }, { where: { cartId: cart.id } })
     )
+    .then(() => LineItem.findAll({ where: { orderId: order.id } }))
+    .then(orderItems => {
+      order.totalAmount = orderItems.reduce((acc, item) => acc += item.price * item.quantity, 0);
+      return order.save();
+    })
     .then(() => Cart.destroy({ where: { userId: order.userId } }))
-    .then(() => Cart.create({ status: "pending", userId: order.userId }));
+    .then(() => Cart.create({ status: "pending", userId: order.userId }))
+    .catch(e => { throw e });
 });
 
 module.exports = { Product, Category, Cart, LineItem, User, Order };
