@@ -73,6 +73,7 @@ const Product = db.define("product", {
   },
   imgUrl: {
     type: Sequelize.STRING,
+    defaultValue: "https://portal.lancercorp.com/Content/Images/missing.png",
     validate: {
       urlOrBlank(url) {
         if (!Sequelize.Validator.isURL(url) && url.length > 0)
