@@ -1,32 +1,48 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import { fetchLineItems } from './store';
 
-const Cart = (props) =>{
-    const Products = props.products
-    console.log('isLogin: ', props.isLogin)
-    return(
-        <div>
-            <h1>Here are all the products in your cart!</h1>
-            <ul>
-                {Products.map(p=>{
-                    return (
-                        <li key={p.id}>
-                            <span>{`Name: ${p.name}, Price: ${p.price}`}</span>
-                            <br/>
-                            <img className = 'product-image' src={p.imageUrl}/>
-                        </li>
-                    )
-                })}
-            </ul>
-        </div>
-    )
-}
+class Cart extends Component {
+    componentDidMount(){
+        const cartId = this.props.cart.id
+        this.props.fetchLineItems(cartId)
+    }
 
-const mapStateToProps = ({products, user}) => {
-    return {
-        products:  products,
-        isLogin: user.id,
+    render () {
+        const {products, lineItems} = this.props
+        console.log('isLogin: ', this.props.isLogin)
+        return(
+            <div>
+                <h1>Here are all the products in your cart!</h1>
+                <ul>
+                    {lineItems.map(p=>{
+                        return (
+                            <li key={p.id}>
+                                <span>{`Name: ${p.name}, Price: ${p.price}`}</span>
+                                <br/>
+                                <img className = 'product-image' src={p.imageUrl}/>
+                            </li>
+                        )
+                    })}
+                </ul>
+            </div>
+        )
     }
 }
 
-export default connect(mapStateToProps)(Cart)
+const mapStateToProps = ({products, user, cart, lineItems}) => {
+    return {
+        products:  products,
+        isLogin: user.id,
+        cart: cart,
+        lineItems: lineItems
+    }
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchLineItems: cartId => dispatch(fetchLineItems(cartId))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);
