@@ -30,16 +30,17 @@ app.use('/api/products', require('./routes/product'));
 app.use('/api/categories', require('./routes/category'));
 app.use('/api/carts', require('./routes/cart'));
 app.use('/api/lineitems', require('./routes/lineitem'));
+app.use('/api/orders', require('./routes/order'));
 
 app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, '../index.html')));
 app.get('/style.css', (req, res, next)=> res.sendFile(path.join(__dirname, 'style.css')));
 
 // Handle 404s
 app.use((req, res, next) => {
-    const err = new Error('Not Found')
-    err.status = 404
-    next(err)
-  });
+    const err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
 
 app.use((err, req, res, next) => {
     console.error(err, err.stack);

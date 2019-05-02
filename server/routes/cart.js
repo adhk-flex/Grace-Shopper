@@ -23,6 +23,14 @@ router.post('/', (req, res, next) => {
     .catch(next);
 });
 
+//Needs more work here
+router.put('/:id', (req, res, next) => {
+    //req.body is an array like [{lineItemId: , qty: }, {lineItemId: , qty: }]
+    Cart.update(req.body, {returning: true, where: {id: req.params.id}})
+    .then((cart) => res.json(cart))
+    .catch(next);
+});
+
 router.delete('/:id', (req, res, next) => {
     Cart.destroy({where: {id: req.params.id}})
         .then(() => res.send(204))
