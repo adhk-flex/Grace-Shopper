@@ -15,12 +15,13 @@ class Login extends Component{
     }
 
     onChange = (ev) => {
-        this.setState({[ev.target.name]: ev.target.value}, ()=>console.log(this.state))
+        this.setState({[ev.target.name]: ev.target.value})
     }
 
     onSave = (ev) => {
         ev.preventDefault()
         this.props.login(this.state)
+            .then(()=>this.props.history.push('/home'))
             .catch(({response})=>{this.setState({error: response.data})})
     }
 

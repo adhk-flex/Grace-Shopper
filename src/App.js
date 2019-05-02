@@ -16,9 +16,15 @@ class App extends Component{
     
     componentDidMount() {
         this.props.fetchProducts()
+        this.props.sessionLogin()
     }
 
     render(){
+        // if(this.props.isLogin){
+        //     console.log('we have a user')
+        // }else{
+        //     console.log('user is not login')
+        // }
         return(
             <Router>
                 <Route path = '/' component={Nav}/>
@@ -45,7 +51,8 @@ const mapStateToProps = ({user}) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchProducts: () => dispatch(fetchProducts())
+        fetchProducts: () => dispatch(fetchProducts()),
+        sessionLogin: () => dispatch(sessionLogin())
     }
 };
 
