@@ -120,25 +120,30 @@ const delProduct = id => dispatch => {
 };
 
 
-const fetchLineItems = cartId => dispatch => {
+export const fetchLineItems = cartId => dispatch => {
   return axios.get(`/api/lineitems/${cartId}`)
     .then(items => dispatch(setLineItems(items.data)))
 };
 
 
-const addLineItem = product => dispatch => {
+export const addLineItem = (product, cartId) => dispatch => {
   return axios.post('/api/lineitems', product)
-    .then(() => dispatch(fetchLineItems()))
+    .then(() => dispatch(fetchLineItems(cartId)))
 };
 
-const delLineItem = id => dispatch => {
+export const delLineItem = (id, cartId) => dispatch => {
   return axios.delete(`/api/lineitems/${id}`)
-    .then(() => dispatch(fetchLineItems()))
+    .then(() => dispatch(fetchLineItems(cartId)))
 };
+
+const setUserCart = userId => dispatch => {
+  return axios.get(`/api/carts/${userId}`)
+    .then(cart => dispatch(setCart(cart)))
+}
 
 export const login = formData => dispatch => {
   return axios.put('/auth/login', formData)
-    .then(user => dispatch(setUser(user.data)))
+    .then(user => dispatch(setUser(user.data), setUserCart(user.id)))
 };
 //login an existing user
 
@@ -164,7 +169,8 @@ const reducer = combineReducers({
   categories,
   products,
   lineItems,
-  user
+  user,
+  cart
 });
 
 const store = createStore(reducer, applyMiddleware(thunk));
