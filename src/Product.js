@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import { addLineItem } from './store';
 
 class Product extends Component{
     constructor(props){
@@ -13,8 +14,21 @@ class Product extends Component{
         this.setState({[ev.target.name]: ev.target.value}, ()=>console.log(this.state))
     }
 
-    onSave = (ev) =>{
+    onSave = (product, ev) => {
         ev.preventDefault()
+        const cartId = this.props.cart.id
+        // console.log(product)
+        const item = {
+            quantity: this.state.selectedQuantity,
+            price: product.price,
+            name: product.name,
+            productNumber: product.productNumber,
+            stockStatus: product.stockStatus,
+            imgUrl: product.imgUrl
+        }
+        // console.log(item)
+        this.props.addLineItem(item, cartId)
+            .then(() => console.log(this.props.lineItems))
     }
 
     render(){
@@ -37,7 +51,7 @@ class Product extends Component{
                 <img className = 'product-image' src={imgUrl}/>
                 <br/>
                 <p>{description}</p>
-                <form onSubmit={onSave}>
+                <form onSubmit={(ev) => {onSave(product, ev)}}>
                     <select className = 'form-control' name='selectedQuantity' value={selectedQuantity} onChange={onChange}>
                         {
                             quantityRange.map(number=>{
@@ -56,11 +70,17 @@ class Product extends Component{
     }
 }
 
-const mapStateToProps = ({products}) => {
+const mapStateToProps = (state) => {
     return {
-        products: products
+        products: state.products,
+        lineItems: state.lineItems,
+        cart: state.cart
     }
 };
 
-
-export default connect(mapStateToProps)(Product);
+const mapDispatchToProps = dispatch => {
+    return {
+        addLineItem: product => dispatch(addLineItem(product)),
+    }
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Product);
