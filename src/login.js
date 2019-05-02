@@ -10,7 +10,11 @@ class Login extends Component{
         this.state = {
             email: '',
             password: '',
-            error: ''
+            error: '',
+            firstName: '',
+            lastName: '',
+            imgUrl: '',
+            role: ''
         }
     }
 
@@ -20,13 +24,15 @@ class Login extends Component{
 
     onSave = (ev) => {
         ev.preventDefault()
-        this.props.login(this.state)
+        this.props.match.path === '/signup' ? 
+        this.props.signup(this.state)
+        : this.props.login(this.state)
             .then(()=>this.props.history.push('/home'))
             .catch(({response})=>{this.setState({error: response.data})})
     }
 
     render(){
-        const {email, password, error} =  this.state;
+        const {email, password, error, firstName, lastName, imgUrl, role} =  this.state;
         const {onChange, onSave} = this;
         const toSignup = this.props.match.path === '/signup'
         return(
@@ -37,6 +43,25 @@ class Login extends Component{
                     <input name = 'email' value = {email} onChange={onChange}/>
                     <label htmlFor = 'password'>Password</label>
                     <input name = 'password' value = {password} onChange={onChange}/>
+                    {
+                        toSignup ? 
+                        (
+                            <div>
+                            <label htmlFor = 'firstName'>FirstName</label>
+                            <input name = 'firstName' value = {firstName} onChange = {onChange}/>
+                            <label htmlFor = 'lastName'>LastName</label>
+                            <input name = 'lastName' value = {lastName} onChange = {onChange}/>
+                            <label htmlFor = 'imgUrl'>ImageUrl</label>
+                            <input name = 'imgUrl' value = {imgUrl} onChange = {onChange}/>
+                            <label htmlFor = 'role'>Role</label>
+                            <select name = 'role' value = {role} onChange = {onChange}>
+                                <option value = 'shopper'>shopper</option>
+                                <option value = 'admin'>admin</option>
+                            </select>
+                            </div>
+                        )  
+                        : null
+                    }
                     <button type='submit'>submit</button>
                 </form>
             </div>
