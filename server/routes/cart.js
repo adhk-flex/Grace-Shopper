@@ -10,9 +10,8 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/:id', (req, res, next) => {
-    
-    Cart.findOne({where: {id: req.params.id}})
+router.get('/user/:userId', (req, res, next) => {
+    Cart.findOne({where: {userId: req.params.userId}})
         .then((cart) => res.json(cart))
         .catch(next);
 });

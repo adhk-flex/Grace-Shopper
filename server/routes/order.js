@@ -4,7 +4,7 @@ const Order = db.Order;
 
 const router = express.Router();
 
-router.get('/:userId', (req, res, next) => {
+router.get('/user/:userId', (req, res, next) => {
     Order.findAll({where: {userId: req.params.userId}})
     .then((orders) => res.json(orders))
     .catch(next);
