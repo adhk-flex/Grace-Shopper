@@ -31,7 +31,9 @@
     ]
   },
   "devDependencies": {
-    "faker": "4.1.0"
+    "chai": "4.2.0",
+    "faker": "4.1.0",
+    "mocha": "6.1.4"
   },
   "scripts": {
     "start": "node server",
@@ -39,7 +41,8 @@
     "webpack": "webpack",
     "webpack:dev": "npm run webpack -- --mode=development --watch",
     "start:dev": "npm run webpack:dev & DATABASE_URL=postgres://localhost/grace-shopper nodemon server --ignore src/ --ignore dist/",
-    "seed": "DATABASE_URL=postgres://localhost/grace-shopper node ./db/seed.js"
+    "seed": "DATABASE_URL=postgres://localhost/grace-shopper node ./db/seed.js",
+    "dbTestOrderCreate": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/order/createOrder.js --watch"
   },
   "keywords": [],
   "author": "",

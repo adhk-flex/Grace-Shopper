@@ -56,6 +56,7 @@ const User = db.define("user", {
   },
   imgUrl: {
     type: Sequelize.STRING,
+    defaultValue: "https://34yigttpdc638c2g11fbif92-wpengine.netdna-ssl.com/wp-content/uploads/2016/09/default-user-img.jpg",
     validate: {
       urlOrBlank(url) {
         if (!Sequelize.Validator.isURL(url) && url.length > 0)
@@ -68,6 +69,7 @@ const User = db.define("user", {
   role: {
     type: Sequelize.STRING,
     allowNull: false,
+    defaultValue: "shopper",
     validate: {
       notEmpty: {
         args: true,
