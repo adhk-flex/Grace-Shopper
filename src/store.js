@@ -136,19 +136,19 @@ const delLineItem = id => dispatch => {
     .then(() => dispatch(fetchLineItems()))
 };
 
-const login = formData => dispatch => {
+export const login = formData => dispatch => {
   return axios.put('/auth/login', formData)
     .then(user => dispatch(setUser(user.data)))
 };
 //login an existing user
 
-const loginNewUser = newUser => dispatch => {
+export const loginNewUser = newUser => dispatch => {
   return axios.post('/auth/login', newUser)
     .then(user => dispatch(setUser(user.data)))
 }
 //this login a new created User right after creating the user. 
 
-const sessionLogin = () => dispatch => {
+export const sessionLogin = () => dispatch => {
   return axios.get('/auth/session')
     .then(user => dispatch(setUser(user.data)))
 };

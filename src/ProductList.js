@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 const ProductList = (props) => {
-    const history = props.history
+    const history = props.history;
     const Products = props.products;
     return(
         <div>
@@ -25,9 +25,9 @@ const ProductList = (props) => {
     }
 
 
-const mapStateToProps = state => {
+const mapStateToProps = ({products}) => {
     return {
-        products: state
+        products: products
     }
 };
 
