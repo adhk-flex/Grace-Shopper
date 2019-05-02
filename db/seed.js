@@ -46,8 +46,8 @@ const seed = () => {
           User.create({
             firstName: faker.name.firstName(),
             lastName: faker.name.lastName(),
-            password: "Password1",
-            email: faker.internet.email(),
+            password: "testpassword",
+            email: 'testemail',
             imgUrl: faker.image.avatar(),
             role: roles[Math.floor(Math.random() * 2)]
           })
