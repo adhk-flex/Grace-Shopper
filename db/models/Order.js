@@ -27,7 +27,7 @@ const Order = db.define("order", {
         defaultValue: 0.00,
         validate: {
             min: {
-                args: [0],
+                args: [[0]],
                 msg: "Total must be a positive number"
             }
         }

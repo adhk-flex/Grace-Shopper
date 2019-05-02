@@ -29,7 +29,9 @@
     ]
   },
   "devDependencies": {
-    "faker": "4.1.0"
+    "chai": "4.2.0",
+    "faker": "4.1.0",
+    "mocha": "6.1.4"
   },
   "scripts": {
     "start": "node server",

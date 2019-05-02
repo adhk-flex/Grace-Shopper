@@ -24,4 +24,20 @@ User.addHook("afterCreate", user =>
   Cart.create({ status: "pending", userId: user.id })
 );
 
+Order.createOrder = user => {
+  return Order.create({
+    status: "purchased",
+    userId: user.id
+  });
+};
+
+Order.addHook("afterCreate", order => {
+  Cart.findOne({ where: { userId: order.userId } })
+    .then(cart =>
+      LineItem.update({ orderId: order.id }, { where: { cartId: cart.id } })
+    )
+    .then(() => Cart.destroy({ where: { userId: order.userId } }))
+    .then(() => Cart.create({ status: "pending", userId: order.userId }));
+});
+
 module.exports = { Product, Category, Cart, LineItem, User, Order };
