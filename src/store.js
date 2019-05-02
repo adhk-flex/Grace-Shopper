@@ -154,7 +154,7 @@ export const sessionLogin = () => dispatch => {
 };
 //this auth route return the current session's user. 
 
-const logout = () => dispatch => {
+export const logout = () => dispatch => {
   return axios.delete('/auth/logout')
     .then(() => dispatch(setUser({})))
 };
