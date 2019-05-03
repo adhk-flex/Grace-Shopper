@@ -127,6 +127,7 @@ export const fetchLineItems = cartId => dispatch => {
 
 
 export const addLineItem = (product, cartId) => dispatch => {
+  console.log('cartId in store: ', cartId)
   return axios.post('/api/lineitems', product)
     .then(() => dispatch(fetchLineItems(cartId)))
 };
@@ -137,25 +138,42 @@ export const delLineItem = (id, cartId) => dispatch => {
 };
 
 const setUserCart = userId => dispatch => {
+  console.log('userId in store: ', userId)
   return axios.get(`/api/carts/${userId}`)
-    .then(cart => dispatch(setCart(cart)))
+    .then(({data}) => dispatch(setCart(data)))
 }
 
 export const login = formData => dispatch => {
   return axios.put('/auth/login', formData)
-    .then(user => dispatch(setUser(user.data), setUserCart(user.id)))
+    .then(user => Promise.all(
+        [
+          dispatch(setUser(user.data)), 
+          dispatch(setUserCart(user.data.id))
+        ]
+        )
+      )
 };
 //login an existing user
 
 export const loginNewUser = newUser => dispatch => {
   return axios.post('/auth/login', newUser)
-    .then(user => dispatch(setUser(user.data)))
+    .then(user => Promise.all(
+      [
+        dispatch(setUser(user.data)), 
+        dispatch(setUserCart(user.id))
+      ]
+      ))
 }
 //this login a new created User right after creating the user. 
 
 export const sessionLogin = () => dispatch => {
   return axios.get('/auth/session')
-    .then(user => dispatch(setUser(user.data)))
+    .then(user => Promise.all(
+      [
+        dispatch(setUser(user.data)), 
+        dispatch(setUserCart(user.id))
+      ]
+      ))
 };
 //this auth route return the current session's user. 
 

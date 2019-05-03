@@ -12,7 +12,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
     
-    Cart.findOne({where: {id: req.params.id}})
+    Cart.findOne({where: {userId: req.params.id}})
         .then((cart) => res.json(cart))
         .catch(next);
 });
