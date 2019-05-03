@@ -158,7 +158,7 @@ export const loginNewUser = newUser => dispatch => {
     .then(user => Promise.all(
       [
         dispatch(setUser(user.data)), 
-        dispatch(setUserCart(user.id))
+        dispatch(setUserCart(user.data.id))
       ]
       ))
 }
