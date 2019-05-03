@@ -11,22 +11,27 @@ class Cart extends Component {
     render () {
         const {products, lineItems} = this.props
         console.log('isLogin: ', this.props.isLogin)
-        return(
-            <div>
-                <h1>Here are all the products in your cart!</h1>
-                <ul>
-                    {lineItems.map(p=>{
-                        return (
-                            <li key={p.id}>
-                                <span>{`Name: ${p.name}, Price: ${p.price}`}</span>
-                                <br/>
-                                <img className = 'product-image' src={p.imageUrl}/>
-                            </li>
-                        )
-                    })}
-                </ul>
-            </div>
-        )
+        if(!lineItems){
+            return null
+        }else{
+            return(
+                <div>
+                    <h1>Here are all the products in your cart!</h1>
+                    <ul>
+                        {lineItems.map(p=>{
+                            return (
+                                <li key={p.id}>
+                                    <span>{`Name: ${p.name}, Price: ${p.price}`}</span>
+                                    <br/>
+                                    <img className = 'product-image' src={p.imageUrl}/>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </div>
+            )
+        }
+        
     }
 }
 

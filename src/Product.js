@@ -14,19 +14,20 @@ class Product extends Component{
         this.setState({[ev.target.name]: ev.target.value}, ()=>console.log(this.state))
     }
 
-    onSave = (product, ev) => {
+    onSave = (ev) => {
         ev.preventDefault()
+        const id = this.props.match.params.id;
+        let product = this.props.products.find(p => p.id === id);
         const cartId = this.props.cart.id
-        // console.log(product)
         const item = {
             quantity: this.state.selectedQuantity,
             price: product.price,
             name: product.name,
             productNumber: product.productNumber,
             stockStatus: product.stockStatus,
-            imgUrl: product.imgUrl
+            imgUrl: product.imgUrl,
+            cartId: cartId
         }
-        // console.log(item)
         this.props.addLineItem(item, cartId)
             .then(() => console.log(this.props.lineItems))
     }
@@ -51,7 +52,7 @@ class Product extends Component{
                 <img className = 'product-image' src={imgUrl}/>
                 <br/>
                 <p>{description}</p>
-                <form onSubmit={(ev) => {onSave(product, ev)}}>
+                <form onSubmit={onSave}>
                     <select className = 'form-control' name='selectedQuantity' value={selectedQuantity} onChange={onChange}>
                         {
                             quantityRange.map(number=>{
@@ -80,7 +81,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        addLineItem: product => dispatch(addLineItem(product)),
+        addLineItem: (product, cartId) => dispatch(addLineItem(product, cartId)),
     }
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Product);

@@ -50,7 +50,6 @@ describe("Order.createOrder", () => {
       .then(users => users[0])
       .then(user => Order.createOrder(user).then(() => Cart.findOne({ where: { userId: user.id } })))
       .then(cart =>{
-        console.log(cart.get())
         return LineItem.findAll({ where: { cartId: cart.id } })
       }) 
       .then(cartItems => expect(cartItems.length).to.equal(0))
