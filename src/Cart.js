@@ -8,6 +8,7 @@ class Cart extends Component {
         this.props.fetchLineItems(cartId)
     }
 
+
     render () {
         const {products, lineItems} = this.props
         console.log('isLogin: ', this.props.isLogin)
@@ -28,6 +29,7 @@ class Cart extends Component {
                             )
                         })}
                     </ul>
+                    <button onClick={()=>this.props.history.push('/checkout')}>Check Out!</button>
                 </div>
             )
         }
