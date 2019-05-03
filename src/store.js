@@ -121,13 +121,12 @@ const delProduct = id => dispatch => {
 
 
 export const fetchLineItems = cartId => dispatch => {
-  return axios.get(`/api/lineitems/${cartId}`)
+  return axios.get(`/api/lineitems/cart/${cartId}`)
     .then(items => dispatch(setLineItems(items.data)))
 };
 
 
 export const addLineItem = (product, cartId) => dispatch => {
-  console.log('cartId in store: ', cartId)
   return axios.post('/api/lineitems', product)
     .then(() => dispatch(fetchLineItems(cartId)))
 };
@@ -138,8 +137,7 @@ export const delLineItem = (id, cartId) => dispatch => {
 };
 
 const setUserCart = userId => dispatch => {
-  console.log('userId in store: ', userId)
-  return axios.get(`/api/carts/${userId}`)
+  return axios.get(`/api/carts/user/${userId}`)
     .then(({data}) => dispatch(setCart(data)))
 }
 

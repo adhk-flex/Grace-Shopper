@@ -19,9 +19,6 @@ class Product extends Component{
         const id = this.props.match.params.id;
         let product = this.props.products.find(p => p.id === id);
         const cartId = this.props.cart.id
-        console.log('this.props: ', this.props)
-        console.log("product: ", product)
-        console.log("cartId: ", cartId)
         const item = {
             quantity: this.state.selectedQuantity,
             price: product.price,
@@ -31,7 +28,6 @@ class Product extends Component{
             imgUrl: product.imgUrl,
             cartId: cartId
         }
-        console.log(item)
         this.props.addLineItem(item, cartId)
             .then(() => console.log(this.props.lineItems))
     }
