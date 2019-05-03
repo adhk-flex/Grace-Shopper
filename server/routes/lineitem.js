@@ -16,8 +16,14 @@ router.get('/:id', (req, res, next) => {
         .catch(next);
 });
 
-router.get('/:cartId', (req, res, next) => {
+router.get('/cart/:cartId', (req, res, next) => {
     LineItem.findAll({where: {cartId: req.params.cartId}})
+        .then((lineitems) => res.json(lineitems))
+        .catch(next);
+});
+
+router.get('/order/:orderId', (req, res, next) => {
+    LineItem.findAll({where: {orderId: req.params.orderId}})
         .then((lineitems) => res.json(lineitems))
         .catch(next);
 });
