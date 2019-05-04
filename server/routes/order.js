@@ -16,17 +16,17 @@ router.get('/:id', (req, res, next) => {
         .catch(next);
 });
 
-router.post('/', (req, res, next) => {
+router.post('/user/:userId', (req, res, next) => {
     //req.body is expecting {userId: 123}
-    Order.createOrder(req.body)
-    .then((cart) => res.json(cart))
+    Order.createOrder({userId: req.params.userId})
+    .then((order) => res.json(order))
     .catch(next);
 });
 
 router.put('/:id', (req, res, next) => {
-    //req.body is expecting {status: shipped}
-    Order.findOne({where: {id: req.params.id}})
-    .then((order) => order.update(req.body))
+    Order.update({status: req.body.status}, 
+        {returning: true, where: {id: req.params.id}})
+    .then(([ rowsUpdate, [updatedOrder] ]) => res.json(updatedOrder))
     .catch(next);
 });
 
