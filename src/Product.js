@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { addLineItem } from './store';
+import { addLineItem } from './store/lineitem';
 
 class Product extends Component{
     constructor(props){

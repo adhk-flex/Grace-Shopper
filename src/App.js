@@ -7,7 +7,8 @@ import ProductList from './ProductList';
 import Product from './Product';
 import Cart from './Cart';
 import CheckoutForm from './CheckoutForm'
-import { fetchProducts, sessionLogin } from './store';
+import { fetchProducts } from './store/product';
+import { sessionLogin } from './store/user';
 import { connect } from 'react-redux';
 import Login from './Login';
 

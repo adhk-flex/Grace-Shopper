@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import { fetchLineItems, updateLineItem } from './store';
+import { fetchLineItems, updateLineItem } from './store/lineitem';
 
 class Cart extends Component {
     constructor () {
