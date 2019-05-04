@@ -45,17 +45,24 @@ describe("Order.createOrder", () => {
       .then(order => expect(typeof order).to.equal("object"));
   });
 
-  it("deletes the user's cart and creates a new empty cart", () => {
+  it("puts a formatted order number on the order", () => {
     User.findAll({ order: [["lastName", "asc"]] })
       .then(users => users[0])
-      .then(user => Order.createOrder(user).then(() => Cart.findOne({ where: { userId: user.id } })))
-      .then(cart =>{
-        return LineItem.findAll({ where: { cartId: cart.id } })
-      }) 
-      .then(cartItems => expect(cartItems.length).to.equal(0))
-      .catch(e => {
-        throw e;
-      })
-  });
+      .then(user => Order.createOrder(user))
+      .then(order => console.log(order.orderNumber))
+  })
+
+  // it("deletes the user's cart and creates a new empty cart", () => {
+  //   User.findAll({ order: [["lastName", "asc"]] })
+  //     .then(users => users[0])
+  //     .then(user => Order.createOrder(user).then(() => Cart.findOne({ where: { userId: user.id } })))
+  //     .then(cart =>{
+  //       return LineItem.findAll({ where: { cartId: cart.id } })
+  //     }) 
+  //     .then(cartItems => expect(cartItems.length).to.equal(0))
+  //     .catch(e => {
+  //       throw e;
+  //     })
+  // });
 
 });
