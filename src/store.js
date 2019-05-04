@@ -136,13 +136,20 @@ export const delLineItem = (id, cartId) => dispatch => {
     .then(() => dispatch(fetchLineItems(cartId)))
 };
 
+export const updateLineItem = (id, formData, cartId) => dispatch => {
+  return axios.put(`/api/lineitems/${id}`, formData)
+    .then(() => dispatch(fetchLineItems(cartId)))
+}
+//require a put route to update the quantity of a existing lineItem. 
+
+
 const setUserCart = userId => dispatch => {
   return axios.get(`/api/carts/user/${userId}`)
     .then(({data}) => dispatch(setCart(data)))
 }
 
-export const login = formData => dispatch => {
-  return axios.put('/auth/login', formData)
+export const login = user => dispatch => {
+  return axios.put('/auth/login', user)
     .then(user => Promise.all(
         [
           dispatch(setUser(user.data)), 
