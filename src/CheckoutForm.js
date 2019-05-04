@@ -3,26 +3,37 @@ import React, {Component} from 'react';
 
 class CheckoutForm extends Component{
 
-    constructor(){
-        super()
-        this.state = {
-            fullName: '',
-            email: '',
-            address: '',
-            zipCode: '',
-            sameShippAddress: true,
-            cardName: '',
-            cardNum: '',
-            expMonth: '',
-            expYear: '',
-            cvv: '',
-            errors: []
-        }
+    constructor(props){
+        super(props)
+        this.state = {...this.userAddress(), ...this.userAddress(), ...this.userCreditCardInfo(), sameShippAddress: true}
     }
 
     // componentDidUpdate(prevProps){
 
     // }
+
+    userAddress = (address) => (
+        {
+            firstName: address ? address.firstName : '',
+            lastName: address ? address.lastName : '',
+            addressLine1: address ? address.addressLine1 : '',
+            addressLine2: address ? address.addressLine2 : '',
+            zipCode: address ? address.zipCode : '',
+            city: address ? address.city : '',
+            state: address ? address.state : '',
+        }
+    )
+
+    userCreditCardInfo = (creditCard) => (
+        {
+            firstNameOnCard: creditCard ? creditCard.firstNameOnCard : '',
+            lastNameOnCard: creditCard ? creditCard.lastNameOnCard : '',
+            cardNum: creditCard ? creditCard.cardNum : '',
+            expMonth: creditCard ? creditCard.expMonth : '',
+            expYear: creditCard ? creditCard.expYear : '',
+            cvv: creditCard ? creditCard.cvv : '',
+        }
+    )
 
     onSave = (ev) => {
         ev.preventDefault()
@@ -40,35 +51,41 @@ class CheckoutForm extends Component{
 
     render(){
         const {onSave, onChange} =  this
-        const {fullName, email, address, zipCode, sameShippAddress, cardName, cardNum, expMonth, expYear, cvv} = this.state
+        const {firstName, lastName, addressLine1, addressLine2, zipCode, city, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv} = this.state
         const form = (addressType) => (
             <form onSubmit={onSave}>
-                    <label htmlFor="fullName">Full Name</label>
-                    <input type="text" name="fullName" value={fullName} placeholder="John M. Eric" onChange = {onChange}/>
+                    <label htmlFor="firstName">FirstName</label>
+                    <input type="text" name="firstName" value={firstName} placeholder="John M. Eric" onChange = {onChange}/>
                     <br/>
-                    <label htmlFor="email">Email</label>
-                    <input type="text" name="email" value={email} placeholder="john@example.com" onChange = {onChange}/>
+                    <label htmlFor="lastName">LastName</label>
+                    <input type="text" name="lastName" value={lastName} placeholder="john@example.com" onChange = {onChange}/>
                     <br/>
-                    <label htmlFor="address">Address</label>
-                    <input type="text" name="address" value = {address} placeholder="120 W 45th NYC" onChange = {onChange}/>
+                    <label htmlFor="addressLine1">address Line1</label>
+                    <input type="text" name="addressLine1" value = {addressLine1} placeholder="120 W 45th NYC" onChange = {onChange}/>
+                    <br/>
+                    <label htmlFor="addressLine2">address Line2 Optional</label>
+                    <input type="text" name="addressLine2" value = {addressLine2} placeholder="120 W 45th NYC" onChange = {onChange}/>
                     <br/>
                     <label htmlFor="zipCode">Zip Code</label>
                     <input type="text" name="zipCode" value = {zipCode} placeholder="21003" onChange = {onChange}/>
+                    <br/>
+                    <label htmlFor="city">City</label>
+                    <input type="text" name="city" value = {city} placeholder="120 W 45th NYC" onChange = {onChange}/>
                     <br/>
                     <button type='submit'>{`Save ${addressType}`}</button>
             </form>
         )
         return(
             <div>
-                <h3>Billing Address</h3>
-                    {form('Billing Address')}
-                <label>Is the shipping address same as billing address?</label>
+                <h3>Shipping Address</h3>
+                    {form('Shipping Address')}
+                <label>Is the billing address same as shipping address?</label>
                 <input name='sameShippAddress' type='checkbox' checked={sameShippAddress} onChange={onChange}/>
                 {
                     !sameShippAddress ? 
                     <div>
-                        <h3>Shipping Address</h3>
-                        {form('Shipping Address')}
+                        <h3>Billing Address</h3>
+                        {form('Billing Address')}
                     </div> : null
                 }
                 <h3>Payment</h3>
@@ -76,8 +93,11 @@ class CheckoutForm extends Component{
                 <br/>
                 <span> Visa, Master, Amex, Discover</span>
                 <form onSubmit={onSave}>
-                    <label htmlFor="cardName">Name on the Card</label>
-                    <input type="text" name="cardName" placeholder="John Eric" value={cardName} onChange = {onChange}/>
+                    <label htmlFor="firstNameOnCard">First Name on the Card</label>
+                    <input type="text" name="firstNameOnCard" placeholder="John Eric" value={firstNameOnCard} onChange = {onChange}/>
+                    <br/>
+                    <label htmlFor="lastNameOnCard">First Name on the Card</label>
+                    <input type="text" name="lastNameOnCard" placeholder="John Eric" value={lastNameOnCard} onChange = {onChange}/>
                     <br/>
                     <label htmlFor="cardNum">Credit Card Number</label>
                     <input type="text" name="cardNum" placeholder="1111-2222-3333-4444" value={cardNum} onChange = {onChange}/>
