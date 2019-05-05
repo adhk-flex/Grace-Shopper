@@ -22,11 +22,11 @@ router.post('/', (req, res, next) => {
     .catch(next);
 });
 
-//Needs more work here
+//Only updates the status
 router.put('/:id', (req, res, next) => {
-    //req.body is an array like [{lineItemId: , qty: }, {lineItemId: , qty: }]
-    Cart.update(req.body, {returning: true, where: {id: req.params.id}})
-    .then((cart) => res.json(cart))
+    Cart.update({status: req.body.status}, 
+                {returning: true, where: {id: req.params.id}})
+    .then(([ rowsUpdate, [updatedCart] ]) => res.json(updatedCart))
     .catch(next);
 });
 
