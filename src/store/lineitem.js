@@ -36,5 +36,5 @@ export const updateLineItem = (id, formData, cartId) => dispatch => {
   return axios.put(`/api/lineitems/${id}`, formData)
     .then(() => dispatch(fetchLineItems(cartId)))
 }
-//require a put route to update the quantity of a existing lineItem. 
+
 
