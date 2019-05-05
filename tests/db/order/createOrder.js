@@ -35,15 +35,16 @@ const doFirst = () => {
 
 describe("Order.createOrder", () => {
   it("is a function", () => {
-    doFirst().then(() => expect(typeof Order.createOrder).to.equal("function"));
+    expect(typeof Order.createOrder).to.equal("function");
   });
 
   xit("takes a user and returns an order object", () => {
     doFirst()
       .then(() => User.findOne())
       .then(user => Order.createOrder(user))
-      .then(order => expect(typeof order).to.equal("object"));
-  });
+      .then(order => expect(typeof order).to.equal("object"))
+      .catch(e => done(e));
+  })
 
   xit("puts a formatted order number on the order", () => {
     doFirst()
@@ -53,27 +54,28 @@ describe("Order.createOrder", () => {
         expect(order.orderNumber.length).to.equal(8);
         expect(order.orderNumber.startsWith("GSHO")).to.equal(true);
         expect(order.orderNumber.includes("000"));
-      });
+      }).catch(e => done(e));
   });
 
-  xit("deletes the user's cart and creates a new empty cart", () => {
+  it("deletes the user's cart and creates a new empty cart", (done) => {
     doFirst()
       .then(() => User.findOne())
       .then(user =>
         Order.createOrder(user).then(() =>
           Cart.findOne({ where: { userId: user.id } })
-        )
+        ).catch(e => done(e))
       )
       .then(cart => {
         return LineItem.findAll({ where: { cartId: cart.id } });
       })
       .then(cartItems => expect(cartItems.length).to.equal(0))
+      .then(done())
       .catch(e => {
-        throw e;
+        done(e);
       });
   });
 
-  it("deducts quantity from product", () => {
+  it("deducts quantity from product", (done) => {
     User.findOne()
       .then(user =>
         Cart.findOne({ where: { userId: user.id } }).then(cart => {
@@ -91,13 +93,11 @@ describe("Order.createOrder", () => {
             }).then(item =>
               Order.createOrder(user).then(() =>
                 expect(product.quantity).to.equal(startQty - item.quantity)
-              )
+              ).catch(e => done(e))
             );
           });
         })
       )
-      .catch(e => {
-        throw e;
-      });
+      .catch(e => done(e));
   });
 });

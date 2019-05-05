@@ -4,6 +4,7 @@ const Cart = require("./Cart");
 const LineItem = require("./LineItem");
 const User = require("./User");
 const Order = require("./Order");
+const Address = require("./Address");
 
 //associations
 Product.belongsTo(Category);
@@ -23,6 +24,9 @@ User.hasOne(Cart);
 
 Order.belongsTo(User);
 User.hasMany(Order);
+
+Address.belongsTo(User);
+User.hasMany(Address);
 
 //user hooks
 User.addHook("afterCreate", user =>
@@ -50,6 +54,7 @@ Order.createOrder = user => {
 };
 
 Order.addHook("afterCreate", order => {
+  console.log("ORDER", order.dataValues)
   return Cart.findOne({ where: { userId: order.userId } })
     .then(cart =>
       LineItem.update({ orderId: order.id }, { where: { cartId: cart.id } })
