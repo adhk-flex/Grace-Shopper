@@ -18,7 +18,7 @@ const Order = db.define("order", {
                     pad += "0";
                 }
             }
-            return `GSOH${pad}${num}`;
+            return `GSHO${pad}${num}`;
         }
     },
     status: {

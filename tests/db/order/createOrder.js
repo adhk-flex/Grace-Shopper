@@ -1,68 +1,103 @@
 const expect = require("chai").expect;
 const { Order, User, LineItem, Cart, Product } = require("../../../db/models");
 
-beforeEach(() => {
-  console.log("Before")
-  User.findAll({ order: [["lastName", "asc"]] })
-    .then(users => users[0])
+const doFirst = () => {
+  return User.findOne()
     .then(user => Cart.findOne({ where: { userId: user.id } }))
-    .then(cart => {
-      return Product.findAll().then(products =>
-        Promise.all([LineItem.destroy({ where: {} }),
-          LineItem.create({
+    .then(cart =>
+      Product.findOne().then(product =>
+        Promise.all([
+          LineItem.createLineItem({
             quantity: 1,
-            price: products[0].price,
-            name: products[0].name,
-            productNumber: products[0].productNumber,
-            stockStatus: products[0].stockStatus,
-            imgUrl: products[0].imgUrl,
+            price: product.price,
+            name: product.name,
+            productNumber: product.productNumber,
+            stockStatus: product.stockStatus,
+            imgUrl: product.imgUrl,
+            productId: product.id,
             cartId: cart.id
           }),
-          LineItem.create({
+          LineItem.createLineItem({
             quantity: 1,
-            price: products[1].price,
-            name: products[1].name,
-            productNumber: products[1].productNumber,
-            stockStatus: products[1].stockStatus,
-            imgUrl: products[1].imgUrl,
+            price: product.price,
+            name: product.name,
+            productNumber: product.productNumber,
+            stockStatus: product.stockStatus,
+            imgUrl: product.imgUrl,
+            productId: product.id,
             cartId: cart.id
           })
         ])
-      );
-    })
+      )
+    )
     .catch(e => console.log(e));
-});
+};
 
 describe("Order.createOrder", () => {
   it("is a function", () => {
-    expect(typeof Order.createOrder).to.equal("function");
+    doFirst().then(() => expect(typeof Order.createOrder).to.equal("function"));
   });
 
-  it("takes a user and returns an order object", () => {
-    User.findAll({ order: [["lastName", "asc"]] })
-      .then(users => users[0])
+  xit("takes a user and returns an order object", () => {
+    doFirst()
+      .then(() => User.findOne())
       .then(user => Order.createOrder(user))
       .then(order => expect(typeof order).to.equal("object"));
   });
 
-  it("puts a formatted order number on the order", () => {
-    User.findAll({ order: [["lastName", "asc"]] })
-      .then(users => users[0])
+  xit("puts a formatted order number on the order", () => {
+    doFirst()
+      .then(() => User.findOne())
       .then(user => Order.createOrder(user))
-      .then(order => console.log(order.orderNumber))
-  })
+      .then(order => {
+        expect(order.orderNumber.length).to.equal(8);
+        expect(order.orderNumber.startsWith("GSHO")).to.equal(true);
+        expect(order.orderNumber.includes("000"));
+      });
+  });
 
-  // it("deletes the user's cart and creates a new empty cart", () => {
-  //   User.findAll({ order: [["lastName", "asc"]] })
-  //     .then(users => users[0])
-  //     .then(user => Order.createOrder(user).then(() => Cart.findOne({ where: { userId: user.id } })))
-  //     .then(cart =>{
-  //       return LineItem.findAll({ where: { cartId: cart.id } })
-  //     }) 
-  //     .then(cartItems => expect(cartItems.length).to.equal(0))
-  //     .catch(e => {
-  //       throw e;
-  //     })
-  // });
+  xit("deletes the user's cart and creates a new empty cart", () => {
+    doFirst()
+      .then(() => User.findOne())
+      .then(user =>
+        Order.createOrder(user).then(() =>
+          Cart.findOne({ where: { userId: user.id } })
+        )
+      )
+      .then(cart => {
+        return LineItem.findAll({ where: { cartId: cart.id } });
+      })
+      .then(cartItems => expect(cartItems.length).to.equal(0))
+      .catch(e => {
+        throw e;
+      });
+  });
 
+  it("deducts quantity from product", () => {
+    User.findOne()
+      .then(user =>
+        Cart.findOne({ where: { userId: user.id } }).then(cart => {
+          Product.findOne().then(product => {
+            const startQty = product.quantity;
+            LineItem.create({
+              cartId: cart.id,
+              productId: product.id,
+              quantity: 1,
+              price: product.price,
+              name: product.name,
+              productNumber: product.productNumber,
+              stockStatus: product.stockStatus,
+              imgUrl: product.imgUrl
+            }).then(item =>
+              Order.createOrder(user).then(() =>
+                expect(product.quantity).to.equal(startQty - item.quantity)
+              )
+            );
+          });
+        })
+      )
+      .catch(e => {
+        throw e;
+      });
+  });
 });
