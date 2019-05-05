@@ -29,8 +29,12 @@ class Cart extends Component {
     }
 
     render () {
-        const {products, lineItems} = this.props;
+        const {lineItems} = this.props;
         const { onChange, onUpdate, onDelete } = this;
+        const TotalAmount = lineItems.reduce((acc, item) => {
+            acc += item.quantity * item.price
+            return acc
+        }, 0)
         console.log('isLogin: ', this.props.isLogin)
         if(!lineItems){
             return null
@@ -40,13 +44,14 @@ class Cart extends Component {
                     <h1>Here are all the products in your cart!</h1>
                     <ul>
                         {lineItems.map(p=>{
+                            const total = p.quantity * p.price;
                             return (
                                 <div>
                                 <li key={p.id}>
                                     <span>{`Name: ${p.name}, Price: ${p.price}`}</span>
                                     <br/>
                                     <img className = 'product-image' src={p.imageUrl}/>
-                                    <span>{`Quantity: ${p.quantity}`}</span>
+                                    <span>{`Quantity: ${p.quantity}, Total: ${total}`}</span>
                                     <form onSubmit={onUpdate}>
                                         <label htmlFor='quantity'>Quantity</label>
                                         <input name='quantity' onChange={(e) => onChange(p, e)}/>
@@ -59,6 +64,7 @@ class Cart extends Component {
                             )
                         })}
                     </ul>
+                    <span>{`Total Amount: ${TotalAmount}`}</span>
                     <button onClick={()=>this.props.history.push('/checkout')}>Check Out!</button>
                 </div>
             )
