@@ -34,6 +34,13 @@ router.post('/', (req, res, next) => {
     .catch(next);
 });
 
+router.put('/:id', (req, res, next) => {
+    LineItem.update({quantity: req.body.quantity}, 
+                {returning: true, where: {id: req.params.id}})
+    .then(([ rowsUpdate, [updatedLineItem] ]) => res.json(updatedLineItem))
+    .catch(next);
+});
+
 router.delete('/:id', (req, res, next) => {
     LineItem.destroy({where: {id: req.params.id}})
         .then(() => res.send(204))
