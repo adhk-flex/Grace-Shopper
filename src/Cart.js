@@ -20,8 +20,10 @@ class Cart extends Component {
 
     onUpdate = e => {
         e.preventDefault()
-        const {id, cartId} = this.state
-        if (this.state.quantity === 0) {
+        const {id, cartId, quantity} = this.state
+        console.log(this.state)
+        console.log("Quantity", quantity)
+        if (quantity === "0") {
             this.props.delLineItem(id, cartId)
         } else {
             this.props.updateLineItem(id, this.state, cartId)
