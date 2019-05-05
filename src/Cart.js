@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import { fetchLineItems, updateLineItem } from './store/lineitem';
+import { fetchLineItems, updateLineItem, delLineItem } from './store/lineitem';
 
 class Cart extends Component {
     constructor () {
@@ -24,9 +24,13 @@ class Cart extends Component {
         this.props.updateLineItem(id, this.state, cartId)
     }
 
+    onDelete = (id, cartId) => {
+        this.props.delLineItem(id, cartId)
+    }
+
     render () {
         const {products, lineItems} = this.props;
-        const { onChange, onUpdate } = this;
+        const { onChange, onUpdate, onDelete } = this;
         console.log('isLogin: ', this.props.isLogin)
         if(!lineItems){
             return null
@@ -48,7 +52,8 @@ class Cart extends Component {
                                         <input name='quantity' onChange={(e) => onChange(p, e)}/>
                                         <button type='submit'>Update</button>
                                     </form>
-
+                                    <p>Don't want this product?</p>
+                                    <button onClick={() => onDelete(p.id, p.cartId)}>Delete</button>
                                 </li>
                                 </div>
                             )
@@ -74,7 +79,8 @@ const mapStateToProps = ({products, user, cart, lineItems}) => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchLineItems: cartId => dispatch(fetchLineItems(cartId)),
-        updateLineItem: (id, formData, cartId) => dispatch(updateLineItem(id, formData, cartId))
+        updateLineItem: (id, formData, cartId) => dispatch(updateLineItem(id, formData, cartId)),
+        delLineItem: (id, cartId) => dispatch(delLineItem(id, cartId))
     }
 }
 
