@@ -14,6 +14,10 @@ const CreditCard = db.define("creditCard", {
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true
   },
+  active: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: true
+  },
   firstName: {
     type: Sequelize.STRING,
     allowNull: false,
