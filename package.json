@@ -44,7 +44,8 @@
     "seed": "DATABASE_URL=postgres://localhost/grace-shopper node ./db/seed.js",
     "dbTestOrderCreate": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/order/createOrder.js --watch",
     "dbTestProductStatus": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/product.js --watch",
-    "dbTestAddress": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/address.js --watch"
+    "dbTestAddress": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/address.js --watch",
+    "dbTestCC": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/creditCards.js --watch"
   },
   "keywords": [],
   "author": "",

@@ -5,6 +5,7 @@ const LineItem = require("./LineItem");
 const User = require("./User");
 const Order = require("./Order");
 const Address = require("./Address");
+const CreditCard = require("./CreditCard");
 
 //associations
 Product.belongsTo(Category);
@@ -30,6 +31,12 @@ User.hasMany(Address);
 
 Order.belongsTo(Address, { as: "shippingAddress" });
 Order.belongsTo(Address, { as: "billingAddress" });
+
+CreditCard.belongsTo(User);
+User.hasMany(CreditCard);
+
+Order.belongsTo(CreditCard);
+CreditCard.hasMany(Order);
 
 //user hooks
 User.addHook("afterCreate", user => Cart.create({ userId: user.id }));
@@ -113,4 +120,4 @@ Address.createAddress = address => {
   });
 };
 
-module.exports = { Product, Category, Cart, LineItem, User, Order, Address };
+module.exports = { Product, Category, Cart, LineItem, User, Order, Address, CreditCard };

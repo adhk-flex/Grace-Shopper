@@ -12,7 +12,6 @@ const doFirst = () => {
             price: product.price,
             name: product.name,
             productNumber: product.productNumber,
-            stockStatus: product.stockStatus,
             imgUrl: product.imgUrl,
             productId: product.id,
             cartId: cart.id
@@ -22,7 +21,6 @@ const doFirst = () => {
             price: product.price,
             name: product.name,
             productNumber: product.productNumber,
-            stockStatus: product.stockStatus,
             imgUrl: product.imgUrl,
             productId: product.id,
             cartId: cart.id
@@ -89,7 +87,6 @@ describe("Order.createOrder", () => {
               price: product.price,
               name: product.name,
               productNumber: product.productNumber,
-              stockStatus: product.stockStatus,
               imgUrl: product.imgUrl
             }).then(item =>
               Order.createOrder(user).then(() =>
