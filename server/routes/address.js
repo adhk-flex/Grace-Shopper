@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/:type/user/:userId', (req, res, next) => {
     Address.findOne({
                     where: { addressType: req.params.type, 
-                            status: 'active', 
+                            active: true, 
                             userId: req.params.userId }})
     .then((address) => res.json(address))
     .catch(next);
