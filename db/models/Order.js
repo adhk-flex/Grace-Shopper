@@ -45,7 +45,7 @@ const Order = db.define("order", {
                 msg: "Total must be a positive number"
             }
         }
-    }
+    },
 });
 
 module.exports = Order;

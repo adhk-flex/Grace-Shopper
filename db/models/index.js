@@ -28,14 +28,15 @@ User.hasMany(Order);
 Address.belongsTo(User);
 User.hasMany(Address);
 
+Order.belongsTo(Address, { as: "shippingAddress" });
+Order.belongsTo(Address, { as: "billingAddress" });
+
 //user hooks
-User.addHook("afterCreate", user =>
-  Cart.create({ status: "pending", userId: user.id })
-);
+User.addHook("afterCreate", user => Cart.create({ userId: user.id }));
 
 //product hooks
 Product.addHook("beforeValidate", product => {
-  if(product.quantity === 0){
+  if (product.quantity === 0) {
     product.stockStatus = "out of stock";
   }
 });
@@ -64,7 +65,6 @@ Order.createOrder = user => {
 };
 
 Order.addHook("afterCreate", order => {
-  console.log("ORDER", order.dataValues);
   return Cart.findOne({ where: { userId: order.userId } })
     .then(cart =>
       LineItem.update({ orderId: order.id }, { where: { cartId: cart.id } })
@@ -78,7 +78,7 @@ Order.addHook("afterCreate", order => {
       return order.save();
     })
     .then(() => Cart.destroy({ where: { userId: order.userId } }))
-    .then(() => Cart.create({ status: "pending", userId: order.userId }));
+    .then(() => Cart.create({ userId: order.userId }));
 });
 
 //line item create method
@@ -94,4 +94,23 @@ LineItem.createLineItem = item => {
   });
 };
 
-module.exports = { Product, Category, Cart, LineItem, User, Order };
+//address create method
+Address.createAddress = address => {
+  return Address.findOne({
+    where: {
+      userId: address.userId,
+      active: true,
+      addressType: address.addressType
+    }
+  }).then(foundAddress => {
+    if (foundAddress) {
+      return foundAddress
+        .update({ active: false })
+        .then(() => Address.create(address));
+    } else {
+      return Address.create(address);
+    }
+  });
+};
+
+module.exports = { Product, Category, Cart, LineItem, User, Order, Address };

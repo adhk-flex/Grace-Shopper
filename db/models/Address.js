@@ -2,6 +2,15 @@ const db = require("../db");
 const { Sequelize } = db;
 
 const Address = db.define("address", {
+  id: {
+    type: Sequelize.UUID,
+    defaultValue: Sequelize.UUIDV4,
+    primaryKey: true
+  },
+  active: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: true
+  },
   addressType: {
     type: Sequelize.STRING,
     allowNull: false,
