@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { addLineItem } from './store/lineitem';
+import { addLineItem, fetchLineItems, updateLineItem } from './store/lineitem';
 
 class Product extends Component{
     constructor(props){
@@ -10,15 +10,20 @@ class Product extends Component{
         }
     }
     
+    componentDidMount () {
+        this.props.fetchLineItems(this.props.cart.id)
+    }
+
     onChange = (ev) =>{
         this.setState({[ev.target.name]: ev.target.value}, ()=>console.log(this.state))
     }
 
     onSave = (ev) => {
         ev.preventDefault()
-        const id = this.props.match.params.id;
-        let product = this.props.products.find(p => p.id === id);
+        const productId = this.props.match.params.id;
+        let product = this.props.products.find(p => p.id === productId);
         const cartId = this.props.cart.id
+        const {lineItems} = this.props
         const item = {
             quantity: this.state.selectedQuantity,
             price: product.price,
@@ -29,8 +34,14 @@ class Product extends Component{
             cartId: cartId,
             productId: product.id
         }
-        this.props.addLineItem(item, cartId)
+        if (lineItems.find(i => i.productId === item.productId)) {
+            const i = lineItems.find(i => i.productId === item.productId)
+            i.quantity = Number(i.quantity) + Number(this.state.selectedQuantity)
+            this.props.updateLineItem(i.id, i, cartId)
+        } else {
+            this.props.addLineItem(item, cartId)
             .then(() => console.log(this.props.lineItems))
+        }
     }
 
     render(){
@@ -82,7 +93,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        fetchLineItems: cartId => dispatch(fetchLineItems(cartId)),
         addLineItem: (product, cartId) => dispatch(addLineItem(product, cartId)),
+        updateLineItem: (id, formData, cartId) => dispatch(updateLineItem(id, formData, cartId))
     }
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Product);
