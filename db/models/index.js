@@ -33,6 +33,13 @@ User.addHook("afterCreate", user =>
   Cart.create({ status: "pending", userId: user.id })
 );
 
+//product hooks
+Product.addHook("beforeValidate", product => {
+  if(product.quantity === 0){
+    product.stockStatus = "out of stock";
+  }
+});
+
 //order hooks and methods
 Order.createOrder = user => {
   return Cart.findOne({ where: { userId: user.id } })
