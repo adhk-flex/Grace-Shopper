@@ -32,13 +32,11 @@ Order.belongsTo(Address, { as: "shippingAddress" });
 Order.belongsTo(Address, { as: "billingAddress" });
 
 //user hooks
-User.addHook("afterCreate", user =>
-  Cart.create({ userId: user.id })
-);
+User.addHook("afterCreate", user => Cart.create({ userId: user.id }));
 
 //product hooks
 Product.addHook("beforeValidate", product => {
-  if(product.quantity === 0){
+  if (product.quantity === 0) {
     product.stockStatus = "out of stock";
   }
 });
@@ -96,4 +94,23 @@ LineItem.createLineItem = item => {
   });
 };
 
-module.exports = { Product, Category, Cart, LineItem, User, Order };
+//address create method
+Address.createAddress = address => {
+  return Address.findOne({
+    where: {
+      userId: address.userId,
+      active: true,
+      addressType: address.addressType
+    }
+  }).then(foundAddress => {
+    if (foundAddress) {
+      return foundAddress
+        .update({ active: false })
+        .then(() => Address.create(address));
+    } else {
+      return Address.create(address);
+    }
+  });
+};
+
+module.exports = { Product, Category, Cart, LineItem, User, Order, Address };

@@ -7,7 +7,7 @@ const Address = db.define("address", {
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true
   },
-  status: {
+  active: {
     type: Sequelize.BOOLEAN,
     defaultValue: true
   },
