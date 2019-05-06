@@ -45,7 +45,10 @@ Order.createOrder = user => {
               throw new Error(
                 `Quantity ${item.quantity} of ${item.name} not available`
               );
-            else return product;
+            else
+              return product.update({
+                quantity: product.quantity - item.quantity
+              });
           })
         )
       )
@@ -54,7 +57,7 @@ Order.createOrder = user => {
 };
 
 Order.addHook("afterCreate", order => {
-  console.log("ORDER", order.dataValues)
+  console.log("ORDER", order.dataValues);
   return Cart.findOne({ where: { userId: order.userId } })
     .then(cart =>
       LineItem.update({ orderId: order.id }, { where: { cartId: cart.id } })
@@ -77,18 +80,9 @@ LineItem.createLineItem = item => {
     where: { productId: item.productId, cartId: item.cartId }
   }).then(prevItem => {
     if (prevItem) {
-      return prevItem
-        .update({ quantity: prevItem.quantity + item.quantity })
-        .then(() => Product.findOne({ where: { id: item.productId } }))
-        .then(product =>
-          product.update({ quantity: product.quantity - item.quantity })
-        );
+      return prevItem.update({ quantity: prevItem.quantity + item.quantity });
     } else {
-      return LineItem.create(item)
-        .then(() => Product.findOne({ where: { id: item.productId } }))
-        .then(product =>
-          product.update({ quantity: product.quantity - item.quantity })
-        );
+      return LineItem.create(item);
     }
   });
 };

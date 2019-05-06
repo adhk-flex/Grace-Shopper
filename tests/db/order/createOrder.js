@@ -80,6 +80,7 @@ describe("Order.createOrder", () => {
       .then(user =>
         Cart.findOne({ where: { userId: user.id } }).then(cart => {
           Product.findOne().then(product => {
+            console.log(product.productNumber);
             const startQty = product.quantity;
             LineItem.create({
               cartId: cart.id,
