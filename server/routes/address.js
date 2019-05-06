@@ -16,6 +16,7 @@ router.get('/:type/user/:userId', (req, res, next) => {
 router.post('/:type/user/:userId', (req, res, next) => {
     let argument = {
         addressType: req.params.type,
+        userId: req.params.userId,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         addressLine1: req.body.addressLine1,
