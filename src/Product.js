@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { addLineItem } from './store';
+import { addLineItem } from './store/lineitem';
 
 class Product extends Component{
     constructor(props){
@@ -26,7 +26,8 @@ class Product extends Component{
             productNumber: product.productNumber,
             stockStatus: product.stockStatus,
             imgUrl: product.imgUrl,
-            cartId: cartId
+            cartId: cartId,
+            productId: product.id
         }
         this.props.addLineItem(item, cartId)
             .then(() => console.log(this.props.lineItems))
