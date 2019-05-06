@@ -29,7 +29,7 @@ router.get('/order/:orderId', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    LineItem.create(req.body)
+    LineItem.createLineItem(req.body)
     .then((lineitem) => res.json(lineitem))
     .catch(next);
 });
