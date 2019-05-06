@@ -28,9 +28,12 @@ User.hasMany(Order);
 Address.belongsTo(User);
 User.hasMany(Address);
 
+Order.belongsTo(Address, { as: "shippingAddress" });
+Order.belongsTo(Address, { as: "billingAddress" });
+
 //user hooks
 User.addHook("afterCreate", user =>
-  Cart.create({ status: "pending", userId: user.id })
+  Cart.create({ userId: user.id })
 );
 
 //product hooks
@@ -64,7 +67,6 @@ Order.createOrder = user => {
 };
 
 Order.addHook("afterCreate", order => {
-  console.log("ORDER", order.dataValues);
   return Cart.findOne({ where: { userId: order.userId } })
     .then(cart =>
       LineItem.update({ orderId: order.id }, { where: { cartId: cart.id } })
@@ -78,7 +80,7 @@ Order.addHook("afterCreate", order => {
       return order.save();
     })
     .then(() => Cart.destroy({ where: { userId: order.userId } }))
-    .then(() => Cart.create({ status: "pending", userId: order.userId }));
+    .then(() => Cart.create({ userId: order.userId }));
 });
 
 //line item create method
