@@ -46,6 +46,11 @@ class Product extends Component{
 
     render(){
         const id = this.props.match.params.id;
+        const {lineItems} = this.props
+        const totalItems = lineItems.reduce((acc, item) => {
+            acc += item.quantity
+            return acc
+        }, 0)
         let product = this.props.products.find(p => p.id === id);
         const {name, quantity, imgUrl, description, price} = product;
         const quantityRange = []
@@ -77,7 +82,7 @@ class Product extends Component{
                     <button className='btn btn-primary' type='submit'>Add to Cart</button>
                 </form>
                 <img className = 'shopping-cart' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKorRm0enmL_tFIgvKcNcOjb_3YkWnny-CIK0BW5F9DoGocc7DkA' onClick={()=>{this.props.history.push('/cart')}}/>
-                <span className = 'shopping-item-quantity'>{this.state.selectedQuantity}</span>
+                <span className = 'shopping-item-quantity'>{totalItems}</span>
             </div>
         )    
     }
