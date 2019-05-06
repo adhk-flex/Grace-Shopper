@@ -46,20 +46,6 @@ const LineItem = db.define("lineItem", {
       }
     }
   },
-  stockStatus: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: {
-        args: true,
-        msg: "Please enter a stock status."
-      },
-      isIn: {
-        args: [["in stock", "out of stock"]],
-        msg: "Product stock status must be 'in stock' or 'out of stock'."
-      }
-    }
-  },
   imgUrl: {
     type: Sequelize.STRING,
     validate: {
