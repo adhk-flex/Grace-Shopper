@@ -42,7 +42,8 @@
     "webpack:dev": "npm run webpack -- --mode=development --watch",
     "start:dev": "npm run webpack:dev & DATABASE_URL=postgres://localhost/grace-shopper nodemon server --ignore src/ --ignore dist/",
     "seed": "DATABASE_URL=postgres://localhost/grace-shopper node ./db/seed.js",
-    "dbTestOrderCreate": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/order/createOrder.js --watch"
+    "dbTestOrderCreate": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/order/createOrder.js --watch",
+    "dbTestProductStatus": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/product.js --watch"
   },
   "keywords": [],
   "author": "",

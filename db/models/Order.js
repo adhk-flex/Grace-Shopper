@@ -7,6 +7,20 @@ const Order = db.define("order", {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true
     },
+    orderNumber: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        get(){
+            const num = this.getDataValue("orderNumber").toString();
+            let pad = "";
+            if(num.length < 4){
+                for(let i = 0; i < 4 - num.length; i++){
+                    pad += "0";
+                }
+            }
+            return `GSHO${pad}${num}`;
+        }
+    },
     status: {
         type: Sequelize.STRING,
         allowNull: false,

@@ -4,6 +4,7 @@ const Cart = require("./Cart");
 const LineItem = require("./LineItem");
 const User = require("./User");
 const Order = require("./Order");
+const Address = require("./Address");
 
 //associations
 Product.belongsTo(Category);
@@ -17,38 +18,80 @@ LineItem.belongsTo(Cart);
 
 Order.hasMany(LineItem);
 LineItem.belongsTo(Order);
- 
+
 Cart.belongsTo(User);
 User.hasOne(Cart);
 
 Order.belongsTo(User);
 User.hasMany(Order);
 
-//hooks
+Address.belongsTo(User);
+User.hasMany(Address);
+
+//user hooks
 User.addHook("afterCreate", user =>
   Cart.create({ status: "pending", userId: user.id })
 );
 
+//product hooks
+Product.addHook("beforeValidate", product => {
+  if(product.quantity === 0){
+    product.stockStatus = "out of stock";
+  }
+});
+
+//order hooks and methods
 Order.createOrder = user => {
-  return Order.create({
-    status: "purchased",
-    userId: user.id
-  });
+  return Cart.findOne({ where: { userId: user.id } })
+    .then(cart => LineItem.findAll({ where: { cartId: cart.id } }))
+    .then(items =>
+      Promise.all(
+        items.map(item =>
+          Product.findOne({ where: { id: item.productId } }).then(product => {
+            if (product.quantity < item.quantity)
+              throw new Error(
+                `Quantity ${item.quantity} of ${item.name} not available`
+              );
+            else
+              return product.update({
+                quantity: product.quantity - item.quantity
+              });
+          })
+        )
+      )
+    )
+    .then(() => Order.create({ status: "purchased", userId: user.id }));
 };
 
 Order.addHook("afterCreate", order => {
-  Cart.findOne({ where: { userId: order.userId } })
+  console.log("ORDER", order.dataValues);
+  return Cart.findOne({ where: { userId: order.userId } })
     .then(cart =>
       LineItem.update({ orderId: order.id }, { where: { cartId: cart.id } })
     )
     .then(() => LineItem.findAll({ where: { orderId: order.id } }))
     .then(orderItems => {
-      order.totalAmount = orderItems.reduce((acc, item) => acc += item.price * item.quantity, 0);
+      order.totalAmount = orderItems.reduce(
+        (acc, item) => (acc += item.price * item.quantity),
+        0
+      );
       return order.save();
     })
     .then(() => Cart.destroy({ where: { userId: order.userId } }))
-    .then(() => Cart.create({ status: "pending", userId: order.userId }))
-    .catch(e => { throw e });
+    .then(() => Cart.create({ status: "pending", userId: order.userId }));
 });
+
+//line item create method
+LineItem.createLineItem = item => {
+  return LineItem.findOne({
+    where: { productId: item.productId, cartId: item.cartId }
+  }).then(prevItem => {
+    if (prevItem) {
+      return prevItem.update({ quantity: prevItem.quantity + item.quantity });
+    } else {
+      return LineItem.create(item);
+    }
+  });
+};
 
 module.exports = { Product, Category, Cart, LineItem, User, Order };

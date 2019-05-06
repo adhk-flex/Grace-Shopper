@@ -1,5 +1,5 @@
 const db = require("./db");
-const { Product, Category, LineItem, Cart } = require("./models");
+const { Product, Category, LineItem, Cart, Order, Address, User } = require("./models");
 
 const dbSync = dropTables => {
   return db
@@ -8,4 +8,4 @@ const dbSync = dropTables => {
     .then(() => console.log("DB SYNC COMPLETE"));
 };
 
-module.exports = { dbSync, Product, Category, LineItem, Cart };
+module.exports = { dbSync, Product, Category, LineItem, Cart, Order, Address, User };
