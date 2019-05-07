@@ -7,6 +7,7 @@ import {user} from './user';
 import {cart} from './cart';
 import {order} from './order';
 import {address} from './address';
+import {creditCard} from './creditcards';
 
 const reducer = combineReducers({
   categories,
@@ -15,7 +16,8 @@ const reducer = combineReducers({
   user,
   cart,
   order,
-  address
+  address,
+  creditCard
 });
 
 const store = createStore(reducer, applyMiddleware(thunk));
