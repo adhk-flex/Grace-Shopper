@@ -21,23 +21,23 @@ class Order extends Component {
             })
         }
     }
-
+    // componentDidUpdate(prevProps){
+    //     if(JSON.stringify(prevProps.order) !== JSON.stringify(this.props.order)){
+    //         if(this.props.user.id){
+    //                 this.props.getOrderByUser(this.props.user.id)
+    //                 .then(orders => {
+    //                     console.log(orders)
+    //                     this.setState({order: orders.order})
+    //                 })
+    //             }
+    //     }
+    // }
+        
     render(){
         const {order} = this.state
         return (
             <div>
                 <h3>Order Page</h3>
-                {/* <ul>
-                    {
-                        order.map(order=>{
-                            return(
-                                <li key={order.id}>
-                                    <span>orderNumber is {order.orderNumber}</span>
-                                </li>
-                            )
-                        })
-                    }
-                </ul> */}
                 <table className='table'>
                     <thead>
                         <tr>
@@ -66,8 +66,10 @@ class Order extends Component {
 } 
 
 const mapStateToProps = state => {
+    console.log(state)
     return {
-        user: state.user
+        user: state.user,
+        order: state.order
     }
 }
 
