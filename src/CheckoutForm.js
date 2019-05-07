@@ -1,5 +1,7 @@
 // make this template for later use
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { postAddress } from './store/address';
 
 class CheckoutForm extends Component{
 
@@ -35,8 +37,18 @@ class CheckoutForm extends Component{
         }
     )
 
-    onSave = (ev) => {
+    onSave = (addType, ev) => {
         ev.preventDefault()
+        const address = this.state
+        const userId = this.props.user.id
+        if (addType === 'Shipping Address') {
+            address.addressType = 'shipping'
+        } else {
+            address.addressType = 'billing'
+        }
+        const type = address.addressType;
+        console.log("here", address, userId, type)
+        this.props.postAddress(address, userId, type)
     }
 
     onChange = (ev) => {
@@ -53,7 +65,7 @@ class CheckoutForm extends Component{
         const {onSave, onChange} =  this
         const {firstName, lastName, addressLine1, addressLine2, zipCode, city, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv} = this.state
         const form = (addressType) => (
-            <form onSubmit={onSave}>
+            <form onSubmit={(e) => onSave(addressType, e)}>
                     <label htmlFor="firstName">FirstName</label>
                     <input type="text" name="firstName" value={firstName} placeholder="John M. Eric" onChange = {onChange}/>
                     <br/>
@@ -120,4 +132,16 @@ class CheckoutForm extends Component{
     }
 }
 
-export default CheckoutForm
+const mapStateToProps = state => {
+    return {
+        user: state.user,
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        postAddress: (dataForm, userId, type) => dispatch(postAddress(dataForm, userId, type)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckoutForm);

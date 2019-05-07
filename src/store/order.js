@@ -26,9 +26,9 @@ const getOrderById = orderId => dispatch => {
     .then(order => dispatch(setOrder(order.data)))
 };
 
-const createOrder = order => dispatch => {
-  return axios.post('/api/orders', order)
-    .then(() => dispatch(getOrderByUser(order.userId)))
+const createOrder = (userId) => dispatch => {
+  return axios.post(`/api/orders/user/${userId}`)
+    .then(() => dispatch(getOrderByUser(userId)))
 };
 
 const updateOrder = (orderId, formData, userId) => dispatch => {
