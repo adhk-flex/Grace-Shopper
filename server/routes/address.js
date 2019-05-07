@@ -21,6 +21,7 @@ router.post('/:type/user/:userId', (req, res, next) => {
         lastName: req.body.lastName,
         addressLine1: req.body.addressLine1,
         addressLine2: req.body.addressLine2,
+        city: req.body.city,
         state: req.body.state,
         zip: req.body.zip
     }

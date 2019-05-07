@@ -20,9 +20,9 @@ class CheckoutForm extends Component{
             lastName: address ? address.lastName : '',
             addressLine1: address ? address.addressLine1 : '',
             addressLine2: address ? address.addressLine2 : '',
-            zipCode: address ? address.zipCode : '',
             city: address ? address.city : '',
             state: address ? address.state : '',
+            zip: address ? address.zipCode : '',
         }
     )
 
@@ -39,16 +39,18 @@ class CheckoutForm extends Component{
 
     onSave = (addType, ev) => {
         ev.preventDefault()
-        const address = this.state
-        const userId = this.props.user.id
-        if (addType === 'Shipping Address') {
-            address.addressType = 'shipping'
-        } else {
-            address.addressType = 'billing'
+        const address = {
+            addressType: addType === 'Shipping Address' ? 'shipping' : 'billing',
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            addressLine1: this.state.addressLine1,
+            addressLine2: this.state.addressLine2,
+            city: this.state.city,
+            state: this.state.state,
+            zip: this.state.zip,
         }
-        const type = address.addressType;
-        console.log("here", address, userId, type)
-        this.props.postAddress(address, userId, type)
+        const userId = this.props.user.id
+        this.props.postAddress(address, userId, address.addressType)
     }
 
     onChange = (ev) => {
@@ -63,7 +65,7 @@ class CheckoutForm extends Component{
 
     render(){
         const {onSave, onChange} =  this
-        const {firstName, lastName, addressLine1, addressLine2, zipCode, city, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv} = this.state
+        const {firstName, lastName, addressLine1, addressLine2, zipCode, city, state, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv} = this.state
         const form = (addressType) => (
             <form onSubmit={(e) => onSave(addressType, e)}>
                     <label htmlFor="firstName">FirstName</label>
@@ -81,8 +83,11 @@ class CheckoutForm extends Component{
                     <label htmlFor="zipCode">Zip Code</label>
                     <input type="text" name="zipCode" value = {zipCode} placeholder="21003" onChange = {onChange}/>
                     <br/>
+                    <label htmlFor="state">State</label>
+                    <input type="text" name="state" value = {state} placeholder="NY" onChange = {onChange}/>
+                    <br/>
                     <label htmlFor="city">City</label>
-                    <input type="text" name="city" value = {city} placeholder="120 W 45th NYC" onChange = {onChange}/>
+                    <input type="text" name="city" value = {city} placeholder="NYC" onChange = {onChange}/>
                     <br/>
                     <button type='submit'>{`Save ${addressType}`}</button>
             </form>
