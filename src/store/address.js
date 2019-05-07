@@ -22,6 +22,7 @@ const userAddress = (userId, type) => dispatch => {
 };
 
 export const postAddress = (dataForm, userId, type) => dispatch => {
+  console.log('store', dataForm)
   return axios.post(`/api/addresses/${type}/user/${userId}`, dataForm)
     .then(() => dispatch(setAddress(userId, type)))
 };
