@@ -1,0 +1,53 @@
+{
+  "name": "react-basic-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "db.js",
+  "dependencies": {
+    "axios": "0.18.0",
+    "babel-core": "6.26.3",
+    "babel-loader": "7.1.5",
+    "babel-preset-react": "6.24.1",
+    "babel-preset-stage-2": "6.24.1",
+    "express": "4.16.4",
+    "express-session": "1.16.1",
+    "morgan": "1.9.1",
+    "nodemon": "1.18.11",
+    "pg": "7.10.0",
+    "react": "16.8.3",
+    "react-dom": "16.8.3",
+    "react-redux": "7.0.3",
+    "react-router-dom": "5.0.0",
+    "redux": "4.0.1",
+    "redux-thunk": "2.3.0",
+    "sequelize": "5.7.6",
+    "webpack": "4.29.6",
+    "webpack-cli": "3.2.3"
+  },
+  "babel": {
+    "presets": [
+      "react",
+      "stage-2"
+    ]
+  },
+  "devDependencies": {
+    "chai": "4.2.0",
+    "faker": "4.1.0",
+    "mocha": "6.1.4"
+  },
+  "scripts": {
+    "start": "node server",
+    "postinstall": "npm run webpack",
+    "webpack": "webpack",
+    "webpack:dev": "npm run webpack -- --mode=development --watch",
+    "start:dev": "npm run webpack:dev & DATABASE_URL=postgres://localhost/grace-shopper nodemon server --ignore src/ --ignore dist/",
+    "seed": "DATABASE_URL=postgres://localhost/grace-shopper node ./db/seed.js",
+    "dbTestOrderCreate": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/order/createOrder.js --watch",
+    "dbTestProductStatus": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/product.js --watch",
+    "dbTestAddress": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/address.js --watch",
+    "dbTestCC": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/creditCards.js --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
