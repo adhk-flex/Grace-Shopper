@@ -22,7 +22,7 @@ class CheckoutForm extends Component{
             addressLine2: address ? address.addressLine2 : '',
             city: address ? address.city : '',
             state: address ? address.state : '',
-            zip: address ? address.zipCode : '',
+            zip: address ? address.zip : '',
         }
     )
 
@@ -51,6 +51,9 @@ class CheckoutForm extends Component{
         }
         const userId = this.props.user.id
         this.props.postAddress(address, userId, address.addressType)
+        if (this.state.sameShippAddress) {
+            this.props.postAddress({...address, addressType: 'billing'}, userId, 'billing')
+        }
     }
 
     onChange = (ev) => {
@@ -65,7 +68,7 @@ class CheckoutForm extends Component{
 
     render(){
         const {onSave, onChange} =  this
-        const {firstName, lastName, addressLine1, addressLine2, zipCode, city, state, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv} = this.state
+        const {firstName, lastName, addressLine1, addressLine2, zip, city, state, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv} = this.state
         const form = (addressType) => (
             <form onSubmit={(e) => onSave(addressType, e)}>
                     <label htmlFor="firstName">FirstName</label>
@@ -80,8 +83,8 @@ class CheckoutForm extends Component{
                     <label htmlFor="addressLine2">address Line2 Optional</label>
                     <input type="text" name="addressLine2" value = {addressLine2} placeholder="120 W 45th NYC" onChange = {onChange}/>
                     <br/>
-                    <label htmlFor="zipCode">Zip Code</label>
-                    <input type="text" name="zipCode" value = {zipCode} placeholder="21003" onChange = {onChange}/>
+                    <label htmlFor="zip">Zip Code</label>
+                    <input type="text" name="zip" value = {zip} placeholder="21003" onChange = {onChange}/>
                     <br/>
                     <label htmlFor="state">State</label>
                     <input type="text" name="state" value = {state} placeholder="NY" onChange = {onChange}/>
