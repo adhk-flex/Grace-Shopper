@@ -1,5 +1,7 @@
 // make this template for later use
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { postAddress } from './store/address';
 
 class CheckoutForm extends Component{
 
@@ -18,9 +20,9 @@ class CheckoutForm extends Component{
             lastName: address ? address.lastName : '',
             addressLine1: address ? address.addressLine1 : '',
             addressLine2: address ? address.addressLine2 : '',
-            zipCode: address ? address.zipCode : '',
             city: address ? address.city : '',
             state: address ? address.state : '',
+            zip: address ? address.zip : '',
         }
     )
 
@@ -35,8 +37,23 @@ class CheckoutForm extends Component{
         }
     )
 
-    onSave = (ev) => {
+    onSave = (addType, ev) => {
         ev.preventDefault()
+        const address = {
+            addressType: addType === 'Shipping Address' ? 'shipping' : 'billing',
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            addressLine1: this.state.addressLine1,
+            addressLine2: this.state.addressLine2,
+            city: this.state.city,
+            state: this.state.state,
+            zip: this.state.zip,
+        }
+        const userId = this.props.user.id
+        this.props.postAddress(address, userId, address.addressType)
+        if (this.state.sameShippAddress) {
+            this.props.postAddress({...address, addressType: 'billing'}, userId, 'billing')
+        }
     }
 
     onChange = (ev) => {
@@ -51,9 +68,9 @@ class CheckoutForm extends Component{
 
     render(){
         const {onSave, onChange} =  this
-        const {firstName, lastName, addressLine1, addressLine2, zipCode, city, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv} = this.state
+        const {firstName, lastName, addressLine1, addressLine2, zip, city, state, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv} = this.state
         const form = (addressType) => (
-            <form onSubmit={onSave}>
+            <form onSubmit={(e) => onSave(addressType, e)}>
                     <label htmlFor="firstName">FirstName</label>
                     <input type="text" name="firstName" value={firstName} placeholder="John M. Eric" onChange = {onChange}/>
                     <br/>
@@ -66,11 +83,14 @@ class CheckoutForm extends Component{
                     <label htmlFor="addressLine2">address Line2 Optional</label>
                     <input type="text" name="addressLine2" value = {addressLine2} placeholder="120 W 45th NYC" onChange = {onChange}/>
                     <br/>
-                    <label htmlFor="zipCode">Zip Code</label>
-                    <input type="text" name="zipCode" value = {zipCode} placeholder="21003" onChange = {onChange}/>
+                    <label htmlFor="zip">Zip Code</label>
+                    <input type="text" name="zip" value = {zip} placeholder="21003" onChange = {onChange}/>
+                    <br/>
+                    <label htmlFor="state">State</label>
+                    <input type="text" name="state" value = {state} placeholder="NY" onChange = {onChange}/>
                     <br/>
                     <label htmlFor="city">City</label>
-                    <input type="text" name="city" value = {city} placeholder="120 W 45th NYC" onChange = {onChange}/>
+                    <input type="text" name="city" value = {city} placeholder="NYC" onChange = {onChange}/>
                     <br/>
                     <button type='submit'>{`Save ${addressType}`}</button>
             </form>
@@ -120,4 +140,16 @@ class CheckoutForm extends Component{
     }
 }
 
-export default CheckoutForm
+const mapStateToProps = state => {
+    return {
+        user: state.user,
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        postAddress: (dataForm, userId, type) => dispatch(postAddress(dataForm, userId, type)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckoutForm);

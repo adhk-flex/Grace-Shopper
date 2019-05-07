@@ -48,6 +48,8 @@ Product.addHook("beforeValidate", product => {
   }
 });
 
+
+//TODO FIND AND ASSIGN ADDRESSES AND CC
 //order hooks and methods
 Order.createOrder = user => {
   return Cart.findOne({ where: { userId: user.id } })
@@ -68,7 +70,12 @@ Order.createOrder = user => {
         )
       )
     )
-    .then(() => Order.create({ status: "purchased", userId: user.id }));
+    .then(() => Promise.all([
+      Address.findOne({ where: { userId: user.id, addressType: "shipping", active: true } }),
+      Address.findOne({ where: { userId: user.id, addressType: "billing", active: true } }),
+      CreditCard.findOne({ where: { userId: user.id, active: true } })
+    ]))
+    .then(([shippingAddress, billingAddress, creditCard]) => Order.create({ status: "purchased", userId: user.id, shippingAddressId: shippingAddress.id, billingAddressId: billingAddress.id, creditCardId: creditCard.id }));
 };
 
 Order.addHook("afterCreate", order => {
@@ -120,4 +127,29 @@ Address.createAddress = address => {
   });
 };
 
-module.exports = { Product, Category, Cart, LineItem, User, Order, Address, CreditCard };
+//credit card create method
+
+CreditCard.createCard = card => {
+  return CreditCard.findOne({
+    where: { userId: card.userId, active: true }
+  }).then(foundCard => {
+    if (foundCard) {
+      return foundCard
+        .update({ active: false })
+        .then(() => CreditCard.create(card));
+    } else {
+      return CreditCard.create(card);
+    }
+  });
+};
+
+module.exports = {
+  Product,
+  Category,
+  Cart,
+  LineItem,
+  User,
+  Order,
+  Address,
+  CreditCard
+};
