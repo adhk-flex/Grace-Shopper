@@ -11,7 +11,7 @@ router.get('/user/:userId', (req, res, next) => {
 });
 
 router.get('/:id', (req, res, next) => {
-    Order.findOne({where: {id: req.params.id}})
+    Order.findOne({where: {id: req.params.id}}, {order: [['orderNumber', 'DESC']]})
         .then((order) => res.json(order))
         .catch(next);
 });
