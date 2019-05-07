@@ -20,6 +20,9 @@ const Nav = ({location: {pathname}}) => {
         },
         {
             label: 'Logout', to: '/logout'
+        },
+        {
+            label: 'Order', to: '/order'
         }
     ];
 

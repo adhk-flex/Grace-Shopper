@@ -16,7 +16,7 @@ export const order = (state = [], action) => {
   }
 };
 
-const getOrderByUser = userId => dispatch => {
+export const getOrderByUser = userId => dispatch => {
   return axios.get(`/api/orders/user/${userId}`)
     .then(orders => dispatch(setOrder(orders.data)))
 };
@@ -26,7 +26,7 @@ const getOrderById = orderId => dispatch => {
     .then(order => dispatch(setOrder(order.data)))
 };
 
-const createOrder = (userId) => dispatch => {
+export const createOrder = (userId) => dispatch => {
   return axios.post(`/api/orders/user/${userId}`)
     .then(() => dispatch(getOrderByUser(userId)))
 };

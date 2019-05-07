@@ -19,6 +19,7 @@ router.get('/:id', (req, res, next) => {
 
 router.post('/user/:userId', (req, res, next) => {
     //req.body is expecting {userId: 123}
+    console.log('in route: ', req.params.userId)
     Order.createOrder({userId: req.params.userId})
     .then((order) => res.json(order))
     .catch(next);
