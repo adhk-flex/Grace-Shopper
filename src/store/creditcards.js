@@ -21,7 +21,9 @@ const getCreditCard = userId => dispatch => {
     .then(card => dispatch(setCreditCard(card.data)))
 }
 
-const postCreditCard = (userId, cardInfo)=> dispatch => {
+export const postCreditCard = (userId, cardInfo)=> dispatch => {
+  console.log(cardInfo)
   return axios.post(`/api/creditcards/user/${userId}`, cardInfo)
-    .then(() => dispatch(getCreditCard(userId)))
+    .then(() => console.log("posted"))  
+  // .then(() => dispatch(getCreditCard(userId)))
 }
