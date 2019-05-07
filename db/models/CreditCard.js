@@ -92,8 +92,12 @@ const CreditCard = db.define("creditCard", {
     type: Sequelize.INTEGER,
     allowNull: false,
     validate: {
-      validYear(year) {
-        if (year < 2019) throw new Error("Card expiry has passed");
+      validDate(year) {
+        const today = new Date();
+        console.log(this.getDataValue("expMonth") < today.getMonth() && today.getFullYear() === year)
+        if (today.getFullYear() > year || this.getDataValue("expMonth") < today.getMonth() && today.getFullYear() === year) {
+          throw new Error("Card expiration date has passed")
+        }
       }
     }
   },
