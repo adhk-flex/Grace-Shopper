@@ -11,10 +11,6 @@ class CheckoutForm extends Component{
         this.state = {...this.userAddress(), ...this.userAddress(), ...this.userCreditCardInfo(), sameShippAddress: true}
     }
 
-    // componentDidUpdate(prevProps){
-
-    // }
-
     userAddress = (address) => (
         {
             firstName: address ? address.firstName : '',
@@ -35,6 +31,7 @@ class CheckoutForm extends Component{
             expMonth: creditCard ? creditCard.expMonth : '',
             expYear: creditCard ? creditCard.expYear : '',
             cvv: creditCard ? creditCard.cvv : '',
+            cardType: creditCard ? creditCard.cardType : '',
         }
     )
 
@@ -62,7 +59,7 @@ class CheckoutForm extends Component{
         const creditCard = {
             firstName: this.state.firstNameOnCard,
             lastName: this.state.lastNameOnCard,
-            cardType: 'visa',
+            cardType: this.state.cardType,
             number: this.state.cardNum,
             expMonth: this.state.expMonth,
             expYear: this.state.expYear,
@@ -86,7 +83,7 @@ class CheckoutForm extends Component{
     render(){
         // console.log(this.state)
         const {onSaveAddress, onSaveCC, onChange} =  this
-        const {firstName, lastName, addressLine1, addressLine2, zip, city, state, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv} = this.state
+        const {firstName, lastName, addressLine1, addressLine2, zip, city, state, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv, cardType} = this.state
         const form = (addressType) => (
             <form onSubmit={(e) => onSaveAddress(addressType, e)}>
                     <label htmlFor="firstName">FirstName</label>
@@ -127,14 +124,14 @@ class CheckoutForm extends Component{
                     </div> : null
                 }
                 <h3>Payment</h3>
-                <span>Accepted Cards</span>
-                <br/>
-                <span> Visa, Master, Amex, Discover</span>
                 <form onSubmit={onSaveCC}>
+                    <label htmlFor="cardType">Accepted Cards: Visa, Master, Amex, Discover</label>
+                    <input type="text" name="cardType" placeholder="visa" value={cardType} onChange = {onChange}/>
+                    <br/>
                     <label htmlFor="firstNameOnCard">First Name on the Card</label>
                     <input type="text" name="firstNameOnCard" placeholder="John Eric" value={firstNameOnCard} onChange = {onChange}/>
                     <br/>
-                    <label htmlFor="lastNameOnCard">First Name on the Card</label>
+                    <label htmlFor="lastNameOnCard">Last Name on the Card</label>
                     <input type="text" name="lastNameOnCard" placeholder="John Eric" value={lastNameOnCard} onChange = {onChange}/>
                     <br/>
                     <label htmlFor="cardNum">Credit Card Number</label>

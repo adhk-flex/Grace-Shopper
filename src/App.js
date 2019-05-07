@@ -7,6 +7,7 @@ import ProductList from './ProductList';
 import Product from './Product';
 import Cart from './Cart';
 import CheckoutForm from './CheckoutForm'
+import Order from './Order'
 import { fetchProducts } from './store/product';
 import { sessionLogin } from './store/user';
 import { connect } from 'react-redux';
@@ -38,6 +39,7 @@ class App extends Component{
                     <Route exact path = '/product/:id' component={Product}/>
                     <Route exact path = '/cart' component={Cart}/>
                     <Route exact path = '/checkout' component={CheckoutForm}/>
+                    <Route exact path = '/order' component={Order}/>
                 </Switch>
             </Router>
         )
