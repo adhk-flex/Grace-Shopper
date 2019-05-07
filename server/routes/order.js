@@ -5,13 +5,14 @@ const Order = db.Order;
 const router = express.Router();
 
 router.get('/user/:userId', (req, res, next) => {
-    Order.findAll({where: {userId: req.params.userId}})
+    Order.findAll({where: {userId: req.params.userId}},
+                  {order: [['orderNumber', 'DESC']]})
     .then((orders) => res.json(orders))
     .catch(next);
 });
 
 router.get('/:id', (req, res, next) => {
-    Order.findOne({where: {id: req.params.id}}, {order: [['orderNumber', 'DESC']]})
+    Order.findOne({where: {id: req.params.id}})
         .then((order) => res.json(order))
         .catch(next);
 });
