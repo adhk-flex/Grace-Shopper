@@ -2,6 +2,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { postAddress } from './store/address';
+import { postCreditCard } from './store/creditcards';
 
 class CheckoutForm extends Component{
 
@@ -37,7 +38,7 @@ class CheckoutForm extends Component{
         }
     )
 
-    onSave = (addType, ev) => {
+    onSaveAddress = (addType, ev) => {
         ev.preventDefault()
         const address = {
             addressType: addType === 'Shipping Address' ? 'shipping' : 'billing',
@@ -56,6 +57,22 @@ class CheckoutForm extends Component{
         }
     }
 
+    onSaveCC = (e) => {
+        e.preventDefault()
+        const creditCard = {
+            firstName: this.state.firstNameOnCard,
+            lastName: this.state.lastNameOnCard,
+            cardType: 'visa',
+            number: this.state.cardNum,
+            expMonth: this.state.expMonth,
+            expYear: this.state.expYear,
+            cvv: this.state.cvv,
+        }
+        const userId = this.props.user.id;
+        console.log('credit Card', creditCard, "userId", userId)
+        this.props.postCreditCard(userId, creditCard)
+    }
+
     onChange = (ev) => {
         // this.setState({[ev.target.name]:ev.target.value})
         const target = ev.target;
@@ -67,10 +84,11 @@ class CheckoutForm extends Component{
     }
 
     render(){
-        const {onSave, onChange} =  this
+        // console.log(this.state)
+        const {onSaveAddress, onSaveCC, onChange} =  this
         const {firstName, lastName, addressLine1, addressLine2, zip, city, state, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv} = this.state
         const form = (addressType) => (
-            <form onSubmit={(e) => onSave(addressType, e)}>
+            <form onSubmit={(e) => onSaveAddress(addressType, e)}>
                     <label htmlFor="firstName">FirstName</label>
                     <input type="text" name="firstName" value={firstName} placeholder="John M. Eric" onChange = {onChange}/>
                     <br/>
@@ -112,7 +130,7 @@ class CheckoutForm extends Component{
                 <span>Accepted Cards</span>
                 <br/>
                 <span> Visa, Master, Amex, Discover</span>
-                <form onSubmit={onSave}>
+                <form onSubmit={onSaveCC}>
                     <label htmlFor="firstNameOnCard">First Name on the Card</label>
                     <input type="text" name="firstNameOnCard" placeholder="John Eric" value={firstNameOnCard} onChange = {onChange}/>
                     <br/>
@@ -149,6 +167,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         postAddress: (dataForm, userId, type) => dispatch(postAddress(dataForm, userId, type)),
+        postCreditCard: (userId, cardInfo) => dispatch(postCreditCard(userId, cardInfo))
     }
 }
 
