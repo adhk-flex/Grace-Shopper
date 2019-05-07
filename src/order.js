@@ -14,9 +14,11 @@ class Order extends Component {
     }
 
     componentDidMount(){
-        console.log(this.props.user.id)
-        this.props.getOrderByUser(this.props.user.id)
+        console.log('this.props.user.id: ', this.props.user.id)
+        if(this.props.user.id){
+            this.props.getOrderByUser(this.props.user.id)
             .then(orders => this.setState(orders[0]))
+        }
     }
 
     render(){
