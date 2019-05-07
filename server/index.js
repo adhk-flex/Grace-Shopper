@@ -32,6 +32,7 @@ app.use('/api/carts', require('./routes/cart'));
 app.use('/api/lineitems', require('./routes/lineitem'));
 app.use('/api/orders', require('./routes/order'));
 app.use('/api/addresses', require('./routes/address'));
+app.use('/api/creditcards', require('./routes/creditcard'));
 
 app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, '../index.html')));
 app.get('/style.css', (req, res, next)=> res.sendFile(path.join(__dirname, 'style.css')));
