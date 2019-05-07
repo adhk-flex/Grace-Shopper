@@ -7,36 +7,69 @@ class Order extends Component {
     constructor(props){
         super(props)
         this.state = {
-            orderNumber: '',
-            status: '',
-            totalAmount: '',
+            order: []
         }
     }
 
     componentDidMount(){
-        console.log(this.props.user.id)
-        this.props.getOrderByUser(this.props.user.id)
-            .then(orders => this.setState(orders[0]))
+        console.log('this.props.user.id: ', this.props.user.id)
+        if(this.props.user.id){
+            this.props.getOrderByUser(this.props.user.id)
+            .then(orders => {
+                console.log(orders)
+                this.setState({order: orders.order})
+            })
+        }
     }
-
+    // componentDidUpdate(prevProps){
+    //     if(JSON.stringify(prevProps.order) !== JSON.stringify(this.props.order)){
+    //         if(this.props.user.id){
+    //                 this.props.getOrderByUser(this.props.user.id)
+    //                 .then(orders => {
+    //                     console.log(orders)
+    //                     this.setState({order: orders.order})
+    //                 })
+    //             }
+    //     }
+    // }
+        
     render(){
-        const {orderNumber, status, totalAmount} = this.state
+        const {order} = this.state
         return (
             <div>
                 <h3>Order Page</h3>
-                <span>The order number is: {orderNumber}</span>
-                <br/>
-                <span>The order status is: {status}</span>
-                <br/>
-                <span>The totalAmount is: {totalAmount}</span>
+                <table className='table'>
+                    <thead>
+                        <tr>
+                            <th>Order Number</th>
+                            <th>Order Status</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            order.map(order => {
+                                return (
+                                    <tr key={order.id}>
+                                        <td>{order.orderNumber}</td>
+                                        <td>{order.status}</td>
+                                        <td>{order.totalAmount}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
             </div>
         )
     }
 } 
 
 const mapStateToProps = state => {
+    console.log(state)
     return {
-        user: state.user
+        user: state.user,
+        order: state.order
     }
 }
 
