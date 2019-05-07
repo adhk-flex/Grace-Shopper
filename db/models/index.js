@@ -52,7 +52,8 @@ Product.addHook("beforeValidate", product => {
 //TODO FIND AND ASSIGN ADDRESSES AND CC
 //order hooks and methods
 Order.createOrder = userId => {
-  return Cart.findOne({ where: { userId: userId } })
+  console.log('this is what comes into Order.createOrder in the db model: ', userId.userId)
+  return Cart.findOne({ where: { userId: userId.userId} })
     .then(cart => LineItem.findAll({ where: { cartId: cart.id } }))
     .then(items =>
       Promise.all(
@@ -71,11 +72,11 @@ Order.createOrder = userId => {
       )
     )
     .then(() => Promise.all([
-      Address.findOne({ where: { userId: userId, addressType: "shipping", active: true } }),
-      Address.findOne({ where: { userId: userId, addressType: "billing", active: true } }),
-      CreditCard.findOne({ where: { userId: userId, active: true } })
+      Address.findOne({ where: { userId: userId.userId, addressType: "shipping", active: true } }),
+      Address.findOne({ where: { userId: userId.userId, addressType: "billing", active: true } }),
+      CreditCard.findOne({ where: { userId: userId.userId, active: true } })
     ]))
-    .then(([shippingAddress, billingAddress, creditCard]) => Order.create({ status: "purchased", userId: userId, shippingAddressId: shippingAddress.id, billingAddressId: billingAddress.id, creditCardId: creditCard.id }));
+    .then(([shippingAddress, billingAddress, creditCard]) => Order.create({ status: "purchased", userId: userId.userId, shippingAddressId: shippingAddress.id, billingAddressId: billingAddress.id, creditCardId: creditCard.id }));
 };
 
 Order.addHook("afterCreate", order => {
