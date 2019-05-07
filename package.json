@@ -37,7 +37,7 @@
   },
   "scripts": {
     "start": "node server",
-    "postinstall": "npm run webpack",
+    "postinstall": "node ./db/seed.js & npm run webpack",
     "webpack": "webpack",
     "webpack:dev": "npm run webpack -- --mode=development --watch",
     "start:dev": "npm run webpack:dev & DATABASE_URL=postgres://localhost/grace-shopper nodemon server --ignore src/ --ignore dist/",
