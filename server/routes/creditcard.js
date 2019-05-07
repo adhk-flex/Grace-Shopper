@@ -15,7 +15,7 @@ router.get('/user/:userId', (req, res, next) => {
 router.post('/user/:userId', (req, res, next) => {
     let argument = {
         userId: req.params.userId,
-        cardType: req.body.type,
+        cardType: req.body.cardType,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         number: req.body.number,
