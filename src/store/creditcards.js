@@ -22,7 +22,7 @@ const getCreditCard = userId => dispatch => {
 }
 
 export const postCreditCard = (userId, cardInfo)=> dispatch => {
-  console.log(cardInfo)
+  console.log('cardInfo: ', cardInfo)
   return axios.post(`/api/creditcards/user/${userId}`, cardInfo)
     .then(() => console.log("posted"))  
   // .then(() => dispatch(getCreditCard(userId)))
