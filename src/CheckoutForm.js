@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { postAddress } from './store/address';
 import { postCreditCard } from './store/creditcards';
+import { createOrder } from './store/order';
 
 class CheckoutForm extends Component{
 
@@ -71,7 +72,6 @@ class CheckoutForm extends Component{
     }
 
     onChange = (ev) => {
-        // this.setState({[ev.target.name]:ev.target.value})
         const target = ev.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -82,8 +82,10 @@ class CheckoutForm extends Component{
 
     render(){
         // console.log(this.state)
-        const {onSaveAddress, onSaveCC, onChange} =  this
-        const {firstName, lastName, addressLine1, addressLine2, zip, city, state, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv, cardType} = this.state
+        const {onSaveAddress, onSaveCC, onChange} =  this;
+        const {firstName, lastName, addressLine1, addressLine2, zip, city, state, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv, cardType} = this.state;
+        const creditCardTypeArr = ['visa', 'mastercard', 'amex', 'discover'];
+        const expMonthArr = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
         const form = (addressType) => (
             <form onSubmit={(e) => onSaveAddress(addressType, e)}>
                     <label htmlFor="firstName">FirstName</label>
@@ -126,19 +128,35 @@ class CheckoutForm extends Component{
                 <h3>Payment</h3>
                 <form onSubmit={onSaveCC}>
                     <label htmlFor="cardType">Accepted Cards: Visa, Master, Amex, Discover</label>
-                    <input type="text" name="cardType" placeholder="visa" value={cardType} onChange = {onChange}/>
+                    <select name="cardType" value={cardType} onChange = {onChange}>
+                        {
+                            creditCardTypeArr.map(card=>{
+                                return (
+                                    <option key={card} value={card}>{card}</option>
+                                )
+                            })
+                        }
+                    </select>
                     <br/>
                     <label htmlFor="firstNameOnCard">First Name on the Card</label>
-                    <input type="text" name="firstNameOnCard" placeholder="John Eric" value={firstNameOnCard} onChange = {onChange}/>
+                    <input type="text" name="firstNameOnCard" placeholder="John" value={firstNameOnCard} onChange = {onChange}/>
                     <br/>
                     <label htmlFor="lastNameOnCard">Last Name on the Card</label>
-                    <input type="text" name="lastNameOnCard" placeholder="John Eric" value={lastNameOnCard} onChange = {onChange}/>
+                    <input type="text" name="lastNameOnCard" placeholder="Eric" value={lastNameOnCard} onChange = {onChange}/>
                     <br/>
                     <label htmlFor="cardNum">Credit Card Number</label>
                     <input type="text" name="cardNum" placeholder="1111-2222-3333-4444" value={cardNum} onChange = {onChange}/>
                     <br/>
                     <label htmlFor="expMonth">Exp Month</label>
-                    <input type="text" name="expMonth" placeholder="August" value={expMonth} onChange = {onChange}/>
+                    <select type="text" name="expMonth" placeholder="August" value={expMonth} onChange = {onChange}>
+                        {
+                            expMonthArr.map(month=>{
+                                return (
+                                    <option key={month} value={month}>{month}</option>
+                                )
+                            })
+                        }
+                    </select>
                     <br/>
                     <label htmlFor="expYear">Exp Year</label>
                     <input type="text" name="expYear" placeholder="2020" value={expYear} onChange = {onChange}/>
@@ -148,7 +166,7 @@ class CheckoutForm extends Component{
                     <br/>
                     <button type='submit'>Save</button>
                 </form>
-                <button onClick={()=>{console.log('proceed to checkout page')}}>Proceed To Checkout</button>
+                <button onClick={()=>{this.props.postOrder(this.props.user.id)}}>Proceed To Checkout</button>
             </div>
             
         )
@@ -164,7 +182,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         postAddress: (dataForm, userId, type) => dispatch(postAddress(dataForm, userId, type)),
-        postCreditCard: (userId, cardInfo) => dispatch(postCreditCard(userId, cardInfo))
+        postCreditCard: (userId, cardInfo) => dispatch(postCreditCard(userId, cardInfo)),
+        postOrder: (userId) => dispatch(createOrder(userId))
     }
 }
 
