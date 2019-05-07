@@ -59,6 +59,9 @@ class Product extends Component{
             quantityRange.push(i)
         }
         const {onChange, onSave} = this
+        if(!product){
+            return null
+        }
         return (
             <div>
                 <h1>
