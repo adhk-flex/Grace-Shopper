@@ -120,4 +120,29 @@ Address.createAddress = address => {
   });
 };
 
-module.exports = { Product, Category, Cart, LineItem, User, Order, Address, CreditCard };
+//credit card create method
+
+CreditCard.createCard = card => {
+  return CreditCard.findOne({
+    where: { userId: card.userId, active: true }
+  }).then(foundCard => {
+    if (foundCard) {
+      return foundCard
+        .update({ active: false })
+        .then(() => CreditCard.create(card));
+    } else {
+      return CreditCard.create(card);
+    }
+  });
+};
+
+module.exports = {
+  Product,
+  Category,
+  Cart,
+  LineItem,
+  User,
+  Order,
+  Address,
+  CreditCard
+};
