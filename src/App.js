@@ -22,12 +22,12 @@ class App extends Component{
     }
 
     render(){
-        if(this.props.isLogin){
+        let isLogin = this.props.isLogin
+        if(isLogin){
             console.log('we have a user')
         }else{
             console.log('user is not login')
         }
-        let isLogin = this.props.isLogin
         return(
             <Router>
                 <Route path = '/' render={(({location}) => Nav(isLogin, {location}))}/>
@@ -51,7 +51,7 @@ class App extends Component{
 // may need modify here
 const mapStateToProps = ({user}) => {
     return {
-        isLogin: user.id
+        isLogin: (user && user.id)?true:false
     }
 }
 
