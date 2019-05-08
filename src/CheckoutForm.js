@@ -9,10 +9,10 @@ class CheckoutForm extends Component{
 
     constructor(props){
         super(props)
-        this.state = {...this.userAddress(), ...this.userAddress(), ...this.userCreditCardInfo(), sameShippAddress: true, errors: []}
+        this.state = {...this.userShipAddress(), ...this.userBillAddress(), ...this.userCreditCardInfo(), sameShippAddress: true, errors: []}
     }
 
-    userAddress = (address) => (
+    userShipAddress = (address) => (
         {
             firstName: address ? address.firstName : '',
             lastName: address ? address.lastName : '',
@@ -23,6 +23,19 @@ class CheckoutForm extends Component{
             zip: address ? address.zip : '',
         }
     )
+
+    userBillAddress = (address) => (
+        {
+            firstNameBill: address ? address.firstName : '',
+            lastNameBill: address ? address.lastName : '',
+            addressLine1Bill: address ? address.addressLine1 : '',
+            addressLine2Bill: address ? address.addressLine2 : '',
+            cityBill: address ? address.city : '',
+            stateBill: address ? address.state : '',
+            zipBill: address ? address.zip : '',
+        }
+    )
+
 
     userCreditCardInfo = (creditCard) => (
         {
@@ -38,16 +51,32 @@ class CheckoutForm extends Component{
 
     onSaveAddress = (addType, ev) => {
         ev.preventDefault()
-        const address = {
-            addressType: addType === 'Shipping Address' ? 'shipping' : 'billing',
-            firstName: this.state.firstName,
-            lastName: this.state.lastName,
-            addressLine1: this.state.addressLine1,
-            addressLine2: this.state.addressLine2,
-            city: this.state.city,
-            state: this.state.state,
-            zip: this.state.zip,
+        let address = {}
+        if(addType === 'Shipping Address'){
+             address = {
+                addressType: 'shipping',
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                addressLine1: this.state.addressLine1,
+                addressLine2: this.state.addressLine2,
+                city: this.state.city,
+                state: this.state.state,
+                zip: this.state.zip,
+            }
         }
+        else{
+            address = {
+                addressType: 'billing',
+                firstName: this.state.firstNameBill,
+                lastName: this.state.lastNameBill,
+                addressLine1: this.state.addressLine1Bill,
+                addressLine2: this.state.addressLine2Bill,
+                city: this.state.cityBill,
+                state: this.state.stateBill,
+                zip: this.state.zipBill,
+            }
+        }
+        
         const userId = this.props.user.id
         this.props.postAddress(address, userId, address.addressType)
         if (this.state.sameShippAddress) {
@@ -82,31 +111,31 @@ class CheckoutForm extends Component{
 
     render(){
         const {onSaveAddress, onSaveCC, onChange} =  this;
-        const {firstName, lastName, addressLine1, addressLine2, zip, city, state, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv, cardType, errors} = this.state;
+        const {firstName, firstNameBill, lastName, lastNameBill, addressLine1, addressLine1Bill, addressLine2, addressLine2Bill, zip, zipBill, city, cityBill, state, stateBill, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv, cardType, errors} = this.state;
         const creditCardTypeArr = ['cardType', 'visa', 'mastercard', 'amex', 'discover'];
         const expMonthArr = ['month', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         const form = (addressType) => (
             <form onSubmit={(e) => onSaveAddress(addressType, e)}>
-                    <label htmlFor="firstName">FirstName</label>
-                    <input type="text" name="firstName" value={firstName} placeholder="John M. Eric" onChange = {onChange}/>
+                    <label htmlFor={`firstName${addressType === 'Billing Address' ? 'Bill' : ''}`}>FirstName</label>
+                    <input type="text" name={`firstName${addressType === 'Billing Address' ? 'Bill' : ''}`} value={addressType === 'Billing Address' ? firstNameBill : firstName} placeholder="John M. Eric" onChange = {onChange}/>
                     <br/>
-                    <label htmlFor="lastName">LastName</label>
-                    <input type="text" name="lastName" value={lastName} placeholder="john@example.com" onChange = {onChange}/>
+                    <label htmlFor={`lastName${addressType === 'Billing Address' ? 'Bill' : ''}`}>LastName</label>
+                    <input type="text" name={`lastName${addressType === 'Billing Address' ? 'Bill' : ''}`} value={addressType === 'Billing Address' ? lastNameBill: lastName} placeholder="john@example.com" onChange = {onChange}/>
                     <br/>
-                    <label htmlFor="addressLine1">address Line1</label>
-                    <input type="text" name="addressLine1" value = {addressLine1} placeholder="120 W 45th NYC" onChange = {onChange}/>
+                    <label htmlFor={`addressLine1${addressType === 'Billing Address' ? 'Bill' : ''}`}>address Line1</label>
+                    <input type="text" name={`addressLine1${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? addressLine1Bill: addressLine1} placeholder="120 W 45th NYC" onChange = {onChange}/>
                     <br/>
-                    <label htmlFor="addressLine2">address Line2 Optional</label>
-                    <input type="text" name="addressLine2" value = {addressLine2} placeholder="120 W 45th NYC" onChange = {onChange}/>
+                    <label htmlFor={`addressLine2${addressType === 'Billing Address' ? 'Bill' : ''}`}>address Line2 Optional</label>
+                    <input type="text" name={`addressLine2${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? addressLine2Bill: addressLine2} placeholder="120 W 45th NYC" onChange = {onChange}/>
                     <br/>
-                    <label htmlFor="zip">Zip Code</label>
-                    <input type="text" name="zip" value = {zip} placeholder="21003" onChange = {onChange}/>
+                    <label htmlFor={`zip${addressType === 'Billing Address' ? 'Bill' : ''}`}>Zip Code</label>
+                    <input type="text" name={`zip${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? zipBill : zip} placeholder="21003" onChange = {onChange}/>
                     <br/>
-                    <label htmlFor="state">State</label>
-                    <input type="text" name="state" value = {state} placeholder="NY" onChange = {onChange}/>
+                    <label htmlFor={`state${addressType === 'Billing Address' ? 'Bill' : ''}`}>State</label>
+                    <input type="text" name={`state${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? stateBill : state} placeholder="NY" onChange = {onChange}/>
                     <br/>
-                    <label htmlFor="city">City</label>
-                    <input type="text" name="city" value = {city} placeholder="NYC" onChange = {onChange}/>
+                    <label htmlFor={`city${addressType === 'Billing Address' ? 'Bill' : ''}`}>City</label>
+                    <input type="text" name={`city${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? cityBill : city} placeholder="NYC" onChange = {onChange}/>
                     <br/>
                     <button type='submit'>{`Save ${addressType}`}</button>
             </form>
