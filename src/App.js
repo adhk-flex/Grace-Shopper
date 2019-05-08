@@ -27,9 +27,10 @@ class App extends Component{
         }else{
             console.log('user is not login')
         }
+        let isLogin = this.props.isLogin
         return(
             <Router>
-                <Route path = '/' component={Nav}/>
+                <Route path = '/' render={(({location}) => Nav(isLogin, {location}))}/>
                 <Switch>
                     <Route exact path = '/home' component={Home}/>
                     <Route exact path = '/login' component={Login}/>
@@ -40,6 +41,7 @@ class App extends Component{
                     <Route exact path = '/cart' component={Cart}/>
                     <Route exact path = '/checkout' component={CheckoutForm}/>
                     <Route exact path = '/order' component={Order}/>
+                    <Route component={ProductList}/>
                 </Switch>
             </Router>
         )
