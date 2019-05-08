@@ -10,8 +10,10 @@ class Product extends Component{
         }
     }
     
-    componentDidMount () {
-        this.props.fetchLineItems(this.props.cart.id)
+    componentDidUpdate (prevProps) {
+        if(prevProps.cart.id !== this.props.cart.id){
+            this.props.fetchLineItems(this.props.cart.id)
+        }     
     }
 
     onChange = (ev) =>{
@@ -52,6 +54,9 @@ class Product extends Component{
             return acc
         }, 0)
         let product = this.props.products.find(p => p.id === id);
+        if(!product){
+            return null
+        }
         const {name, quantity, imgUrl, description, price} = product;
         const quantityRange = []
         const {selectedQuantity} = this.state
@@ -59,9 +64,6 @@ class Product extends Component{
             quantityRange.push(i)
         }
         const {onChange, onSave} = this
-        if(!product){
-            return null
-        }
         return (
             <div>
                 <h1>
