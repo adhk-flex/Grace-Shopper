@@ -22,7 +22,8 @@ class App extends Component{
     }
 
     render(){
-        if(this.props.isLogin){
+        let isLogin = this.props.isLogin
+        if(isLogin){
             console.log('we have a user')
         }else{
             console.log('user is not login')
@@ -32,14 +33,15 @@ class App extends Component{
                 <Route path = '/' component={Nav}/>
                 <Switch>
                     <Route exact path = '/home' component={Home}/>
-                    <Route exact path = '/login' component={Login}/>
-                    <Route exact path = '/signup' component={Login}/>
-                    <Route exact path = '/logout' component={Login}/>
+                    {!isLogin&&<Route exact path = '/login' component={Login}/>}
+                    {!isLogin&&<Route exact path = '/signup' component={Login}/>}
+                    {isLogin&&<Route exact path = '/logout' component={Login}/>}
                     <Route exact path = '/productList' component={ProductList}/>
                     <Route exact path = '/product/:id' component={Product}/>
                     <Route exact path = '/cart' component={Cart}/>
-                    <Route exact path = '/checkout' component={CheckoutForm}/>
-                    <Route exact path = '/order' component={Order}/>
+                    {isLogin&&<Route exact path = '/checkout' component={CheckoutForm}/>}
+                    {isLogin&&<Route exact path = '/order' component={Order}/>}
+                    <Route component={ProductList}/>
                 </Switch>
             </Router>
         )
@@ -49,7 +51,7 @@ class App extends Component{
 // may need modify here
 const mapStateToProps = ({user}) => {
     return {
-        isLogin: user.id
+        isLogin: (user && user.id)?true:false
     }
 }
 

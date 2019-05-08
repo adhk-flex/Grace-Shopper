@@ -10,8 +10,8 @@ class Product extends Component{
         }
     }
     
-    componentDidMount () {
-        this.props.fetchLineItems(this.props.cart.id)
+    async componentDidMount () {
+        await this.props.fetchLineItems(this.props.cart.id)
     }
 
     onChange = (ev) =>{
@@ -51,7 +51,7 @@ class Product extends Component{
             acc += item.quantity
             return acc
         }, 0)
-        let product = this.props.products.find(p => p.id === id);
+        let product = this.props.products? this.props.products.find(p => p.id === id): null;
         const {name, quantity, imgUrl, description, price} = product;
         const quantityRange = []
         const {selectedQuantity} = this.state
@@ -59,7 +59,7 @@ class Product extends Component{
             quantityRange.push(i)
         }
         const {onChange, onSave} = this
-        if(!product){
+        if(!product.name){
             return null
         }
         return (
@@ -93,9 +93,9 @@ class Product extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        products: state.products,
-        lineItems: state.lineItems,
-        cart: state.cart
+        products: state.products? state.products: false,
+        lineItems: state.lineItems? state.lineItems:false,
+        cart: state.cart? state.cart:false
     }
 };
 
