@@ -42,12 +42,14 @@ export const loginNewUser = newUser => dispatch => {
 
 export const sessionLogin = () => dispatch => {
   return axios.get('/auth/session')
-    .then(user => Promise.all(
+    .then(user => {
+      console.log('in the store user.js ', user)
+      return Promise.all(
       [
         dispatch(setUser(user.data)), 
         dispatch(setUserCart(user.data.id))
       ]
-      ))
+      )})
 };
 //this auth route return the current session's user. 
 

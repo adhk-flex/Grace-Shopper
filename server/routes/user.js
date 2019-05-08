@@ -5,9 +5,13 @@ const User = db.User;
 const router = express.Router();
 
 router.get('/session', (req, res, next) => {
+    console.log('req.session.userId: ', req.session.userId)
     if (req.session.userId) {
         User.findByPk(req.session.userId)
-            .then(me => res.json(me))
+            .then(me => {
+                console.log('in route get session: ', me)
+                res.json(me)
+            })
             .catch(next);
     }
     else res.status(404);
