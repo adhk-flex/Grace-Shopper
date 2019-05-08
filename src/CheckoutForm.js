@@ -201,6 +201,9 @@ class CheckoutForm extends Component{
                     <br/>
                     <button type='submit'>Save</button>
                 </form>
+                <button onClick={() => {
+                    this.props.history.push('/cart')
+                }}>Go Back To Cart</button>
                 <button onClick={()=>{
                     this.props.postOrder(this.props.user.id)
                     .then((order)=>{
