@@ -8,9 +8,10 @@ class Cart extends Component {
         this.state = { }
     }
 
-    componentDidMount(){
-        const cartId = this.props.cart.id
-        this.props.fetchLineItems(cartId)
+    componentDidUpdate(prevProps){
+        if(prevProps.cart.id !== this.props.cart.id){
+            this.props.fetchLineItems(this.props.cart.id)
+        }
     }
 
     onChange = (item, e) => {
