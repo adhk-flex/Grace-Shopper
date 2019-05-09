@@ -25,7 +25,6 @@ class Order extends Component {
         
     render(){
         const {order} = this.state
-        // const order = this.props.order
         return (
             <div>
                 <h3>Order Page</h3>
