@@ -22,14 +22,15 @@ class App extends Component{
     }
 
     render(){
-        if(this.props.isLogin){
-            console.log('Hello ', this.props.name)
+        let isLogin = this.props.isLogin
+        if(isLogin){
+            console.log('we have a user')
         }else{
             console.log('user is not login')
         }
         return(
             <Router>
-                <Route path = '/' component={Nav}/>
+                <Route path = '/' render={(({location}) => Nav(isLogin, {location}))}/>
                 <Switch>
                     <Route exact path = '/home' component={Home}/>
                     <Route exact path = '/login' component={Login}/>
@@ -40,6 +41,7 @@ class App extends Component{
                     <Route exact path = '/cart' component={Cart}/>
                     <Route exact path = '/checkout' component={CheckoutForm}/>
                     <Route exact path = '/order' component={Order}/>
+                    <Route component={ProductList}/>
                 </Switch>
             </Router>
         )
@@ -49,8 +51,7 @@ class App extends Component{
 // may need modify here
 const mapStateToProps = ({user}) => {
     return {
-        isLogin: user.id,
-        name: user.firstName
+        isLogin: (user && user.id)?true:false
     }
 }
 
