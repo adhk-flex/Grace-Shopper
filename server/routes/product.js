@@ -17,6 +17,37 @@ router.get('/:id', (req, res, next) => {
         .catch(next);
 });
 
+router.get('/search/:srchVal', (req, res, next) => {
+    const srchVal = req.params.srchVal.toLowerCase();
+    Product.findAll()
+        .then((products) => products.filter(product => 
+            product.name.toLowerCase().includes(srchVal) 
+            || product.description.toLowerCase().includes(srchVal)
+            || product.productNumber.toLowerCase().includes(srchVal)
+            )
+        )
+        .then(results => res.send(results))
+        .catch(next);
+});
+
+router.get('/category/:catId/:srchVal?', (req, res, next) => {
+    const srchVal = req.params.srchVal.toLowerCase();
+    Product.findAll({ where: { categoryId: req.params.catId } })
+        .then((products) => {
+            if(!srchVal){
+                res.send(products);
+            } else { 
+                const results = products.filter(product => 
+                    product.name.toLowerCase().includes(srchVal) 
+                    || product.description.toLowerCase().includes(srchVal)
+                    || product.productNumber.toLowerCase().includes(srchVal)
+                    )
+                res.send(results);
+             }
+        })
+        .catch(next);
+});
+
 router.delete('/:id', (req, res, next) => {
     Product.destroy({where: {id: req.params.id}})
         .then(() => res.send(204))
