@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { postAddress, userAddress } from './store/address';
-import { postCreditCard } from './store/creditcards';
+import { postCreditCard, getCreditCard } from './store/creditcards';
 import { createOrder } from './store/order';
 
 class CheckoutForm extends Component{
@@ -15,13 +15,42 @@ class CheckoutForm extends Component{
     componentDidUpdate(prevProps){
         if(prevProps.user.id !== this.props.user.id){
             this.props.getUserAddress(this.props.user.id, 'shipping')
-                .catch(ex=>console.log(ex))
+                .then(({address})=>{this.setState({...address})})
+                .catch(ex=>this.setState({errors: ex.response.data.errors}))
             this.props.getUserAddress(this.props.user.id, 'billing')
-                .catch(ex=>console.log(ex))
+                .then(({address})=>{this.setState({...this.renameBillAddressKeys(address)})})
+                .catch(ex=>this.setState({errors: ex.response.data.errors}))
+            this.props.getCreditCard(this.props.user.id)
+                .then(({creditCard})=>{
+                    this.setState({...this.renameCreditcardKeys(creditCard)})
+                })
+                .catch(ex=>this.setState({errors: ex.response.data.errors}))
         }
     }
+    // the two functions below is used to change the key name on local state to match the database
+    // this can be improve after giving different field names on database. 
+    renameBillAddressKeys = (address) => {
+        const billAddress = {}
+        Object.keys(address).forEach(key=>{
+            billAddress[key+'Bill'] = address[key]
+        })
+        return billAddress
+    }
 
-    userShipAddress = (address) => (
+    renameCreditcardKeys = (creditCard) => {
+        const retCreditCard = {}
+        Object.keys(creditCard).forEach(key=>{
+            if(key === 'firstName' || key === 'lastName'){
+                retCreditCard[key+'OnCard'] = creditCard[key]
+            }else{
+                retCreditCard[key] = creditCard[key]
+            } 
+        })
+        return retCreditCard
+    }
+
+    userShipAddress = (address) => {
+        return (
         {
             firstName: address ? address.firstName : '',
             lastName: address ? address.lastName : '',
@@ -31,7 +60,8 @@ class CheckoutForm extends Component{
             state: address ? address.state : '',
             zip: address ? address.zip : '',
         }
-    )
+        )
+    }
 
     userBillAddress = (address) => (
         {
@@ -50,7 +80,7 @@ class CheckoutForm extends Component{
         {
             firstNameOnCard: creditCard ? creditCard.firstNameOnCard : '',
             lastNameOnCard: creditCard ? creditCard.lastNameOnCard : '',
-            cardNum: creditCard ? creditCard.cardNum : '',
+            number: creditCard ? creditCard.number : '',
             expMonth: creditCard ? creditCard.expMonth : '',
             expYear: creditCard ? creditCard.expYear : '',
             cvv: creditCard ? creditCard.cvv : '',
@@ -100,7 +130,7 @@ class CheckoutForm extends Component{
             firstName: this.state.firstNameOnCard,
             lastName: this.state.lastNameOnCard,
             cardType: this.state.cardType,
-            number: this.state.cardNum,
+            number: this.state.number,
             expMonth: this.state.expMonth,
             expYear: this.state.expYear,
             cvv: this.state.cvv,
@@ -120,7 +150,8 @@ class CheckoutForm extends Component{
 
     render(){
         const {onSaveAddress, onSaveCC, onChange} =  this;
-        const {firstName, firstNameBill, lastName, lastNameBill, addressLine1, addressLine1Bill, addressLine2, addressLine2Bill, zip, zipBill, city, cityBill, state, stateBill, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv, cardType, errors} = this.state;
+        const {firstName, lastName, addressLine1, addressLine2, zip, city, state, firstNameBill, lastNameBill, addressLine1Bill, addressLine2Bill, zipBill, cityBill, stateBill, sameShippAddress, firstNameOnCard, lastNameOnCard, number, expMonth, expYear, cvv, cardType, errors} = this.state;
+
         const creditCardTypeArr = ['cardType', 'visa', 'mastercard', 'amex', 'discover'];
         const expMonthArr = ['month', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         const form = (addressType) => (
@@ -188,8 +219,8 @@ class CheckoutForm extends Component{
                     <label htmlFor="lastNameOnCard">Last Name on the Card</label>
                     <input type="text" name="lastNameOnCard" value={lastNameOnCard} onChange = {onChange}/>
                     <br/>
-                    <label htmlFor="cardNum">Credit Card Number</label>
-                    <input type="text" name="cardNum" value={cardNum} onChange = {onChange}/>
+                    <label htmlFor="number">Credit Card Number</label>
+                    <input type="text" name="number" value={number} onChange = {onChange}/>
                     <br/>
                     <label htmlFor="expMonth">Exp Month</label>
                     <select type="text" name="expMonth" value={expMonth} onChange = {onChange}>
@@ -228,9 +259,9 @@ class CheckoutForm extends Component{
 }
 
 const mapStateToProps = state => {
-    console.log('state: ', state)
     return {
-        user: state.user? state.user:false
+        user: state.user? state.user:false,
+        address: state.address? state.address:{},
     }
 }
 
@@ -239,7 +270,8 @@ const mapDispatchToProps = dispatch => {
         postAddress: (dataForm, userId, type) => dispatch(postAddress(dataForm, userId, type)),
         postCreditCard: (userId, cardInfo) => dispatch(postCreditCard(userId, cardInfo)),
         postOrder: (userId) => dispatch(createOrder(userId)),
-        getUserAddress: (userId, type) => dispatch(userAddress(userId, type))
+        getUserAddress: (userId, type) => dispatch(userAddress(userId, type)),
+        getCreditCard: (userId)=>dispatch(getCreditCard(userId))
     }
 }
 
