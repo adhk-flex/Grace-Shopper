@@ -30,6 +30,12 @@ router.get('/search/:srchVal', (req, res, next) => {
         .catch(next);
 });
 
+router.get('/category/:catId', (req, res, next) => {
+    Product.findAll({ where: { categoryId: req.params.catId } })
+        .then((products) => res.send(products))
+        .catch(next);
+});
+
 router.delete('/:id', (req, res, next) => {
     Product.destroy({where: {id: req.params.id}})
         .then(() => res.send(204))
