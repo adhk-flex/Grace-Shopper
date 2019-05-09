@@ -12,34 +12,20 @@ class Order extends Component {
         }
     }
 
-    componentDidMount(){
-        console.log('this.props.user.id: ', this.props.user.id)
-        const userId = this.props.user.id
-        if (userId){
-            this.props.getOrderByUser(userId)
-            .then(orders => {
-                console.log(orders)
-                this.setState({order: orders.order})
-            })
-            this.props.setUserCart(userId)
+    componentDidUpdate(prevProps){
+        if(prevProps.user.id !== this.props.user.id){
+            if(this.props.user.id){
+                    this.props.getOrderByUser(this.props.user.id)
+                    .then(orders => {
+                        this.setState({order: orders.order})
+                    })
+                }
         }
-        
-        
     }
-    // componentDidUpdate(prevProps){
-    //     if(JSON.stringify(prevProps.order) !== JSON.stringify(this.props.order)){
-    //         if(this.props.user.id){
-    //                 this.props.getOrderByUser(this.props.user.id)
-    //                 .then(orders => {
-    //                     console.log(orders)
-    //                     this.setState({order: orders.order})
-    //                 })
-    //             }
-    //     }
-    // }
         
     render(){
         const {order} = this.state
+        // const order = this.props.order
         return (
             <div>
                 <h3>Order Page</h3>
@@ -73,8 +59,8 @@ class Order extends Component {
 const mapStateToProps = state => {
     console.log(state)
     return {
-        user: state.user,
-        order: state.order
+        user: state.user? state.user:false,
+        order: state.order? state.order:false
     }
 }
 
