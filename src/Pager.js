@@ -19,7 +19,7 @@ class Pager extends Component {
 
   onClick = (value) => {
     this.setState({pageNum: value})
-    this.props.history.push(`/products/${value}`)
+    this.props.history.push(`/productList/${value}`)
   }
 
   render(){

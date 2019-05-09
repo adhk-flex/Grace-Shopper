@@ -6,7 +6,9 @@ const Category = db.Category;
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
-    Product.findAll()
+    Product.findAll({
+        order: [['name', 'ASC']]
+    })
     .then((products) => res.json(products))
     .catch(next);
 });
