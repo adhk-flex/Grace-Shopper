@@ -5,6 +5,9 @@ const Order = db.Order;
 const router = express.Router();
 
 router.get('/user/:userId', (req, res, next) => {
+    if(req.params.userId !== req.session.userId){
+        res.send(500);
+    }
     Order.findAll({where: {userId: req.params.userId}},
                   {order: [['orderNumber', 'DESC']]})
     .then((orders) => res.json(orders))
@@ -18,6 +21,9 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/user/:userId', (req, res, next) => {
+    if(req.params.userId !== req.session.userId){
+        res.send(500);
+    }
     //req.body is expecting {userId: 123}
     console.log('in route: ', req.params.userId)
     Order.createOrder({userId: req.params.userId})

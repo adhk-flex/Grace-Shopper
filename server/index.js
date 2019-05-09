@@ -24,16 +24,8 @@ app.use(session({
   }));
 
 // authentication router
-app.use('/auth', require('./routes/user'));
 
-app.use((req, res, next) => {
-    console.log('I am in the middleware for checking logged in session');
-    if (req.params.userId && (req.session.userId !== req.params.userId)) {
-        res.send(500);      
-        next();  
-    }
-    next();
-});
+app.use('/auth', require('./routes/user'));
 
 app.use('/api/products', require('./routes/product'));
 app.use('/api/categories', require('./routes/category'));
@@ -63,4 +55,3 @@ dbSync()
     .catch(e => {
         throw new Error(e.message);
     });
-

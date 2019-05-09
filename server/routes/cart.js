@@ -11,6 +11,9 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/user/:userId', (req, res, next) => {
+    if(req.params.userId !== req.session.userId){
+        res.send(500);
+    }
     Cart.findOne({where: {userId: req.params.userId}})
         .then((cart) => res.json(cart))
         .catch(next);
