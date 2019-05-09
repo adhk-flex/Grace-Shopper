@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
-import { fetchLineItems } from './store/lineitem';
 import { getProductByPg, fetchProducts } from './store/product'
 import Pager from './Pager';
-
 import { lineItems, fetchLineItems } from './store/lineitem';
 import Search from "./Search";
 
