@@ -17,6 +17,19 @@ router.get('/:id', (req, res, next) => {
         .catch(next);
 });
 
+router.get('/search/:srchVal', (req, res, next) => {
+    const srchVal = req.params.srchVal;
+    Product.findAll()
+        .then((products) => products.filter(product => 
+            product.name.includes(srchVal) 
+            || product.description.includes(srchVal)
+            || product.productNumber.includes(srchVal)
+            )
+        )
+        .then(results => res.send(results))
+        .catch(next);
+});
+
 router.delete('/:id', (req, res, next) => {
     Product.destroy({where: {id: req.params.id}})
         .then(() => res.send(204))
