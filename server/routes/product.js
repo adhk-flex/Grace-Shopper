@@ -34,7 +34,6 @@ router.get('/category/:catId/:srchVal?', (req, res, next) => {
     const srchVal = req.params.srchVal.toLowerCase();
     Product.findAll({ where: { categoryId: req.params.catId } })
         .then((products) => {
-            console.log("SEARCHVAL", req.params.srchVal);
             if(!srchVal){
                 res.send(products);
             } else { 
