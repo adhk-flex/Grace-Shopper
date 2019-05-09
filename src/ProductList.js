@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { lineItems, fetchLineItems } from './store/lineitem';
+import { getProductByPg } from './store/product'
+import Pager from './Pager';
 
 class ProductList extends Component {
     constructor(props){
         super(props)
         this.state = {
+            count: 0,
         }
     }
     componentDidUpdate(prevProps){
         if(prevProps.cart.id !== this.props.cart.id){
             this.props.fetchLineItems(this.props.cart.id)
-        }     
+        }   
+        if(prevProps.match.params.idx !== this.props.match.params.idx){
+            this.props.getProductByPg(this.props.match.params.idx)
+        }  
     }
     render(){
         const history = this.props.history;
@@ -22,6 +28,7 @@ class ProductList extends Component {
         }, 0)
         return(
             <div>
+                <Pager history={history}/>
                 <h1>Here are All of our Products:</h1>
                 <ul className='list-group'>
                     {
@@ -53,6 +60,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchLineItems: cartId => dispatch(fetchLineItems(cartId)),
+        getProductByPg: pgIdx => dispatch(getProductByPg(pgIdx))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ProductList);

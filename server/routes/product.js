@@ -11,6 +11,16 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
+router.get('/:pgIdx', (req, res, next) => {
+    const end = req.params.pgIdx * 10;
+    const start = end - 10
+    Product.findAll({
+        order: [['name', 'ASC']]
+    })
+        .then(products => res.json(products.slice(start, end)))
+        .catch(next)
+})
+
 router.get('/:id', (req, res, next) => {
     Product.findOne({where: {id: req.params.id}})
         .then((product) => res.json(product))

@@ -17,10 +17,14 @@ export const products = (state = [], action) => {
 };
 
 export const fetchProducts = () => dispatch => {
-  return axios.get('api/products/')
+  return axios.get('/api/products/')
     .then(products => dispatch(setProducts(products.data)))
 };
 
+export const getProductByPg = pgIdx => dispatch => {
+  return axios.get(`/api/products/${pgIdx}`)
+    .then(products => dispatch(setProducts(products.data)))
+}
 
 const addProduct = product => dispatch => {
   return axios.post('/api/products/', product)
