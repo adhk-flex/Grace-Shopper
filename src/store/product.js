@@ -31,6 +31,11 @@ const addProduct = product => dispatch => {
     .then(() => dispatch(fetchProducts()))
 };
 
+const updateProduct = (id, product) => dispatch => {
+  return axios.put(`/api/products/${id}`, product)
+    .then(() => dispatch(fetchProducts()))
+};
+
 const delProduct = id => dispatch => {
   return axios.delete(`/api/products/${id}`)
     .then(() => dispatch(fetchProducts()))
