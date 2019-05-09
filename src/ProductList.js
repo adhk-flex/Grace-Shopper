@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { lineItems, fetchLineItems } from './store/lineitem';
+import Search from "./Search";
 
 class ProductList extends Component {
     constructor(props){
@@ -23,6 +24,7 @@ class ProductList extends Component {
         return(
             <div>
                 <h1>Here are All of our Products:</h1>
+                <Search history={history} match={this.props.match}/>
                 <ul className='list-group'>
                     {
                         Products.map(p=>{
