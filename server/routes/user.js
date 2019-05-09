@@ -5,7 +5,6 @@ const User = db.User;
 const router = express.Router();
 
 router.get('/session', (req, res, next) => {
-    console.log('req.session.userId: ', req.session.userId)
     if (req.session.userId) {
         User.findByPk(req.session.userId)
             .then(me => {
@@ -19,6 +18,7 @@ router.get('/session', (req, res, next) => {
 
 router.delete('/logout', (req, res, next) => {
     req.session.destroy();
+    console.log('req.session.userId: ', req.session.userId);
     res.status(204).end();
 });
 
@@ -26,6 +26,7 @@ router.post('/login', (req, res, next) => {
     User.create(req.body)
         .then((user) => {
             req.session.userId = user.id;
+            console.log('req.session.userId: ', req.session.userId);
             res.json(user);
         })
         .catch(next);
@@ -41,6 +42,7 @@ router.put('/login', (req, res, next) => {
     .then(user => {
         if (user) {
             req.session.userId = user.id;
+            console.log('req.session.userId: ', req.session.userId);
             res.json(user);
         }
         else {
@@ -50,6 +52,7 @@ router.put('/login', (req, res, next) => {
         }
     })
     .catch(next);
+    
 });
 
 module.exports = router;
