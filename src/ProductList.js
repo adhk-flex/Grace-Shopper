@@ -23,7 +23,11 @@ class ProductList extends Component {
             this.props.fetchLineItems(this.props.cart.id)
         }   
         if(prevProps.match.params.idx !== this.props.match.params.idx){
+            if (this.props.match.params.idx === undefined) {
+                this.props.fetchProducts()
+            } else {
             this.props.getProductByPg(this.props.match.params.idx)
+            }
         }  
     }
     render(){
