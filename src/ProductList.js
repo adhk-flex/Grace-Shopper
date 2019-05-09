@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import { fetchLineItems } from './store/lineitem';
 import { getProductByPg, fetchProducts } from './store/product'
 import Pager from './Pager';
+
+import { lineItems, fetchLineItems } from './store/lineitem';
+import Search from "./Search";
+
 
 class ProductList extends Component {
     constructor(props){
@@ -35,6 +40,7 @@ class ProductList extends Component {
             <div>
                 <Pager history={history}/>
                 <h1>Here are All of our Products:</h1>
+                <Search history={history} match={this.props.match}/>
                 <ul className='list-group'>
                     {
                         Products.map(p=>{

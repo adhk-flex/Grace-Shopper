@@ -5,6 +5,9 @@ const Address = db.Address;
 const router = express.Router();
 
 router.get('/:type/user/:userId', (req, res, next) => {
+    if(req.params.userId !== req.session.userId){
+        res.send(500);
+    }
     Address.findOne({
                     where: { addressType: req.params.type, 
                             active: true, 
@@ -14,6 +17,9 @@ router.get('/:type/user/:userId', (req, res, next) => {
 });
 
 router.post('/:type/user/:userId', (req, res, next) => {
+    if(req.params.userId !== req.session.userId){
+        res.send(500);
+    }
     let argument = {
         addressType: req.params.type,
         userId: req.params.userId,
