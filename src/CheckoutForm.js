@@ -1,7 +1,7 @@
 // make this template for later use
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { postAddress } from './store/address';
+import { postAddress, userAddress } from './store/address';
 import { postCreditCard } from './store/creditcards';
 import { createOrder } from './store/order';
 
@@ -10,6 +10,15 @@ class CheckoutForm extends Component{
     constructor(props){
         super(props)
         this.state = {...this.userShipAddress(), ...this.userBillAddress(), ...this.userCreditCardInfo(), sameShippAddress: true, errors: []}
+    }
+
+    componentDidUpdate(prevProps){
+        if(prevProps.user.id !== this.props.user.id){
+            this.props.getUserAddress(this.props.user.id, 'shipping')
+                .catch(ex=>console.log(ex))
+            this.props.getUserAddress(this.props.user.id, 'billing')
+                .catch(ex=>console.log(ex))
+        }
     }
 
     userShipAddress = (address) => (
@@ -117,25 +126,25 @@ class CheckoutForm extends Component{
         const form = (addressType) => (
             <form onSubmit={(e) => onSaveAddress(addressType, e)}>
                     <label htmlFor={`firstName${addressType === 'Billing Address' ? 'Bill' : ''}`}>FirstName</label>
-                    <input type="text" name={`firstName${addressType === 'Billing Address' ? 'Bill' : ''}`} value={addressType === 'Billing Address' ? firstNameBill : firstName} placeholder="John M. Eric" onChange = {onChange}/>
+                    <input type="text" name={`firstName${addressType === 'Billing Address' ? 'Bill' : ''}`} value={addressType === 'Billing Address' ? firstNameBill : firstName} onChange = {onChange}/>
                     <br/>
                     <label htmlFor={`lastName${addressType === 'Billing Address' ? 'Bill' : ''}`}>LastName</label>
-                    <input type="text" name={`lastName${addressType === 'Billing Address' ? 'Bill' : ''}`} value={addressType === 'Billing Address' ? lastNameBill: lastName} placeholder="john@example.com" onChange = {onChange}/>
+                    <input type="text" name={`lastName${addressType === 'Billing Address' ? 'Bill' : ''}`} value={addressType === 'Billing Address' ? lastNameBill: lastName} onChange = {onChange}/>
                     <br/>
                     <label htmlFor={`addressLine1${addressType === 'Billing Address' ? 'Bill' : ''}`}>address Line1</label>
-                    <input type="text" name={`addressLine1${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? addressLine1Bill: addressLine1} placeholder="120 W 45th NYC" onChange = {onChange}/>
+                    <input type="text" name={`addressLine1${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? addressLine1Bill: addressLine1} onChange = {onChange}/>
                     <br/>
                     <label htmlFor={`addressLine2${addressType === 'Billing Address' ? 'Bill' : ''}`}>address Line2 Optional</label>
-                    <input type="text" name={`addressLine2${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? addressLine2Bill: addressLine2} placeholder="120 W 45th NYC" onChange = {onChange}/>
+                    <input type="text" name={`addressLine2${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? addressLine2Bill: addressLine2} onChange = {onChange}/>
                     <br/>
                     <label htmlFor={`zip${addressType === 'Billing Address' ? 'Bill' : ''}`}>Zip Code</label>
-                    <input type="text" name={`zip${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? zipBill : zip} placeholder="21003" onChange = {onChange}/>
+                    <input type="text" name={`zip${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? zipBill : zip} onChange = {onChange}/>
                     <br/>
                     <label htmlFor={`state${addressType === 'Billing Address' ? 'Bill' : ''}`}>State</label>
-                    <input type="text" name={`state${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? stateBill : state} placeholder="NY" onChange = {onChange}/>
+                    <input type="text" name={`state${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? stateBill : state} onChange = {onChange}/>
                     <br/>
                     <label htmlFor={`city${addressType === 'Billing Address' ? 'Bill' : ''}`}>City</label>
-                    <input type="text" name={`city${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? cityBill : city} placeholder="NYC" onChange = {onChange}/>
+                    <input type="text" name={`city${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? cityBill : city} onChange = {onChange}/>
                     <br/>
                     <button type='submit'>{`Save ${addressType}`}</button>
             </form>
@@ -174,16 +183,16 @@ class CheckoutForm extends Component{
                     </select>
                     <br/>
                     <label htmlFor="firstNameOnCard">First Name on the Card</label>
-                    <input type="text" name="firstNameOnCard" placeholder="John" value={firstNameOnCard} onChange = {onChange}/>
+                    <input type="text" name="firstNameOnCard" value={firstNameOnCard} onChange = {onChange}/>
                     <br/>
                     <label htmlFor="lastNameOnCard">Last Name on the Card</label>
-                    <input type="text" name="lastNameOnCard" placeholder="Eric" value={lastNameOnCard} onChange = {onChange}/>
+                    <input type="text" name="lastNameOnCard" value={lastNameOnCard} onChange = {onChange}/>
                     <br/>
                     <label htmlFor="cardNum">Credit Card Number</label>
-                    <input type="text" name="cardNum" placeholder="1111-2222-3333-4444" value={cardNum} onChange = {onChange}/>
+                    <input type="text" name="cardNum" value={cardNum} onChange = {onChange}/>
                     <br/>
                     <label htmlFor="expMonth">Exp Month</label>
-                    <select type="text" name="expMonth" placeholder="August" value={expMonth} onChange = {onChange}>
+                    <select type="text" name="expMonth" value={expMonth} onChange = {onChange}>
                         {
                             expMonthArr.map(month=>{
                                 return (
@@ -194,10 +203,10 @@ class CheckoutForm extends Component{
                     </select>
                     <br/>
                     <label htmlFor="expYear">Exp Year</label>
-                    <input type="text" name="expYear" placeholder="2020" value={expYear} onChange = {onChange}/>
+                    <input type="text" name="expYear" value={expYear} onChange = {onChange}/>
                     <br/>
                     <label htmlFor="cvv">CVV</label>
-                    <input type="text" name="cvv" placeholder="345" value={cvv} onChange = {onChange}/>
+                    <input type="text" name="cvv" value={cvv} onChange = {onChange}/>
                     <br/>
                     <button type='submit'>Save</button>
                 </form>
@@ -219,6 +228,7 @@ class CheckoutForm extends Component{
 }
 
 const mapStateToProps = state => {
+    console.log('state: ', state)
     return {
         user: state.user,
     }
@@ -228,7 +238,8 @@ const mapDispatchToProps = dispatch => {
     return {
         postAddress: (dataForm, userId, type) => dispatch(postAddress(dataForm, userId, type)),
         postCreditCard: (userId, cardInfo) => dispatch(postCreditCard(userId, cardInfo)),
-        postOrder: (userId) => dispatch(createOrder(userId))
+        postOrder: (userId) => dispatch(createOrder(userId)),
+        getUserAddress: (userId, type) => dispatch(userAddress(userId, type))
     }
 }
 
