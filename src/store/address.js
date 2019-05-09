@@ -16,7 +16,7 @@ export const address = (state = [], action) => {
   }
 };
 
-const userAddress = (userId, type) => dispatch => {
+export const userAddress = (userId, type) => dispatch => {
   return axios.get(`/api/addresses/${type}/user/${userId}`)
     .then(add => dispatch(setAddress(add.data)))
 };
