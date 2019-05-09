@@ -29,10 +29,10 @@ const Nav = (isLogin, {location: {pathname}}) => {
             label: 'Checkout', to: '/checkout'
         },
         {
-            label: 'Logout', to: '/logout'
+            label: 'Order', to: '/order'
         },
         {
-            label: 'Order', to: '/order'
+            label: 'Logout', to: '/logout'
         }
     ];
     const guestLinks = [
@@ -40,16 +40,16 @@ const Nav = (isLogin, {location: {pathname}}) => {
             label: 'Home', to: '/home'
         },
         {
-            label: 'ProductList', to: '/productList'
-        },
-        {
-            label: 'Checkout', to: '/checkout'
-        },
-        {
             label: 'Login', to: '/login'
         },
         {
             label: 'SignUp', to: '/signup'
+        },
+        {
+            label: 'ProductList', to: '/productList'
+        },
+        {
+            label: 'Checkout', to: '/checkout'
         }
     ];
 
