@@ -8,9 +8,14 @@ class Cart extends Component {
         this.state = { }
     }
 
-    componentDidUpdate(prevProps){
+    async componentDidMount(){
+        const cartId = this.props.cart && this.props.cart.id? this.props.cart.id:false
+        await this.props.fetchLineItems(cartId)
+    }
+
+    async componentDidUpdate(prevProps){
         if(prevProps.cart.id !== this.props.cart.id){
-            this.props.fetchLineItems(this.props.cart.id)
+            await this.props.fetchLineItems(this.props.cart.id)
         }
     }
 
@@ -88,10 +93,10 @@ class Cart extends Component {
 
 const mapStateToProps = ({products, user, cart, lineItems}) => {
     return {
-        products:  products,
-        isLogin: user.id,
-        cart: cart,
-        lineItems: lineItems
+        products:  products? products:false,
+        isLogin: user&&user.id? user.id:false,
+        cart: cart? cart:false,
+        lineItems: lineItems? lineItems:false
     }
 };
 
