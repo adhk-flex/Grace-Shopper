@@ -25,9 +25,16 @@ class Search extends Component{
         this.setState({ term: evt.target.value });
     };
     handleSubmit = evt => {
+        const catId = this.props.match.params.catId;
         evt.preventDefault();
-        this.props.history.push(`/productList/search/${this.state.term}`)
+        this.props.history.push(catId ? `/productList/category/${catId}/${this.state.term}` : `/productList/search/${this.state.term}`)
     };
+    handleClear = () => {
+        const catId = this.props.match.params.catId;
+        this.setState({ term: "" }, () => 
+            this.props.history.push(catId ? `/productList/category/${catId}` : '/productList')
+        )
+    }
     render(){
         return (
             <form className="m-2" onSubmit={this.handleSubmit}>
@@ -43,9 +50,7 @@ class Search extends Component{
                     <button 
                         type="button" 
                         className="btn btn-info" 
-                        onClick={() => this.setState({ term: "" }, () => 
-                            this.props.history.push("/productList")
-                        )}>
+                        onClick={this.handleClear}>
                         Clear
                     </button>
                 </div>
