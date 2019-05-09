@@ -9,9 +9,9 @@ const Nav = ({location: {pathname}}) => {
         {
             label: 'ProductList', to: '/productList'
         },
-        {
-            label: 'Checkout', to: '/checkout'
-        },
+        // {
+        //     label: 'Checkout', to: '/checkout'
+        // },
         {
             label: 'Login', to: '/login'
         },
