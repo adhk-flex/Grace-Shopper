@@ -16,7 +16,7 @@ export const creditCard = (state = [], action) => {
   }
 };
 
-const getCreditCard = userId => dispatch => {
+export const getCreditCard = userId => dispatch => {
   return axios.get(`/api/creditcards/user/${userId}`)
     .then(card => dispatch(setCreditCard(card.data)))
 }
