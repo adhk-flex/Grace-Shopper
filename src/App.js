@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {HashRouter as Router, Route, Switch} from 'react-router-dom';
-
+import {HashRouter as Router, Route, Switch } from 'react-router-dom';
 import Nav from './Nav';
 import Home from './Home'; 
 import ProductList from './ProductList';
@@ -8,7 +7,7 @@ import Product from './Product';
 import Cart from './Cart';
 import CheckoutForm from './CheckoutForm'
 import Order from './order'
-import { fetchProducts } from './store/product';
+import { fetchProducts, fetchFilteredProducts } from './store/product';
 import { sessionLogin } from './store/user';
 import { connect } from 'react-redux';
 import Login from './login';

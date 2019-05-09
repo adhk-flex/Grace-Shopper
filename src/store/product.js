@@ -21,6 +21,15 @@ export const fetchProducts = () => dispatch => {
     .then(products => dispatch(setProducts(products.data)))
 };
 
+export const fetchFilteredProducts = (srchVal, catId) => dispatch => {
+  let url = catId ? `api/products/category/${catId}` : `api/products/search`;
+  url += srchVal ? `/${srchVal}` : '';
+  console.log(url);
+  return axios.get(url)
+    .then(products => {
+      return dispatch(setProducts(products.data))
+    } )
+};
 
 const addProduct = product => dispatch => {
   return axios.post('/api/products/', product)

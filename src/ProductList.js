@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { lineItems, fetchLineItems } from './store/lineitem';
+import { lineItems, fetchLineItems  } from './store/lineitem';
+import { fetchFilteredProducts } from './store/product';
 import Search from "./Search";
 
 class ProductList extends Component {
@@ -9,10 +10,24 @@ class ProductList extends Component {
         this.state = {
         }
     }
+    componentDidMount(){
+        const { srchVal, catId } = this.props.match.params;     
+
+        if(srchVal || catId){
+            this.props.fetchFilteredProducts(srchVal, catId);
+        }
+    }
     componentDidUpdate(prevProps){
+        const { srchVal, catId } = this.props.match.params;
         if(prevProps.cart.id !== this.props.cart.id){
             this.props.fetchLineItems(this.props.cart.id)
         }     
+
+        if(JSON.stringify(this.props.match.params) !== JSON.stringify(prevProps.match.params)){
+            if(srchVal || catId){
+                this.props.fetchFilteredProducts(srchVal, catId);
+            }
+        }
     }
     render(){
         const history = this.props.history;
@@ -55,6 +70,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchLineItems: cartId => dispatch(fetchLineItems(cartId)),
+        fetchFilteredProducts: (srchVal, catId) => dispatch(fetchFilteredProducts(srchVal, catId))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ProductList);
