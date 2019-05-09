@@ -46,11 +46,17 @@ class Search extends Component{
                     onChange={this.handleChange} 
                 />
                 <div className="input-group-append" style={{ marginLeft: "2px" }}>
-                    <button type="submit" className="btn btn-primary">Search</button>
+                    <button 
+                        type="submit" 
+                        className="btn btn-primary" 
+                        disabled={!this.state.term.length}>
+                        Search
+                    </button>
                     <button 
                         type="button" 
                         className="btn btn-info" 
-                        onClick={this.handleClear}>
+                        onClick={this.handleClear}
+                        disabled={!this.state.term.length}>
                         Clear
                     </button>
                 </div>
