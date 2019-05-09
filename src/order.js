@@ -73,8 +73,8 @@ class Order extends Component {
 const mapStateToProps = state => {
     console.log(state)
     return {
-        user: state.user,
-        order: state.order
+        user: state.user? state.user:false,
+        order: state.order? state.order:false
     }
 }
 
