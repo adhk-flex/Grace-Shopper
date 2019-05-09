@@ -35,8 +35,6 @@ class ManageProduct extends Component {
                         })
                     }
                 </ul>
-                <img className = 'shopping-cart' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKorRm0enmL_tFIgvKcNcOjb_3YkWnny-CIK0BW5F9DoGocc7DkA' onClick={()=>{history.push('/cart')}}/>
-                <span className = 'shopping-item-quantity'>{totalItems}</span>
             </div>
         )
     }
