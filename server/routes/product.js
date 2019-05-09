@@ -6,14 +6,57 @@ const Category = db.Category;
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
-    Product.findAll()
+    Product.findAll({
+        order: [['name', 'ASC']]
+    })
     .then((products) => res.json(products))
     .catch(next);
 });
 
+router.get('/:pgIdx', (req, res, next) => {
+    const end = req.params.pgIdx * 10;
+    const start = end - 10
+    Product.findAll({
+        order: [['name', 'ASC']]
+    })
+        .then(products => res.json(products.slice(start, end)))
+        .catch(next)
+})
+
 router.get('/:id', (req, res, next) => {
     Product.findOne({where: {id: req.params.id}})
         .then((product) => res.json(product))
+        .catch(next);
+});
+
+router.get('/search/:srchVal', (req, res, next) => {
+    const srchVal = req.params.srchVal.toLowerCase();
+    Product.findAll()
+        .then((products) => products.filter(product => 
+            product.name.toLowerCase().includes(srchVal) 
+            || product.description.toLowerCase().includes(srchVal)
+            || product.productNumber.toLowerCase().includes(srchVal)
+            )
+        )
+        .then(results => res.send(results))
+        .catch(next);
+});
+
+router.get('/category/:catId/:srchVal?', (req, res, next) => {
+    const srchVal = req.params.srchVal.toLowerCase();
+    Product.findAll({ where: { categoryId: req.params.catId } })
+        .then((products) => {
+            if(!srchVal){
+                res.send(products);
+            } else { 
+                const results = products.filter(product => 
+                    product.name.toLowerCase().includes(srchVal) 
+                    || product.description.toLowerCase().includes(srchVal)
+                    || product.productNumber.toLowerCase().includes(srchVal)
+                    )
+                res.send(results);
+             }
+        })
         .catch(next);
 });
 

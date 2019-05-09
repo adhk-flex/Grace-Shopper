@@ -1,8 +1,8 @@
 // make this template for later use
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { postAddress } from './store/address';
-import { postCreditCard } from './store/creditcards';
+import { postAddress, userAddress } from './store/address';
+import { postCreditCard, getCreditCard } from './store/creditcards';
 import { createOrder } from './store/order';
 
 class CheckoutForm extends Component{
@@ -12,7 +12,45 @@ class CheckoutForm extends Component{
         this.state = {...this.userShipAddress(), ...this.userBillAddress(), ...this.userCreditCardInfo(), sameShippAddress: true, errors: []}
     }
 
-    userShipAddress = (address) => (
+    componentDidUpdate(prevProps){
+        if(prevProps.user.id !== this.props.user.id){
+            this.props.getUserAddress(this.props.user.id, 'shipping')
+                .then(({address})=>{this.setState({...address})})
+                .catch(ex=>this.setState({errors: ex.response.data.errors}))
+            this.props.getUserAddress(this.props.user.id, 'billing')
+                .then(({address})=>{this.setState({...this.renameBillAddressKeys(address)})})
+                .catch(ex=>this.setState({errors: ex.response.data.errors}))
+            this.props.getCreditCard(this.props.user.id)
+                .then(({creditCard})=>{
+                    this.setState({...this.renameCreditcardKeys(creditCard)})
+                })
+                .catch(ex=>this.setState({errors: ex.response.data.errors}))
+        }
+    }
+    // the two functions below is used to change the key name on local state to match the database
+    // this can be improve after giving different field names on database. 
+    renameBillAddressKeys = (address) => {
+        const billAddress = {}
+        Object.keys(address).forEach(key=>{
+            billAddress[key+'Bill'] = address[key]
+        })
+        return billAddress
+    }
+
+    renameCreditcardKeys = (creditCard) => {
+        const retCreditCard = {}
+        Object.keys(creditCard).forEach(key=>{
+            if(key === 'firstName' || key === 'lastName'){
+                retCreditCard[key+'OnCard'] = creditCard[key]
+            }else{
+                retCreditCard[key] = creditCard[key]
+            } 
+        })
+        return retCreditCard
+    }
+
+    userShipAddress = (address) => {
+        return (
         {
             firstName: address ? address.firstName : '',
             lastName: address ? address.lastName : '',
@@ -22,7 +60,8 @@ class CheckoutForm extends Component{
             state: address ? address.state : '',
             zip: address ? address.zip : '',
         }
-    )
+        )
+    }
 
     userBillAddress = (address) => (
         {
@@ -41,7 +80,7 @@ class CheckoutForm extends Component{
         {
             firstNameOnCard: creditCard ? creditCard.firstNameOnCard : '',
             lastNameOnCard: creditCard ? creditCard.lastNameOnCard : '',
-            cardNum: creditCard ? creditCard.cardNum : '',
+            number: creditCard ? creditCard.number : '',
             expMonth: creditCard ? creditCard.expMonth : '',
             expYear: creditCard ? creditCard.expYear : '',
             cvv: creditCard ? creditCard.cvv : '',
@@ -91,7 +130,7 @@ class CheckoutForm extends Component{
             firstName: this.state.firstNameOnCard,
             lastName: this.state.lastNameOnCard,
             cardType: this.state.cardType,
-            number: this.state.cardNum,
+            number: this.state.number,
             expMonth: this.state.expMonth,
             expYear: this.state.expYear,
             cvv: this.state.cvv,
@@ -111,31 +150,32 @@ class CheckoutForm extends Component{
 
     render(){
         const {onSaveAddress, onSaveCC, onChange} =  this;
-        const {firstName, firstNameBill, lastName, lastNameBill, addressLine1, addressLine1Bill, addressLine2, addressLine2Bill, zip, zipBill, city, cityBill, state, stateBill, sameShippAddress, firstNameOnCard, lastNameOnCard, cardNum, expMonth, expYear, cvv, cardType, errors} = this.state;
+        const {firstName, lastName, addressLine1, addressLine2, zip, city, state, firstNameBill, lastNameBill, addressLine1Bill, addressLine2Bill, zipBill, cityBill, stateBill, sameShippAddress, firstNameOnCard, lastNameOnCard, number, expMonth, expYear, cvv, cardType, errors} = this.state;
+
         const creditCardTypeArr = ['cardType', 'visa', 'mastercard', 'amex', 'discover'];
         const expMonthArr = ['month', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         const form = (addressType) => (
             <form onSubmit={(e) => onSaveAddress(addressType, e)}>
                     <label htmlFor={`firstName${addressType === 'Billing Address' ? 'Bill' : ''}`}>FirstName</label>
-                    <input type="text" name={`firstName${addressType === 'Billing Address' ? 'Bill' : ''}`} value={addressType === 'Billing Address' ? firstNameBill : firstName} placeholder="John M. Eric" onChange = {onChange}/>
+                    <input type="text" name={`firstName${addressType === 'Billing Address' ? 'Bill' : ''}`} value={addressType === 'Billing Address' ? firstNameBill : firstName} onChange = {onChange}/>
                     <br/>
                     <label htmlFor={`lastName${addressType === 'Billing Address' ? 'Bill' : ''}`}>LastName</label>
-                    <input type="text" name={`lastName${addressType === 'Billing Address' ? 'Bill' : ''}`} value={addressType === 'Billing Address' ? lastNameBill: lastName} placeholder="john@example.com" onChange = {onChange}/>
+                    <input type="text" name={`lastName${addressType === 'Billing Address' ? 'Bill' : ''}`} value={addressType === 'Billing Address' ? lastNameBill: lastName} onChange = {onChange}/>
                     <br/>
                     <label htmlFor={`addressLine1${addressType === 'Billing Address' ? 'Bill' : ''}`}>address Line1</label>
-                    <input type="text" name={`addressLine1${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? addressLine1Bill: addressLine1} placeholder="120 W 45th NYC" onChange = {onChange}/>
+                    <input type="text" name={`addressLine1${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? addressLine1Bill: addressLine1} onChange = {onChange}/>
                     <br/>
                     <label htmlFor={`addressLine2${addressType === 'Billing Address' ? 'Bill' : ''}`}>address Line2 Optional</label>
-                    <input type="text" name={`addressLine2${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? addressLine2Bill: addressLine2} placeholder="120 W 45th NYC" onChange = {onChange}/>
+                    <input type="text" name={`addressLine2${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? addressLine2Bill: addressLine2} onChange = {onChange}/>
                     <br/>
                     <label htmlFor={`zip${addressType === 'Billing Address' ? 'Bill' : ''}`}>Zip Code</label>
-                    <input type="text" name={`zip${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? zipBill : zip} placeholder="21003" onChange = {onChange}/>
+                    <input type="text" name={`zip${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? zipBill : zip} onChange = {onChange}/>
                     <br/>
                     <label htmlFor={`state${addressType === 'Billing Address' ? 'Bill' : ''}`}>State</label>
-                    <input type="text" name={`state${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? stateBill : state} placeholder="NY" onChange = {onChange}/>
+                    <input type="text" name={`state${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? stateBill : state} onChange = {onChange}/>
                     <br/>
                     <label htmlFor={`city${addressType === 'Billing Address' ? 'Bill' : ''}`}>City</label>
-                    <input type="text" name={`city${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? cityBill : city} placeholder="NYC" onChange = {onChange}/>
+                    <input type="text" name={`city${addressType === 'Billing Address' ? 'Bill' : ''}`} value = {addressType === 'Billing Address' ? cityBill : city} onChange = {onChange}/>
                     <br/>
                     <button type='submit'>{`Save ${addressType}`}</button>
             </form>
@@ -174,16 +214,16 @@ class CheckoutForm extends Component{
                     </select>
                     <br/>
                     <label htmlFor="firstNameOnCard">First Name on the Card</label>
-                    <input type="text" name="firstNameOnCard" placeholder="John" value={firstNameOnCard} onChange = {onChange}/>
+                    <input type="text" name="firstNameOnCard" value={firstNameOnCard} onChange = {onChange}/>
                     <br/>
                     <label htmlFor="lastNameOnCard">Last Name on the Card</label>
-                    <input type="text" name="lastNameOnCard" placeholder="Eric" value={lastNameOnCard} onChange = {onChange}/>
+                    <input type="text" name="lastNameOnCard" value={lastNameOnCard} onChange = {onChange}/>
                     <br/>
-                    <label htmlFor="cardNum">Credit Card Number</label>
-                    <input type="text" name="cardNum" placeholder="1111-2222-3333-4444" value={cardNum} onChange = {onChange}/>
+                    <label htmlFor="number">Credit Card Number</label>
+                    <input type="text" name="number" value={number} onChange = {onChange}/>
                     <br/>
                     <label htmlFor="expMonth">Exp Month</label>
-                    <select type="text" name="expMonth" placeholder="August" value={expMonth} onChange = {onChange}>
+                    <select type="text" name="expMonth" value={expMonth} onChange = {onChange}>
                         {
                             expMonthArr.map(month=>{
                                 return (
@@ -194,13 +234,16 @@ class CheckoutForm extends Component{
                     </select>
                     <br/>
                     <label htmlFor="expYear">Exp Year</label>
-                    <input type="text" name="expYear" placeholder="2020" value={expYear} onChange = {onChange}/>
+                    <input type="text" name="expYear" value={expYear} onChange = {onChange}/>
                     <br/>
                     <label htmlFor="cvv">CVV</label>
-                    <input type="text" name="cvv" placeholder="345" value={cvv} onChange = {onChange}/>
+                    <input type="text" name="cvv" value={cvv} onChange = {onChange}/>
                     <br/>
                     <button type='submit'>Save</button>
                 </form>
+                <button onClick={() => {
+                    this.props.history.push('/cart')
+                }}>Go Back To Cart</button>
                 <button onClick={()=>{
                     this.props.postOrder(this.props.user.id)
                     .then((order)=>{
@@ -217,7 +260,8 @@ class CheckoutForm extends Component{
 
 const mapStateToProps = state => {
     return {
-        user: state.user,
+        user: state.user? state.user:false,
+        address: state.address? state.address:{},
     }
 }
 
@@ -225,7 +269,9 @@ const mapDispatchToProps = dispatch => {
     return {
         postAddress: (dataForm, userId, type) => dispatch(postAddress(dataForm, userId, type)),
         postCreditCard: (userId, cardInfo) => dispatch(postCreditCard(userId, cardInfo)),
-        postOrder: (userId) => dispatch(createOrder(userId))
+        postOrder: (userId) => dispatch(createOrder(userId)),
+        getUserAddress: (userId, type) => dispatch(userAddress(userId, type)),
+        getCreditCard: (userId)=>dispatch(getCreditCard(userId))
     }
 }
 

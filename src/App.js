@@ -4,10 +4,12 @@ import {HashRouter as Router, Route, Switch} from 'react-router-dom';
 import Nav from './Nav';
 import Home from './Home'; 
 import ProductList from './ProductList';
+import ManageProduct from './ManageProduct';
 import Product from './Product';
 import Cart from './Cart';
 import CheckoutForm from './CheckoutForm'
-import Order from './order'
+import Order from './Order'
+import ManageOrder from './ManageOrder';
 import { fetchProducts } from './store/product';
 import { sessionLogin } from './store/user';
 import { connect } from 'react-redux';
@@ -22,24 +24,32 @@ class App extends Component{
     }
 
     render(){
-        if(this.props.isLogin){
+        let isLogin = this.props.isLogin
+        if(isLogin){
             console.log('we have a user')
         }else{
             console.log('user is not login')
         }
         return(
             <Router>
-                <Route path = '/' component={Nav}/>
+                <Route path = '/' render={(({location}) => Nav(isLogin, {location}))}/>
                 <Switch>
                     <Route exact path = '/home' component={Home}/>
                     <Route exact path = '/login' component={Login}/>
                     <Route exact path = '/signup' component={Login}/>
                     <Route exact path = '/logout' component={Login}/>
+                    <Route exact path = '/productList/:idx' component={ProductList}/>
                     <Route exact path = '/productList' component={ProductList}/>
+                    <Route exact path = '/manageProduct' component={ManageProduct}/>
+                    <Route exact path = '/productList/search/:srchVal' component={ProductList} />
+                    <Route exact path = '/productList/category/:catId' component={ProductList} />
+                    <Route exact path = '/productList/category/:catId/:srchVal' component={ProductList} />
                     <Route exact path = '/product/:id' component={Product}/>
                     <Route exact path = '/cart' component={Cart}/>
                     <Route exact path = '/checkout' component={CheckoutForm}/>
                     <Route exact path = '/order' component={Order}/>
+                    <Route exact path = '/manageOrder' component={ManageOrder}/>
+                    <Route component={ProductList}/>
                 </Switch>
             </Router>
         )
@@ -49,7 +59,7 @@ class App extends Component{
 // may need modify here
 const mapStateToProps = ({user}) => {
     return {
-        isLogin: user.id
+        isLogin: (user && user.id)? user: false
     }
 }
 

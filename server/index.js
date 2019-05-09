@@ -24,6 +24,7 @@ app.use(session({
   }));
 
 // authentication router
+
 app.use('/auth', require('./routes/user'));
 
 app.use('/api/products', require('./routes/product'));

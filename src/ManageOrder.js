@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { getOrderByUser } from './store/order';
 import { setUserCart } from './store/cart';
 
-class Order extends Component {
+class ManageOrder extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -70,4 +70,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Order);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageOrder);
