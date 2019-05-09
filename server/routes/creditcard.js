@@ -5,6 +5,9 @@ const CreditCard = db.CreditCard;
 const router = express.Router();
 
 router.get('/user/:userId', (req, res, next) => {
+    if(req.params.userId !== req.session.userId){
+        res.send(500);
+    }
     CreditCard.findOne({
                     where: { active: true, 
                             userId: req.params.userId }})
@@ -13,6 +16,9 @@ router.get('/user/:userId', (req, res, next) => {
 });
 
 router.post('/user/:userId', (req, res, next) => {
+    if(req.params.userId !== req.session.userId){
+        res.send(500);
+    }
     let argument = {
         userId: req.params.userId,
         cardType: req.body.cardType,

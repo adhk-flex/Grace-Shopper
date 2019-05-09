@@ -2,21 +2,32 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { lineItems, fetchLineItems  } from './store/lineitem';
 import { fetchFilteredProducts } from './store/product';
+import { getProductByPg, fetchProducts } from './store/product'
+import Pager from './Pager';
+import { lineItems, fetchLineItems } from './store/lineitem';
 import Search from "./Search";
+
 
 class ProductList extends Component {
     constructor(props){
         super(props)
         this.state = {
+            count: 0,
         }
     }
+
     componentDidMount(){
         const { srchVal, catId } = this.props.match.params;     
 
         if(srchVal || catId){
             this.props.fetchFilteredProducts(srchVal, catId);
-        }
+        } else {
+            this.props.fetchProducts();
+	}
     }
+
+
+
     componentDidUpdate(prevProps){
         const { srchVal, catId } = this.props.match.params;
         if(prevProps.cart.id !== this.props.cart.id){
@@ -28,16 +39,21 @@ class ProductList extends Component {
                 this.props.fetchFilteredProducts(srchVal, catId);
             }
         }
+        }   
+        if(prevProps.match.params.idx !== this.props.match.params.idx){
+            this.props.getProductByPg(this.props.match.params.idx)
+        }  
     }
     render(){
         const history = this.props.history;
-        const Products = this.props.products;
+        const Products = this.props.products.slice(0, 10);
         const totalItems = this.props.lineItems.reduce((acc, item) => {
             acc += item.quantity
             return acc
         }, 0)
         return(
             <div>
+                <Pager history={history}/>
                 <h1>Here are All of our Products:</h1>
                 <Search history={history} match={this.props.match}/>
                 <ul className='list-group'>
@@ -70,7 +86,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchLineItems: cartId => dispatch(fetchLineItems(cartId)),
+<<<<<<< HEAD
         fetchFilteredProducts: (srchVal, catId) => dispatch(fetchFilteredProducts(srchVal, catId))
+=======
+        fetchProducts: () => dispatch(fetchProducts()),
+        getProductByPg: pgIdx => dispatch(getProductByPg(pgIdx))
+>>>>>>> ed490eb9ae838a8cf6aa4bb7944cac0eaa54f634
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ProductList);
