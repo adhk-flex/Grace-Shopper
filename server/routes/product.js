@@ -18,21 +18,34 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.get('/search/:srchVal', (req, res, next) => {
-    const srchVal = req.params.srchVal;
+    const srchVal = req.params.srchVal.toLowerCase();
     Product.findAll()
         .then((products) => products.filter(product => 
-            product.name.includes(srchVal) 
-            || product.description.includes(srchVal)
-            || product.productNumber.includes(srchVal)
+            product.name.toLowerCase().includes(srchVal) 
+            || product.description.toLowerCase().includes(srchVal)
+            || product.productNumber.toLowerCase().includes(srchVal)
             )
         )
         .then(results => res.send(results))
         .catch(next);
 });
 
-router.get('/category/:catId', (req, res, next) => {
+router.get('/category/:catId/:srchVal?', (req, res, next) => {
+    const srchVal = req.params.srchVal.toLowerCase();
     Product.findAll({ where: { categoryId: req.params.catId } })
-        .then((products) => res.send(products))
+        .then((products) => {
+            console.log("SEARCHVAL", req.params.srchVal);
+            if(!srchVal){
+                res.send(products);
+            } else { 
+                const results = products.filter(product => 
+                    product.name.toLowerCase().includes(srchVal) 
+                    || product.description.toLowerCase().includes(srchVal)
+                    || product.productNumber.toLowerCase().includes(srchVal)
+                    )
+                res.send(results);
+             }
+        })
         .catch(next);
 });
 
