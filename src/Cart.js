@@ -37,15 +37,18 @@ class Cart extends Component {
 
 
     render () {
-        console.log("props", this.props)
-        console.log("state", this.state)
+        // console.log("props", this.props)
+        // console.log("state", this.state)
         const {lineItems} = this.props;
         const { onChange, onUpdate, onDelete } = this;
-        const TotalAmount = parseFloat(lineItems.reduce((acc, item) => {
+        const totalAmount = lineItems.reduce((acc, item) => {
             acc += item.quantity * item.price
             return acc
-        }, 0)).toFixed(2);
-        console.log('isLogin: ', this.props.isLogin)
+        }, 0)
+        console.log(typeof totalAmount)
+        const disableCheckout = totalAmount === 0;
+        console.log(disableCheckout)
+        // console.log('isLogin: ', this.props.isLogin)
         if(!lineItems){
             return null
         }else{
@@ -74,8 +77,8 @@ class Cart extends Component {
                             )
                         })}
                     </ul>
-                    <span>{`Total Amount: $${TotalAmount}`}</span>
-                    <button onClick={()=>this.props.history.push('/checkout')}>Check Out!</button>
+                    <span>{`Total Amount: $${totalAmount}`}</span>
+                    <button onClick={()=>this.props.history.push('/checkout')} disabled={disableCheckout} >Check Out!</button>
                 </div>
             )
         }
