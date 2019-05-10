@@ -9,14 +9,10 @@ class Product extends Component{
             selectedQuantity: '',
         }
     }
-    
-    async componentDidMount () {
-        await this.props.fetchLineItems(this.props.cart.id)
-    }
 
-    async componentDidUpdate (prevProps) {
+    componentDidUpdate (prevProps) {
         if(prevProps.cart.id !== this.props.cart.id){
-            await this.props.fetchLineItems(this.props.cart.id)
+            this.props.fetchLineItems(this.props.cart.id)
         }     
     }
 
@@ -46,7 +42,6 @@ class Product extends Component{
             this.props.updateLineItem(i.id, i, cartId)
         } else {
             this.props.addLineItem(item, cartId)
-            .then(() => console.log(this.props.lineItems))
         }
     }
 
@@ -58,7 +53,14 @@ class Product extends Component{
             return acc
         }, 0)
         let product = this.props.products.find(p => p.id === id);
-        if(!product){
+        const lineItemExist = () => {
+            if (lineItems.find(i => i.productId === product.id)) {
+                return lineItems.find(i => i.productId === product.id)
+            } else {
+                return false
+            }
+        }
+        if (!product) {
             return null
         }
         const {name, quantity, imgUrl, description, price} = product;
@@ -78,6 +80,9 @@ class Product extends Component{
                 <img className = 'product-image' src={imgUrl}/>
                 <br/>
                 <p>{description}</p>
+                <div>
+                    {lineItemExist() !== false ? `There ${lineItemExist().quantity >1 ? 'are' : 'is'} ${lineItemExist().quantity} ${lineItemExist().name} in cart`: null}
+                </div>
                 <form onSubmit={onSave}>
                     <select className = 'form-control' name='selectedQuantity' value={selectedQuantity} onChange={onChange}>
                         {

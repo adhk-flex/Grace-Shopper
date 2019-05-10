@@ -8,14 +8,9 @@ class Cart extends Component {
         this.state = { }
     }
 
-    async componentDidMount(){
-        const cartId = this.props.cart && this.props.cart.id? this.props.cart.id:false
-        await this.props.fetchLineItems(cartId)
-    }
-
-    async componentDidUpdate(prevProps){
+    componentDidUpdate(prevProps){
         if(prevProps.cart.id !== this.props.cart.id){
-            await this.props.fetchLineItems(this.props.cart.id)
+            this.props.fetchLineItems(this.props.cart.id)
         }
     }
 
@@ -27,8 +22,6 @@ class Cart extends Component {
     onUpdate = e => {
         e.preventDefault()
         const {id, cartId, quantity} = this.state
-        // console.log(this.state)
-        // console.log("Quantity", quantity)
         if (quantity === "0") {
             this.props.delLineItem(id, cartId)
         } else {
@@ -42,18 +35,13 @@ class Cart extends Component {
 
 
     render () {
-        // console.log("props", this.props)
-        // console.log("state", this.state)
         const {lineItems} = this.props;
         const { onChange, onUpdate, onDelete } = this;
         const totalAmount = lineItems.reduce((acc, item) => {
             acc += item.quantity * item.price
             return acc
         }, 0)
-        console.log(typeof totalAmount)
         const disableCheckout = totalAmount === 0;
-        console.log(disableCheckout)
-        // console.log('isLogin: ', this.props.isLogin)
         if(!lineItems){
             return null
         }else{

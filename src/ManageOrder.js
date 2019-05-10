@@ -4,18 +4,27 @@ import { connect } from 'react-redux';
 import { getOrderByUser } from './store/order';
 import { setUserCart } from './store/cart';
 
-class Order extends Component {
+class ManageOrder extends Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            order: []
+        }
+    }
 
     componentDidUpdate(prevProps){
-        if(JSON.stringify(prevProps)!==JSON.stringify(this.props)){
+        if(prevProps.user.id !== this.props.user.id){
             if(this.props.user.id){
                     this.props.getOrderByUser(this.props.user.id)
+                    .then(orders => {
+                        this.setState({order: orders.order})
+                    })
                 }
         }
     }
         
     render(){
-        const {order} = this.props
+        const {order} = this.state
         return (
             <div>
                 <h3>Order Page</h3>
@@ -47,6 +56,7 @@ class Order extends Component {
 } 
 
 const mapStateToProps = state => {
+    console.log(state)
     return {
         user: state.user? state.user:false,
         order: state.order? state.order:false
@@ -60,4 +70,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Order);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageOrder);
