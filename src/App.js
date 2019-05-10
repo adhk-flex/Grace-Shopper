@@ -14,6 +14,7 @@ import { fetchProducts } from './store/product';
 import { sessionLogin } from './store/user';
 import { connect } from 'react-redux';
 import Login from './login';
+import ShipAddress from './ShipAddress';
 
 
 class App extends Component{
@@ -47,6 +48,7 @@ class App extends Component{
                     <Route exact path = '/product/:id' component={Product}/>
                     <Route exact path = '/cart' component={Cart}/>
                     <Route exact path = '/checkout' component={CheckoutForm}/>
+                    <Route exact path = '/checkoutStep1' component={ShipAddress}/>
                     <Route exact path = '/order' component={Order}/>
                     <Route exact path = '/manageOrder' component={ManageOrder}/>
                     <Route component={ProductList}/>
