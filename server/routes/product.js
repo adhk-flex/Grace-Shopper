@@ -43,7 +43,8 @@ router.get('/search/:srchVal', (req, res, next) => {
 });
 
 router.get('/category/:catId/:srchVal?', (req, res, next) => {
-    const srchVal = req.params.srchVal.toLowerCase();
+    const srchVal = req.params.srchVal 
+    ? req.params.srchVal.toLowerCase() : undefined;
     Product.findAll({ where: { categoryId: req.params.catId } })
         .then((products) => {
             if(!srchVal){
@@ -57,6 +58,12 @@ router.get('/category/:catId/:srchVal?', (req, res, next) => {
                 res.send(results);
              }
         })
+        .catch(next);
+});
+
+router.get('/:id', (req, res, next) => {
+    Product.findOne({where: {id: req.params.id}})
+        .then((product) => res.json(product))
         .catch(next);
 });
 
