@@ -5,26 +5,17 @@ import { getOrderByUser } from './store/order';
 import { setUserCart } from './store/cart';
 
 class Order extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            order: []
-        }
-    }
 
     componentDidUpdate(prevProps){
-        if(prevProps.user.id !== this.props.user.id){
+        if(JSON.stringify(prevProps)!==JSON.stringify(this.props)){
             if(this.props.user.id){
                     this.props.getOrderByUser(this.props.user.id)
-                    .then(orders => {
-                        this.setState({order: orders.order})
-                    })
                 }
         }
     }
         
     render(){
-        const {order} = this.state
+        const {order} = this.props
         return (
             <div>
                 <h3>Order Page</h3>
@@ -56,7 +47,6 @@ class Order extends Component {
 } 
 
 const mapStateToProps = state => {
-    console.log(state)
     return {
         user: state.user? state.user:false,
         order: state.order? state.order:false
