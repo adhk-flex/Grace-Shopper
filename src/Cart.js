@@ -15,15 +15,11 @@ class Cart extends Component {
 
     onChange = (item, e) => {
         const locateItem = this.props.lineItems.find(i => i.id === item.id)
-        console.log('locateItem', locateItem)
         locateItem.quantity = Number(e.target.value)
-        console.log('locateItem2', locateItem)
-        console.log(this.props.lineItems)
     };
 
     onUpdate = (item, e) => {
         e.preventDefault()
-        console.log(item)
         const {quantity, id, cartId} = item;
         if (quantity === 0) {
             this.props.delLineItem(id, cartId)
