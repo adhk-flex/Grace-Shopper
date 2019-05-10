@@ -13,6 +13,62 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
+router.get('/search/:srchVal/:pgIdx?', (req, res, next) => {
+    const srchVal = req.params.srchVal.toLowerCase();
+    Product.findAll({ order:[["name", "asc"]] })
+        .then((products) => products.filter(product => 
+            product.name.toLowerCase().includes(srchVal) 
+            || product.description.toLowerCase().includes(srchVal)
+            || product.productNumber.toLowerCase().includes(srchVal)
+            )
+        )
+        .then(results => {
+            if(req.params.pgIdx){
+                const end = req.params.pgIdx * 10;
+                const start = end - 10;
+                res.send(results.slice(start, end));
+            } else {
+                res.send(results);
+            }
+        })
+        .catch(next);
+});
+
+router.get('/category/:catId/:pgIdx?', (req, res, next) => {
+    console.log("HIT CATEGORY GET")
+    Product.findAll({ where: { categoryId: req.params.catId }, order: [["name", "asc"]] })
+        .then((products) => {
+            if(req.params.pgIdx){
+                const end = req.params.pgIdx * 10;
+                const start = end - 10 
+                res.send(products.slice(start, end));
+            } else { 
+                res.send(products);
+             }
+        })
+        .catch(next);
+});
+
+router.get('/category/:catId/search/:srchVal/:pgIdx?', (req, res, next) => {
+    const { srchVal, pgIdx } = req.params;
+    Product.findAll({ where: { categoryId: req.params.catId }, order: [["name", "asc"]] })
+        .then((products) => {
+            const results = products.filter(product => 
+                product.name.toLowerCase().includes(srchVal) 
+                || product.description.toLowerCase().includes(srchVal)
+                || product.productNumber.toLowerCase().includes(srchVal)
+                )
+            if(pgIdx){
+                const end = req.params.pgIdx * 10;
+                const start = end - 10;
+                res.send(results.slice(start, end));
+            } else {
+                res.send(results);
+            }
+        })
+        .catch(next);
+});
+
 router.get('/:pgIdx', (req, res, next) => {
     const end = req.params.pgIdx * 10;
     const start = end - 10
@@ -26,37 +82,6 @@ router.get('/:pgIdx', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
     Product.findOne({where: {id: req.params.id}})
         .then((product) => res.json(product))
-        .catch(next);
-});
-
-router.get('/search/:srchVal', (req, res, next) => {
-    const srchVal = req.params.srchVal.toLowerCase();
-    Product.findAll()
-        .then((products) => products.filter(product => 
-            product.name.toLowerCase().includes(srchVal) 
-            || product.description.toLowerCase().includes(srchVal)
-            || product.productNumber.toLowerCase().includes(srchVal)
-            )
-        )
-        .then(results => res.send(results))
-        .catch(next);
-});
-
-router.get('/category/:catId/:srchVal?', (req, res, next) => {
-    const srchVal = req.params.srchVal.toLowerCase();
-    Product.findAll({ where: { categoryId: req.params.catId } })
-        .then((products) => {
-            if(!srchVal){
-                res.send(products);
-            } else { 
-                const results = products.filter(product => 
-                    product.name.toLowerCase().includes(srchVal) 
-                    || product.description.toLowerCase().includes(srchVal)
-                    || product.productNumber.toLowerCase().includes(srchVal)
-                    )
-                res.send(results);
-             }
-        })
         .catch(next);
 });
 
