@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { lineItems, fetchLineItems  } from './store/lineitem';
 import { fetchFilteredProducts } from './store/product';
 import { getProductByPg, fetchProducts } from './store/product'
 import Pager from './Pager';
@@ -38,8 +37,8 @@ class ProductList extends Component {
             if(srchVal || catId){
                 this.props.fetchFilteredProducts(srchVal, catId);
             }
-        }
         }   
+        
         if(prevProps.match.params.idx !== this.props.match.params.idx){
             if (this.props.match.params.idx === undefined) {
                 this.props.fetchProducts()
@@ -90,12 +89,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchLineItems: cartId => dispatch(fetchLineItems(cartId)),
-<<<<<<< HEAD
-        fetchFilteredProducts: (srchVal, catId) => dispatch(fetchFilteredProducts(srchVal, catId))
-=======
+        fetchFilteredProducts: (srchVal, catId) => dispatch(fetchFilteredProducts(srchVal, catId)),
         fetchProducts: () => dispatch(fetchProducts()),
         getProductByPg: pgIdx => dispatch(getProductByPg(pgIdx))
->>>>>>> ed490eb9ae838a8cf6aa4bb7944cac0eaa54f634
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ProductList);
