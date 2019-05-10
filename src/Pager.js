@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchProducts } from './store/product';
+import { fetchProducts, fetchFilteredProducts } from './store/product';
 
 class Pager extends Component {
   constructor (props) {
@@ -12,14 +12,47 @@ class Pager extends Component {
     }
   }
 
+  load = () => {
+    const { catId, srchVal, pgIdx } = this.props.match.params;
+    const { fetchFilteredProducts, fetchProducts } = this.props;
+    if(catId || srchVal){
+      fetchFilteredProducts(srchVal, catId, pgIdx)
+        .then(() => this.setState({ count: this.props.products.length, pageNum: +pgIdx || 1 }))
+    } else {
+      fetchProducts()
+        .then(() => this.setState({ count: this.props.products.length, pageNum: +pgIdx || 1 }))
+    }
+  }
+
   componentDidMount () {
-    this.props.fetchProducts()
-      .then(() => this.setState({count: this.props.products.length}))
+    this.load();
+    // const { catId, srchVal, pgIdx } = this.props.match.params;
+    // const { fetchFilteredProducts, fetchProducts } = this.props;
+    // if(srchVal !== prevProps.match.params.srchVal || catId !== prevProps.match.params.catId) {
+    //   if(catId || srchVal){
+    //     fetchFilteredProducts(srchVal, catId, pgIdx)
+    //       .then(() => this.setState({ count: this.props.products.length, pageNum: 1 }))
+    //   } else {
+    //     fetchProducts()
+    //       .then(() => this.setState({ count: this.props.products.length, pageNum: 1 }))
+    //   }
+    // }
+  }
+
+  componentDidUpdate (prevProps) {
+    const { srchVal, catId } = this.props.match.params;
+    if(srchVal !== prevProps.match.params.srchVal || catId !== prevProps.match.params.catId){
+      this.load();
+    }
   }
 
   onClick = (value) => {
+    const { srchVal, catId } = this.props.match.params;
     this.setState({pageNum: value})
-    this.props.history.push(`/productList/${value}`)
+    let baseUrl = "/productList";
+    if (catId) baseUrl += `/category/${catId}`;
+    if (srchVal) baseUrl += `/search/${srchVal}`
+    this.props.history.push(`${baseUrl}/${value}`)
   }
 
   render(){
@@ -60,7 +93,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchProducts: () => dispatch(fetchProducts())
+    fetchProducts: () => dispatch(fetchProducts()),
+    fetchFilteredProducts: (srchVal, catId) => dispatch(fetchFilteredProducts(srchVal, catId))
   }
 };
 

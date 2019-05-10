@@ -35,7 +35,6 @@ router.get('/search/:srchVal/:pgIdx?', (req, res, next) => {
 });
 
 router.get('/category/:catId/:pgIdx?', (req, res, next) => {
-    console.log("HIT CATEGORY GET")
     Product.findAll({ where: { categoryId: req.params.catId }, order: [["name", "asc"]] })
         .then((products) => {
             if(req.params.pgIdx){
