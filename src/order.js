@@ -15,8 +15,6 @@ class Order extends Component {
     }
         
     render(){
-        // const {order} = this.state
-        console.log('this.props: ', this.props)
         const {order} = this.props
         return (
             <div>
@@ -49,7 +47,6 @@ class Order extends Component {
 } 
 
 const mapStateToProps = state => {
-    console.log(state)
     return {
         user: state.user? state.user:false,
         order: state.order? state.order:false

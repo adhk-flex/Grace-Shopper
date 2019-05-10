@@ -42,7 +42,6 @@ class Product extends Component{
             this.props.updateLineItem(i.id, i, cartId)
         } else {
             this.props.addLineItem(item, cartId)
-            .then(() => console.log(this.props.lineItems))
         }
     }
 
