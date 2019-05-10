@@ -80,9 +80,9 @@ class Product extends Component{
                 <img className = 'product-image' src={imgUrl}/>
                 <br/>
                 <p>{description}</p>
-                <div>
+                <p>
                     {lineItemExist() !== false ? `There ${lineItemExist().quantity >1 ? 'are' : 'is'} ${lineItemExist().quantity} ${lineItemExist().name} in cart`: null}
-                </div>
+                </p>
                 <form onSubmit={onSave}>
                     <select className = 'form-control' name='selectedQuantity' value={selectedQuantity} onChange={onChange}>
                         {
