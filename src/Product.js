@@ -9,14 +9,10 @@ class Product extends Component{
             selectedQuantity: '',
         }
     }
-    
-    async componentDidMount () {
-        await this.props.fetchLineItems(this.props.cart.id)
-    }
 
-    async componentDidUpdate (prevProps) {
+    componentDidUpdate (prevProps) {
         if(prevProps.cart.id !== this.props.cart.id){
-            await this.props.fetchLineItems(this.props.cart.id)
+            this.props.fetchLineItems(this.props.cart.id)
         }     
     }
 
