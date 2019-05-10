@@ -26,17 +26,6 @@ class Pager extends Component {
 
   componentDidMount () {
     this.load();
-    // const { catId, srchVal, pgIdx } = this.props.match.params;
-    // const { fetchFilteredProducts, fetchProducts } = this.props;
-    // if(srchVal !== prevProps.match.params.srchVal || catId !== prevProps.match.params.catId) {
-    //   if(catId || srchVal){
-    //     fetchFilteredProducts(srchVal, catId, pgIdx)
-    //       .then(() => this.setState({ count: this.props.products.length, pageNum: 1 }))
-    //   } else {
-    //     fetchProducts()
-    //       .then(() => this.setState({ count: this.props.products.length, pageNum: 1 }))
-    //   }
-    // }
   }
 
   componentDidUpdate (prevProps) {
