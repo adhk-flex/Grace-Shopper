@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 const Nav = (isLogin, {location: {pathname}}, lineItems) => {
     let finalLinks=[];
     const itemQuantity = lineItems.reduce((acc, item) => {
-        acc += item.quantity
+        acc += Number(item.quantity)
         return acc
     },0)
     const adminLinks = [

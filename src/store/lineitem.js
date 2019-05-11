@@ -17,10 +17,9 @@ export const lineItems = (state = [], action) => {
 };
 
 export const fetchLineItems = cartId => dispatch => {
-  console.log('cartId in fetchLineItems store/lineItem.js: ', cartId)
-  if (cartId === null) {
+  if (cartId === undefined) {
     const items = JSON.parse(localStorage.getItem('lineItems'))
-    dispatch(setLineItems(items))
+    return new Promise(() => dispatch(setLineItems(items)))
   } else {
   return axios.get(`/api/lineitems/cart/${cartId}`)
     .then(items => dispatch(setLineItems(items.data)))

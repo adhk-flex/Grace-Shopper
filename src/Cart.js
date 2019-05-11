@@ -12,7 +12,7 @@ class Cart extends Component {
     }
     componentDidMount(){
         this.props.fetchLineItems(this.props.cart.id)
-        .catch(e => {this.setState({errors: e.response.data.errors})})
+            .catch(e => {this.setState({errors: e.response.data.errors})})
 
     }
 
@@ -48,6 +48,7 @@ class Cart extends Component {
 
     render () {
         const {lineItems} = this.props;
+        console.log('loggingline in cart', lineItems)
         const { onChange, onUpdate, onDelete } = this;
         const totalAmount = lineItems.reduce((acc, item) => {
             acc += item.quantity * item.price
