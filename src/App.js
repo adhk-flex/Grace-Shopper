@@ -28,12 +28,11 @@ class App extends Component{
             localStorage.setItem('lineItems', JSON.stringify([]))
         }
         if(!localStorage.getItem('shippingAddress')){
-            localStorage.setItem('shippingAddress', JSON.stringify([]))
+            localStorage.setItem('shippingAddress', JSON.stringify({}))
         }
         if(!localStorage.getItem('billingAddress')){
-            localStorage.setItem('billingAddress', JSON.stringify([]))
+            localStorage.setItem('billingAddress', JSON.stringify({}))
         }
-        
     }
     
     componentDidUpdate(prevProps){

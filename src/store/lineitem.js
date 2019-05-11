@@ -30,7 +30,10 @@ export const fetchLineItems = cartId => dispatch => {
 export const addLineItem = (product, cartId) => dispatch => {
 
   if(cartId === undefined){
-    const items = JSON.parse(localStorage.getItem('lineItems'))  
+    let items = JSON.parse(localStorage.getItem('lineItems'))  
+    if(!items){
+      items=[]
+    }
     items.push(product)
     localStorage.setItem('lineItems', JSON.stringify(items));
     return new Promise(() => dispatch(fetchLineItems()))
@@ -48,15 +51,14 @@ export const delLineItem = (id, cartId) => dispatch => {
 
 export const updateLineItem = (id, formData, cartId) => dispatch => {
   if(cartId===undefined){
-    const items = JSON.parse(localStorage.getItem('lineItems'))  
-    let newItems = items.map(item=>{
-      if(item.productId===product.productId){
-        item.quantity=product.quantity+Number(item.quantity)
-        console.log(item.quantity)
-      }
-      return item;
-    })
-    localStorage.setItem('lineItems', JSON.stringify(newItems))
+    console.log(formData)
+    let items = JSON.parse(localStorage.getItem('lineItems'))  
+    let newitems = items.filter(item=>item.productId!==formData.productId)
+    if(!newitems){
+      newitems=[]
+    }
+    newitems.push(formData)
+    localStorage.setItem('lineItems', JSON.stringify(newitems))
     return new Promise(() => dispatch(fetchLineItems()))
   }
   else{
