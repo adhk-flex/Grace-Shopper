@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { lineItems, fetchLineItems } from './store/product';
+import { lineItems, fetchLineItems } from './store/lineitem';
 
 class ManageProduct extends Component {
     constructor(props){

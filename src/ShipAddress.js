@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import {userAddress} from './store/address';
+import {userAddress, postAddress} from './store/address';
 
 class ShipAddress extends Component{
 
     constructor(props){
         super(props)
-        this.state = this.userShipAddress(this.props.address)
+        this.state = this.userShipAddress()
     }
 
     componentDidUpdate(prevProps){
@@ -17,8 +17,7 @@ class ShipAddress extends Component{
     }
 
     userShipAddress = (address) => {
-        return (
-        {
+        return {
             firstName: address ? address.firstName : '',
             lastName: address ? address.lastName : '',
             addressLine1: address ? address.addressLine1 : '',
@@ -27,7 +26,7 @@ class ShipAddress extends Component{
             state: address ? address.state : '',
             zip: address ? address.zip : '',
         }
-        )
+        
     }
 
     onChange = (e) => {
@@ -36,23 +35,23 @@ class ShipAddress extends Component{
 
     onSave = (e) => {
         e.preventDefault()
-        address = {
-            addressType: 'shipping',
-            firstName: this.state.firstName,
-            lastName: this.state.lastName,
-            addressLine1: this.state.addressLine1,
-            addressLine2: this.state.addressLine2,
-            city: this.state.city,
-            state: this.state.state,
-            zip: this.state.zip,
-        }
+        const address = {
+                addressType: 'shipping',
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                addressLine1: this.state.addressLine1,
+                addressLine2: this.state.addressLine2,
+                city: this.state.city,
+                state: this.state.state,
+                zip: this.state.zip,
+            }
         const userId = this.props.user.id;
         this.props.postAddress(address, userId, address.addressType)
         .catch(ex=>console.log(ex))
     }
     
     Addressform = (addressType, firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange, onSave) => (
-        <form onSubmit={(e) => onSaveAddress(addressType, e)}>
+        <form onSubmit={(e) => onSave(e)}>
                 <label htmlFor={`firstName`}>FirstName</label>
                 <input type="text" name={`firstName`} value={firstName} onChange = {onChange}/>
                 <br/>
@@ -101,7 +100,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getShipAddress: (userId, type) => dispatch(userAddress(userId, type))
+        getShipAddress: (userId, type) => dispatch(userAddress(userId, type)),
+        postAddress: (dataForm, userId, type) => dispatch(postAddress(dataForm, userId, type))
     }
 }
 
