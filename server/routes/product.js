@@ -101,4 +101,11 @@ router.post('/', (req, res, next)=>{
     .catch((error) => console.log(error));
 });
 
+router.put('/:id', (req, res, next) => {
+    Product.update(req.body, 
+        {returning: true, where: {id: req.params.id}})
+    .then(([ rowsUpdate, [updatedProduct] ]) => res.json(updatedProduct))
+    .catch(next);
+});
+
 module.exports = router;
