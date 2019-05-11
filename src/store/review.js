@@ -31,7 +31,7 @@ const getReviewsByProduct = productId => dispatch => {
     .then(reviews => dispatch(setReviews(reviews.data)))
 };
 
-const postReview = (review, productId, userId) => dispatch => {
+export const postReview = (review, productId, userId) => dispatch => {
   return axios.post(`/api/reviews/${productId}/${userId}`, review)
     .then(() => dispatch(fetchReviews()))
 };

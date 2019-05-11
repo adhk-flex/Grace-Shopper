@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { addLineItem, fetchLineItems, updateLineItem } from './store/lineitem';
 import Errors from './Errors';
+import Review from './Review'
 
 class Product extends Component{
     constructor(props){
@@ -103,6 +104,7 @@ class Product extends Component{
                 <img className = 'shopping-cart' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKorRm0enmL_tFIgvKcNcOjb_3YkWnny-CIK0BW5F9DoGocc7DkA' onClick={()=>{this.props.history.push('/cart')}}/>
                 <span className = 'shopping-item-quantity'>{totalItems}</span>
             <Errors errors={this.state.errors} />
+            <Review productId={this.props.match.params.id}/>
             </div>
         )    
     }
@@ -112,7 +114,8 @@ const mapStateToProps = (state) => {
     return {
         products: state.products? state.products: false,
         lineItems: state.lineItems? state.lineItems:false,
-        cart: state.cart? state.cart:false
+        cart: state.cart? state.cart:false,
+        user: state.user
     }
 };
 

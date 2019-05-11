@@ -25,10 +25,11 @@ router.get('/:productId', (req, res, next) => {
 router.post('/:productId/:userId', (req, res, next) => {
   let argument = {
     content: req.body.content,
-    starts: req.body.start,
+    stars: req.body.stars,
     userId: req.params.userId,
     productId: req.params.productId
   }
+  console.log(argument)
   Review.create(argument)
     .then((reviews) => res.json(reviews))
     .catch(next);
