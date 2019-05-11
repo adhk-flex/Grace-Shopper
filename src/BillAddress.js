@@ -12,7 +12,7 @@ class BillAddress extends Component{
     }
 
     componentDidUpdate(prevProps){
-        if(prevProps.user.id !== this.props.user.id){
+        if(JSON.stringify(prevProps) !== JSON.stringify(this.props)){
             this.props.getBillAddress(this.props.user.id, 'billing')
             .then(({address})=>this.setState({...address}))
         }
