@@ -1,15 +1,25 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { fetchLineItems, updateLineItem, delLineItem } from './store/lineitem';
+import Errors from './Errors';
 
 class Cart extends Component {
+    constructor(){
+        super()
+        this.state = {
+            errors: []
+        }
+    }
     componentDidMount(){
         this.props.fetchLineItems(this.props.cart.id)
+        .catch(e => {this.setState({errors: e.response.data.errors})})
+
     }
 
     componentDidUpdate(prevProps){
         if (prevProps.cart.id !== this.props.cart.id){
             this.props.fetchLineItems(this.props.cart.id)
+            .catch(e => {this.setState({errors: e.response.data.errors})})
         }
     }
 
@@ -23,13 +33,16 @@ class Cart extends Component {
         const {quantity, id, cartId} = item;
         if (quantity === 0) {
             this.props.delLineItem(id, cartId)
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         } else {
             this.props.updateLineItem(id, item, cartId)
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         } 
     }
 
     onDelete = (id, cartId) => {
         this.props.delLineItem(id, cartId)
+            .catch(e => {this.setState({errors: e.response.data.errors})})
     }
 
 
@@ -71,6 +84,7 @@ class Cart extends Component {
                     </ul>
                     <span>{`Total Amount: $${totalAmount}`}</span>
                     <button onClick={()=>this.props.history.push('/checkoutStep1')} disabled={disableCheckout} >Check Out!</button>
+                <Errors errors={this.state.errors} />
                 </div>
             )
         }

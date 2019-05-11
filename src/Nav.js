@@ -1,8 +1,12 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 
-const Nav = (isLogin, {location: {pathname}}) => {
+const Nav = (isLogin, {location: {pathname}}, lineItems) => {
     let finalLinks=[];
+    const itemQuantity = lineItems.reduce((acc, item) => {
+        acc += item.quantity
+        return acc
+    },0)
     const adminLinks = [
         {
             label: 'Home', to: '/home'
@@ -30,6 +34,9 @@ const Nav = (isLogin, {location: {pathname}}) => {
         },
         {
             label: 'Logout', to: '/logout'
+        },
+        {
+            label: `Cart(${itemQuantity})`, to:'/cart'
         }
     ];
     const guestLinks = [
