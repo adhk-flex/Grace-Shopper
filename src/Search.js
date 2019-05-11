@@ -27,7 +27,7 @@ class Search extends Component{
     handleSubmit = evt => {
         const catId = this.props.match.params.catId;
         evt.preventDefault();
-        this.props.history.push(catId ? `/productList/category/${catId}/${this.state.term}` : `/productList/search/${this.state.term}`)
+        this.props.history.push(catId ? `/productList/category/${catId}/search/${this.state.term}` : `/productList/search/${this.state.term}`)
     };
     handleClear = () => {
         const catId = this.props.match.params.catId;

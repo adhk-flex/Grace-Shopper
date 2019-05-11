@@ -12,11 +12,12 @@ class CategoryNav extends Component {
         }
     }
     handleChange = evt => {
+        const { history, match: { params: { srchVal } } } = this.props;
         this.setState({ choice: evt.target.value }, () => {
             if(this.state.choice){
-                this.props.history.push(`/productList/category/${this.state.choice}`)
+                history.push(`/productList/category/${this.state.choice}${srchVal ? `/search/${srchVal}` : ""}`)
             } else {
-                this.props.history.push('/productList')
+                history.push(`/productList${srchVal ? `/search/${srchVal}` : ""}`)
             }
         });
     }
