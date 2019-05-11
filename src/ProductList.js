@@ -67,7 +67,7 @@ class ProductList extends Component {
                             return (
                                 <li key={p.id} className='list-group-item'>
                                     <span>{p.name}</span>
-                                    <img className='product-image' onClick={()=>history.push(`/product/${p.id}`)} src={p.imageUrl}/>
+                                    <img className='product-image' onClick={()=>history.push(`/product/${p.id}`)} src={p.imgUrl}/>
                                     <p>${p.price}</p>
                                 </li>)
                         })
