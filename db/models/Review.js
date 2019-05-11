@@ -18,8 +18,7 @@ const Review = db.define("review", {
         }
     },
     stars: {
-        type: Sequelize.ENUM,
-        values: [1, 2, 3, 4, 5],
+        type: Sequelize.INTEGER,
         validate: {
             isInt: {
                 args: true,
@@ -27,7 +26,7 @@ const Review = db.define("review", {
             },
             min: {
                 args: [[0]],
-                msg: "must be large than zero"
+                msg: "must be large than or equal to zero"
             },
             max: {
                 args: [[5]],
