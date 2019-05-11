@@ -5,6 +5,11 @@ import { getOrderByUser } from './store/order';
 import { setUserCart } from './store/cart';
 
 class Order extends Component {
+    componentDidMount(){
+        if(this.props.user.id){
+            this.props.getOrderByUser(this.props.user.id)
+        }
+    }
 
     componentDidUpdate(prevProps){
         if(JSON.stringify(prevProps)!==JSON.stringify(this.props)){
