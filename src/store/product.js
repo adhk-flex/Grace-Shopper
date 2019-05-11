@@ -21,6 +21,17 @@ export const fetchProducts = () => dispatch => {
     .then(products => dispatch(setProducts(products.data)))
 };
 
+export const fetchFilteredProducts = (srchVal, catId, pgIdx) => dispatch => {
+  let url = `/api/products`;
+  if (catId) url += `/category/${catId}`;
+  if (srchVal) url += `/search/${srchVal}`;
+  if (pgIdx) url += `/${pgIdx}`;
+  return axios.get(url)
+    .then(products => {
+      return dispatch(setProducts(products.data))
+    } )
+};
+
 export const getProductByPg = pgIdx => dispatch => {
   return axios.get(`/api/products/${pgIdx}`)
     .then(products => dispatch(setProducts(products.data)))
