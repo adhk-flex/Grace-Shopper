@@ -42,7 +42,13 @@ class OrderForm extends Component{
         <tr key={o.id}>
             <td> <input type='text' onChange={this.handleChange} name='orderNumber' value={o.orderNumber}/> </td>
             <td> <input type='text' onChange={this.handleChange} name='totalAmount' value={o.totalAmount}/> </td>
-            <td> <input type='text' onChange={this.handleChange} name='status' value={o.status}/> </td>
+            <td> <select onChange={this.handleChange} name='status' value={o.status}>
+                    <option value="created">Created</option>
+                    <option value="processing">Processing</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="closed">Closed</option>
+                </select> 
+            </td>
             <td> <button className='btn btn-primary' type='submit' onClick={this.handleSubmit}/></td>
             <td> <Errors errors={this.state.errors} /></td>
         </tr>

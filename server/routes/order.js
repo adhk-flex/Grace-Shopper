@@ -44,9 +44,8 @@ router.post('/user/:userId', (req, res, next) => {
 });
 
 router.put('/:id', (req, res, next) => {
-    Order.update({status: req.body.status}, 
+    Order.update(req.body, 
         {returning: true, where: {id: req.params.id}})
-    .then(([ rowsUpdate, [updatedOrder] ]) => res.json(updatedOrder))
     .catch(next);
 });
 
