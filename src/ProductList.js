@@ -5,7 +5,8 @@ import { getProductByPg, fetchProducts } from './store/product'
 import Pager from './Pager';
 import CategoryNav from './CategoryNav';
 import { lineItems, fetchLineItems } from './store/lineitem';
-import Search from "./Search";
+import Search from './Search';
+import Errors from './Errors';
 
 
 class ProductList extends Component {
@@ -13,6 +14,7 @@ class ProductList extends Component {
         super(props)
         this.state = {
             count: 0,
+            errors: [],
         }
     }
 
@@ -20,9 +22,11 @@ class ProductList extends Component {
         const { srchVal, catId, pgIdx } = this.props.match.params;     
 
         if(srchVal || catId){
-            this.props.fetchFilteredProducts(srchVal, catId, pgIdx);
+            this.props.fetchFilteredProducts(srchVal, catId, pgIdx)
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         } else {
-            this.props.fetchProducts();
+            this.props.fetchProducts()
+                .catch(e => {this.setState({errors: e.response.data.errors})})
 	    }
     }
 
@@ -32,11 +36,13 @@ class ProductList extends Component {
         const { srchVal, catId, pgIdx } = this.props.match.params;
         if(prevProps.cart.id !== this.props.cart.id){
             this.props.fetchLineItems(this.props.cart.id)
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         }     
 
         if(JSON.stringify(this.props.match.params) !== JSON.stringify(prevProps.match.params)){
             if(srchVal || catId){
-                this.props.fetchFilteredProducts(srchVal, catId, pgIdx);
+                this.props.fetchFilteredProducts(srchVal, catId, pgIdx)
+                .catch(e => {this.setState({errors: e.response.data.errors})})
             }
         }   
         
@@ -44,8 +50,10 @@ class ProductList extends Component {
             if(!srchVal && !catId){
                 if (this.props.match.params.idx === undefined) {
                     this.props.fetchProducts()
+                        .catch(e => {this.setState({errors: e.response.data.errors})})
                 } else {
                 this.props.getProductByPg(this.props.match.params.idx)
+                    .catch(e => {this.setState({errors: e.response.data.errors})})
                 }
             }
         }  
@@ -77,6 +85,7 @@ class ProductList extends Component {
                 </ul>
                 <img className = 'shopping-cart' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKorRm0enmL_tFIgvKcNcOjb_3YkWnny-CIK0BW5F9DoGocc7DkA' onClick={()=>{history.push('/cart')}}/>
                 <span className = 'shopping-item-quantity'>{totalItems}</span>
+            <Errors errors={this.state.errors} />
             </div>
         )
     }
