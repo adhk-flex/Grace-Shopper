@@ -17,6 +17,7 @@ import Login from './login';
 import ShipAddress from './ShipAddress';
 import CreditCard from './CreditCard';
 import BillAddress from './BillAddress'
+import Review from './Review';
 
 class App extends Component{
     
