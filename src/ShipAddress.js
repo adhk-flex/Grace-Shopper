@@ -13,6 +13,7 @@ class ShipAddress extends Component{
     componentDidUpdate(prevProps){
         if(prevProps.user.id !== this.props.user.id){
             this.props.getShipAddress(this.props.user.id, 'shipping')
+            .then(({address})=>this.setState({...address}))
         }
     }
 

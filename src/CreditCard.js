@@ -64,6 +64,7 @@ class CreditCard extends Component{
                     <br/>
                     <button type ='submit'>Save Credit Card</button>
                 </form>
+                <button onClick={()=>this.props.history.push('/checkoutStep3')}>proceed</button>
             </div>
         )
     }
@@ -81,6 +82,5 @@ const mapDispatchToProps = (dispatch) => {
         postCreditCard: (userId, cardInfo) => dispatch(postCreditCard(userId, cardInfo))
     }
 }
-
 
 export default connect(mapStateToProps,mapDispatchToProps)(CreditCard);
