@@ -70,7 +70,7 @@ class Cart extends Component {
                         })}
                     </ul>
                     <span>{`Total Amount: $${totalAmount}`}</span>
-                    <button onClick={()=>this.props.history.push('/checkout')} disabled={disableCheckout} > Check Out! </button>
+                    <button onClick={()=>this.props.history.push('/checkoutStep1')} disabled={disableCheckout} >Check Out!</button>
                 </div>
             )
         }

@@ -26,9 +26,6 @@ const Nav = (isLogin, {location: {pathname}}) => {
             label: 'ProductList', to: '/productList'
         },
         {
-            label: 'Checkout', to: '/checkout'
-        },
-        {
             label: 'Order', to: '/order'
         },
         {
