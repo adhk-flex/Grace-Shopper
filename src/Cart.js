@@ -54,7 +54,7 @@ class Cart extends Component {
                                 <li key={p.id}>
                                     <span>{`Name: ${p.name}, Price: ${p.price}`}</span>
                                     <br />
-                                    <img className = 'product-image' src={p.imageUrl}/>
+                                    <img className = 'product-image' src={p.imgUrl}/>
                                     <form onSubmit={(e) => onUpdate(p, e)}>
                                         <label htmlFor='quantity'>Quantity</label>
                                         <input name='quantity' placeholder={p.quantity} onChange={(e) => onChange(p, e)}/>
