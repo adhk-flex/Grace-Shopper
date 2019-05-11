@@ -1,12 +1,24 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 class CategoryNav extends Component {
     constructor(){
         super();
         this.state = { choice: "" };
     }
+    componentDidUpdate(prevProps){
+        if(this.props.match.params.catId !== prevProps.match.params.catId){
+            this.setState({ choice: this.props.match.params.catId || "" });
+        }
+    }
     handleChange = evt => {
-        this.setState({ choice: evt.target.value }, () => console.log(this.state.choice));
+        this.setState({ choice: evt.target.value }, () => {
+            if(this.state.choice){
+                this.props.history.push(`/productList/category/${this.state.choice}`)
+            } else {
+                this.props.history.push('/productList')
+            }
+        });
     }
     render () {
         return (
@@ -16,11 +28,24 @@ class CategoryNav extends Component {
                 value={this.state.choice}
                 onChange={this.handleChange}
             >
-                <option value="">--none--</option>
-                <option value="">--Cat1--</option>
+                <option value="">All Products</option>
+                {
+                    this.props.categories.map(category => (
+                        <option 
+                            value={category.id} 
+                            key={category.id}
+                            >
+                                {category.name}
+                        </option>
+                    ))
+                }
             </select>
         );
     }
 }
 
-export default CategoryNav;
+const mapStateToProps = state => ({
+    categories: state.categories
+});
+
+export default connect(mapStateToProps)(CategoryNav);

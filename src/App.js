@@ -11,6 +11,7 @@ import Order from './Order'
 import ManageOrder from './ManageOrder';
 import { fetchProducts } from './store/product';
 import { sessionLogin } from './store/user';
+import { fetchCategories } from './store/category';
 import { connect } from 'react-redux';
 import Login from './login';
 
@@ -18,8 +19,9 @@ import Login from './login';
 class App extends Component{
     
     componentDidMount() {
-        this.props.fetchProducts()
-        this.props.sessionLogin()
+        this.props.fetchProducts();
+        this.props.sessionLogin();
+        this.props.fetchCategories();
     }
 
     render(){
@@ -65,7 +67,8 @@ const mapStateToProps = ({user}) => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchProducts: () => dispatch(fetchProducts()),
-        sessionLogin: () => dispatch(sessionLogin())
+        sessionLogin: () => dispatch(sessionLogin()),
+        fetchCategories: () => dispatch(fetchCategories())
     }
 };
 

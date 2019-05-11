@@ -62,7 +62,7 @@ class ProductList extends Component {
                 <Pager history={history} match ={this.props.match} />
                 <h1>Here are All of our Products:</h1>
                 <Search history={history} match={this.props.match} />
-                <CategoryNav />
+                <CategoryNav history={history} match={this.props.match} />
                 <ul className='list-group'>
                     {
                         Products.map(p=>{
