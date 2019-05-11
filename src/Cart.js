@@ -12,14 +12,14 @@ class Cart extends Component {
     }
     componentDidMount(){
         this.props.fetchLineItems(this.props.cart.id)
-        .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+        .catch(e => {this.setState({errors: e.response.data.errors})})
 
     }
 
     componentDidUpdate(prevProps){
         if (prevProps.cart.id !== this.props.cart.id){
             this.props.fetchLineItems(this.props.cart.id)
-            .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+            .catch(e => {this.setState({errors: e.response.data.errors})})
         }
     }
 
@@ -33,16 +33,16 @@ class Cart extends Component {
         const {quantity, id, cartId} = item;
         if (quantity === 0) {
             this.props.delLineItem(id, cartId)
-            .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         } else {
             this.props.updateLineItem(id, item, cartId)
-            .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         } 
     }
 
     onDelete = (id, cartId) => {
         this.props.delLineItem(id, cartId)
-        .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+            .catch(e => {this.setState({errors: e.response.data.errors})})
     }
 
 

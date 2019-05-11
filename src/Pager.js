@@ -20,11 +20,11 @@ class Pager extends Component {
     if(catId || srchVal){
       fetchFilteredProducts(srchVal, catId, pgIdx)
         .then(() => this.setState({ count: this.props.products.length, pageNum: +pgIdx || 1 }))
-        .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+        .catch(e => {this.setState({errors: e.response.data.errors})})
     } else {
       fetchProducts()
         .then(() => this.setState({ count: this.props.products.length, pageNum: +pgIdx || 1 }))
-        .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+        .catch(e => {this.setState({errors: e.response.data.errors})})
     }
   }
 
@@ -46,7 +46,7 @@ class Pager extends Component {
     if (catId) baseUrl += `/category/${catId}`;
     if (srchVal) baseUrl += `/search/${srchVal}`
     this.props.history.push(`${baseUrl}/${value}`)
-      .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+      .catch(e => {this.setState({errors: e.response.data.errors})})
   }
 
   render(){

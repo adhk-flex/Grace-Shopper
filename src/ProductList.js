@@ -23,10 +23,10 @@ class ProductList extends Component {
 
         if(srchVal || catId){
             this.props.fetchFilteredProducts(srchVal, catId, pgIdx)
-                .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         } else {
             this.props.fetchProducts()
-                .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+                .catch(e => {this.setState({errors: e.response.data.errors})})
 	    }
     }
 
@@ -36,13 +36,13 @@ class ProductList extends Component {
         const { srchVal, catId, pgIdx } = this.props.match.params;
         if(prevProps.cart.id !== this.props.cart.id){
             this.props.fetchLineItems(this.props.cart.id)
-                .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         }     
 
         if(JSON.stringify(this.props.match.params) !== JSON.stringify(prevProps.match.params)){
             if(srchVal || catId){
                 this.props.fetchFilteredProducts(srchVal, catId, pgIdx)
-                .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+                .catch(e => {this.setState({errors: e.response.data.errors})})
             }
         }   
         
@@ -50,10 +50,10 @@ class ProductList extends Component {
             if(!srchVal && !catId){
                 if (this.props.match.params.idx === undefined) {
                     this.props.fetchProducts()
-                        .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+                        .catch(e => {this.setState({errors: e.response.data.errors})})
                 } else {
                 this.props.getProductByPg(this.props.match.params.idx)
-                    .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+                    .catch(e => {this.setState({errors: e.response.data.errors})})
                 }
             }
         }  

@@ -15,7 +15,7 @@ class Product extends Component{
     componentDidUpdate (prevProps) {
         if(prevProps.cart.id !== this.props.cart.id){
             this.props.fetchLineItems(this.props.cart.id)
-                .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         }     
     }
 
@@ -43,10 +43,10 @@ class Product extends Component{
             const i = lineItems.find(i => i.productId === item.productId)
             i.quantity = Number(i.quantity) + Number(this.state.selectedQuantity)
             this.props.updateLineItem(i.id, i, cartId)
-                .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         } else {
             this.props.addLineItem(item, cartId)
-                .catch(({response})=>{this.setState({errors: e.response.data.errors})})
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         }
     }
 
