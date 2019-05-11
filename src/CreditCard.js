@@ -1,18 +1,33 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { getCreditCard, postCreditCard } from './store/creditcards';
+import Errors from './Errors';
 
 class CreditCard extends Component{
     constructor(props){
         super(props)
-        this.state = this.setCreditCard()
+        this.state = {...this.setCreditCard(), errors: []}
+    }
+
+    _mounted = false
+
+    componentDidMount(){
+        this._mounted = true
     }
 
     componentDidUpdate(prevProps){
         if(JSON.stringify(prevProps) !== JSON.stringify(this.props)){
             this.props.getCreditCard(this.props.user.id)
-            .then(({creditCard})=>this.setState({...creditCard}))
+            .then(({creditCard})=>{
+                if(this._mounted){
+                    this.setState({...creditCard})
+                }
+            })
         }
+    }
+
+    componentWillUnmount(){
+        this._mounted = false
     }
 
     setCreditCard = (creditCard) => {
@@ -31,15 +46,22 @@ class CreditCard extends Component{
         this.setState({[e.target.name]: e.target.value})
     }
 
+    onSave = (e) => {
+        e.preventDefault()
+        this.props.postCreditCard(this.props.user.id, this.state)
+        .then(()=>{this.props.history.push('/checkoutStep3')})
+        .catch(e=>this.setState({errors: e.response.data.errors}))
+    }
+
     render(){
         const {firstName, lastName, number, cardType, expMonth, expYear, cvv} = this.state
-        const {onChange} = this
+        const {onChange, onSave} = this
         const creditCardTypeArr = ['cardType', 'visa', 'mastercard', 'amex', 'discover'];
         const expMonthArr = ['month', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         return (
             <div>
                 <h3>Credit Card Information</h3>
-                <form>
+                <form onSubmit={onSave}>
                     <label htmlFor='firstName'>First Name</label>
                     <input text='firstName' name='firstName' value={firstName} onChange={onChange}/>
                     <br/>
@@ -75,16 +97,11 @@ class CreditCard extends Component{
                     <input text='expYear' name='expYear' value={expYear} onChange={onChange}/>
                     <br/>
                     <label htmlFor='cvv'>cvv</label>
-                    <input text='cvv' name='cvv' value={cvv} onChange={onChange}/>    
+                    <input text='cvv' name='cvv' value={cvv} onChange={onChange}/>  
+                    <br/>
+                    <button type='submit'>Save and Proceed</button>  
                 </form>
-                <button onClick={
-                    ()=>{
-                        this.props.postCreditCard(this.props.user.id, this.state)
-                        this.props.history.push('/checkoutStep3')
-                    }
-                    }
-                > save and proceed
-                </button>
+                <Errors errors={this.state.errors}/>
             </div>
         )
     }
