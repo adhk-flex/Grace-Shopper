@@ -45,7 +45,10 @@ class Login extends Component{
                 {this.props.match.path === '/logout' ? 
                 (<div>
                     <span>Do you want to Logout?</span>
-                    <button onClick={()=>this.props.logout()}>Yes</button>
+                    <button onClick={()=>{
+                        this.props.logout()
+                        .then(()=>this.props.history.push('/home'))
+                    }}>Yes</button>
                     <button onClick={()=>this.props.history.push('/home')}>No</button>
                 </div>
                 ) 
