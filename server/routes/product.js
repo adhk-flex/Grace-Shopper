@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('../../db/models');
+const Op = require('../../db/db').Sequelize.Op;
 const Product = db.Product;
 const Category = db.Category;
 
@@ -15,13 +16,12 @@ router.get('/', (req, res, next) => {
 
 router.get('/search/:srchVal/:pgIdx?', (req, res, next) => {
     const srchVal = req.params.srchVal.toLowerCase();
-    Product.findAll({ order:[["name", "asc"]] })
-        .then((products) => products.filter(product => 
-            product.name.toLowerCase().includes(srchVal) 
-            || product.description.toLowerCase().includes(srchVal)
-            || product.productNumber.toLowerCase().includes(srchVal)
-            )
-        )
+    Product.findAll({ where: { [Op.or]: [
+            { name: { [Op.iLike]: `%${srchVal}%` } },
+            { description: { [Op.iLike]: `%${srchVal}%` } },
+            { productNumber: { [Op.iLike]: `%${srchVal}%` } }
+        ] }
+        , order:[["name", "asc"]] })
         .then(results => {
             if(req.params.pgIdx){
                 const end = req.params.pgIdx * 10;
@@ -50,19 +50,23 @@ router.get('/category/:catId/:pgIdx?', (req, res, next) => {
 
 router.get('/category/:catId/search/:srchVal/:pgIdx?', (req, res, next) => {
     const { srchVal, pgIdx } = req.params;
-    Product.findAll({ where: { categoryId: req.params.catId }, order: [["name", "asc"]] })
+    Product.findAll({ where: { 
+            categoryId: req.params.catId,
+            [Op.or] : [
+                { name: { [Op.iLike]: `%${srchVal}%` } },
+                { description: { [Op.iLike]: `%${srchVal}%` } },
+                { productNumber: { [Op.iLike]: `%${srchVal}%` } }
+            ] 
+            }, 
+            order: [["name", "asc"]] 
+        })
         .then((products) => {
-            const results = products.filter(product => 
-                product.name.toLowerCase().includes(srchVal) 
-                || product.description.toLowerCase().includes(srchVal)
-                || product.productNumber.toLowerCase().includes(srchVal)
-                )
             if(pgIdx){
                 const end = req.params.pgIdx * 10;
                 const start = end - 10;
-                res.send(results.slice(start, end));
+                res.send(products.slice(start, end));
             } else {
-                res.send(results);
+                res.send(products);
             }
         })
         .catch(next);
