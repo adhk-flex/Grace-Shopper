@@ -4,6 +4,12 @@ const Review = db.Review;
 
 const router = express.Router();
 
+router.get('/', (req, res, next) => {
+  Review.findAll()
+    .then((reviews) => res.json(reviews))
+    .catch(next);
+});
+
 router.get('/:userId', (req, res, next) => {
   Review.findAll({where: {userId: req.params.userId}})
     .then((reviews) => res.json(reviews))
