@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchProducts, fetchFilteredProducts } from './store/product';
+import Errors from './Errors';
 
 class Pager extends Component {
   constructor (props) {
     super(props)
     this.state = {
       count: 0,
-      pageNum: 1
+      pageNum: 1,
+      errors: [],
     }
   }
 
@@ -18,9 +20,11 @@ class Pager extends Component {
     if(catId || srchVal){
       fetchFilteredProducts(srchVal, catId, pgIdx)
         .then(() => this.setState({ count: this.props.products.length, pageNum: +pgIdx || 1 }))
+        .catch(({response})=>{this.setState({errors: e.response.data.errors})})
     } else {
       fetchProducts()
         .then(() => this.setState({ count: this.props.products.length, pageNum: +pgIdx || 1 }))
+        .catch(({response})=>{this.setState({errors: e.response.data.errors})})
     }
   }
 
@@ -42,6 +46,7 @@ class Pager extends Component {
     if (catId) baseUrl += `/category/${catId}`;
     if (srchVal) baseUrl += `/search/${srchVal}`
     this.props.history.push(`${baseUrl}/${value}`)
+      .catch(({response})=>{this.setState({errors: e.response.data.errors})})
   }
 
   render(){
@@ -69,6 +74,7 @@ class Pager extends Component {
             </button>
           ))}
         </div>
+      <Errors errors={this.state.errors} />
       </div>
     )
   }

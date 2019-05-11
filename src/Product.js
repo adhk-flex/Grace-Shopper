@@ -1,18 +1,21 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { addLineItem, fetchLineItems, updateLineItem } from './store/lineitem';
+import Errors from './Errors';
 
 class Product extends Component{
     constructor(props){
         super(props)
         this.state = {
             selectedQuantity: '',
+            errors: [],
         }
     }
 
     componentDidUpdate (prevProps) {
         if(prevProps.cart.id !== this.props.cart.id){
             this.props.fetchLineItems(this.props.cart.id)
+                .catch(({response})=>{this.setState({errors: e.response.data.errors})})
         }     
     }
 
@@ -40,8 +43,10 @@ class Product extends Component{
             const i = lineItems.find(i => i.productId === item.productId)
             i.quantity = Number(i.quantity) + Number(this.state.selectedQuantity)
             this.props.updateLineItem(i.id, i, cartId)
+                .catch(({response})=>{this.setState({errors: e.response.data.errors})})
         } else {
             this.props.addLineItem(item, cartId)
+                .catch(({response})=>{this.setState({errors: e.response.data.errors})})
         }
     }
 
@@ -97,6 +102,7 @@ class Product extends Component{
                 </form>
                 <img className = 'shopping-cart' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKorRm0enmL_tFIgvKcNcOjb_3YkWnny-CIK0BW5F9DoGocc7DkA' onClick={()=>{this.props.history.push('/cart')}}/>
                 <span className = 'shopping-item-quantity'>{totalItems}</span>
+            <Errors errors={this.state.errors} />
             </div>
         )    
     }
