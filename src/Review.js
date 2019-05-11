@@ -1,17 +1,25 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import {postReview} from './store/review';
+import {postReview,getReviewsByProduct} from './store/review';
+import Errors from './Errors';
 
 class Review extends Component{
 
     constructor(){
         super()
         this.state = {
-            prevReviews: [],
+            reviews: [],
             content: '',
             stars: 0,
+            errors: []
         }
+    }
+
+    componentDidMount(){
+        this.props.getReviewsByProduct(this.props.productId)
+            .then(({reviews})=>{this.setState({reviews})})
+            .catch(e=>this.setState({errors: e.response.data.errors}))
     }
 
     onChange = (e) => {
@@ -22,11 +30,14 @@ class Review extends Component{
         e.preventDefault()
         const {productId, user} = this.props
         this.props.postReview(this.state, productId, user.id)
+        .then(()=>this.props.getReviewsByProduct(this.props.productId))
+        .then(reviews=>this.setState(reviews)) // should use componentDidUpdate?
+        .catch(e=>this.setState({errors: e.response.data.errors}))
     }
 
     render(){
         const {onChange, onSave} = this
-        const {PrevReviews, content, stars} = this.state
+        const {reviews ,content, stars} = this.state
         const starsArr = [1,2,3,4,5]
         return (
             <div>
@@ -49,23 +60,51 @@ class Review extends Component{
                     <br/>
                     <button type='submit'>Save Comments</button>
                 </form>
+                <h4>Here are the Reviews for this Product:</h4>
+                {
+                    reviews.length ? 
+                    <table className='table'>
+                    <thead>
+                        <tr>
+                            <th>Comments</th>
+                            <th>Stars</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            reviews.map(review => {
+                                return (
+                                    <tr key={review.id}>
+                                        <td>{review.content}</td>
+                                        <td>{review.stars}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                    </table>
+                    : null
+                }
+                <Errors errors={this.state.errors}/>
             </div>
         )
     }
 } 
 
 const mapStateToProps = (state) => {
+    console.log('state:', state)
     return {
         user: state.user,
         product: state.product,
+        reviews: state.reviews
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        postReview: (review, productId, userId) => dispatch(postReview(review, productId, userId))
+        postReview: (review, productId, userId) => dispatch(postReview(review, productId, userId)),
+        getReviewsByProduct: (productId) => dispatch(getReviewsByProduct(productId))
     }
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Review);

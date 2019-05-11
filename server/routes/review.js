@@ -10,13 +10,14 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/:userId', (req, res, next) => {
+router.get('/user/:userId', (req, res, next) => {
   Review.findAll({where: {userId: req.params.userId}})
     .then((reviews) => res.json(reviews))
     .catch(next);
 });
 
-router.get('/:productId', (req, res, next) => {
+router.get('/product/:productId', (req, res, next) => {
+  console.log(req.params.productId)
   Review.findAll({where: {productId: req.params.productId}})
     .then((reviews) => res.json(reviews))
     .catch(next);

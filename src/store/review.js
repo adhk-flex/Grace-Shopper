@@ -22,12 +22,12 @@ const fetchReviews = () => dispatch => {
 };
 
 const getReviewsByUser = userId => dispatch => {
-  return axios.get(`/api/reviews/${userId}`)
+  return axios.get(`/api/reviews/user/${userId}`)
     .then(reviews => dispatch(setReviews(reviews.data)))
 };
 
-const getReviewsByProduct = productId => dispatch => {
-  return axios.get(`/api/reviews/${productId}`)
+export const getReviewsByProduct = productId => dispatch => {
+  return axios.get(`/api/reviews/product/${productId}`)
     .then(reviews => dispatch(setReviews(reviews.data)))
 };
 
