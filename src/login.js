@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import Errors from './Errors';
 
 import { loginNewUser, login, logout } from './store/user';
 
@@ -10,7 +11,7 @@ class Login extends Component{
         this.state = {
             email: '',
             password: '',
-            error: '',
+            errors: [],
             firstName: '',
             lastName: '',
             imgUrl: '',
@@ -31,7 +32,7 @@ class Login extends Component{
         }else if(this.props.match.path === '/login'){
             this.props.login(this.state)
             .then(()=>this.props.history.push('/home'))
-            .catch(({response})=>{this.setState({error: response.data})})
+            .catch(({response})=>{this.setState({errors: e.response.data.errors})})
         }   
     }
 
@@ -79,7 +80,7 @@ class Login extends Component{
                         </form>
                     </div>
                 )}
-                
+                <Errors errors={this.state.errors} />
             </div>
         )     
     }
