@@ -1,30 +1,38 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-
 import { getOrderByUser } from './store/order';
-import { setUserCart } from './store/cart';
+import OrderForm from './OrderForm';
 
 class ManageOrder extends Component {
     constructor(props){
         super(props)
-        this.state = {
-            order: []
+        // this.state = {
+        //     orders: []
+        // }
+    }
+
+    componentDidMount(){
+        if(this.props.user){
+            this.props.getOrderByUser(this.props.user.id)
         }
     }
 
     componentDidUpdate(prevProps){
-        if(prevProps.user.id !== this.props.user.id){
+        if(JSON.stringify(prevProps)!==JSON.stringify(this.props)){
             if(this.props.user.id){
-                    this.props.getOrderByUser(this.props.user.id)
-                    .then(orders => {
-                        this.setState({order: orders.order})
-                    })
-                }
+                this.props.getOrderByUser(this.props.user.id)
+            }
+        }
+    }
+
+    componentDidMount(){
+        if(this.props.user.id){
+            this.props.getOrderByUser(this.props.user.id)
         }
     }
         
     render(){
-        const {order} = this.state
+        const orders = this.props.orders;
         return (
             <div>
                 <h3>Order Page</h3>
@@ -34,18 +42,13 @@ class ManageOrder extends Component {
                             <th>Order Number</th>
                             <th>Order Status</th>
                             <th>Total Amount</th>
+                            <th>Save</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
-                            order.map(order => {
-                                return (
-                                    <tr key={order.id}>
-                                        <td>{order.orderNumber}</td>
-                                        <td>{order.status}</td>
-                                        <td>{order.totalAmount}</td>
-                                    </tr>
-                                )
+                            orders.map(o => {
+                                return (<OrderForm order={o} key={o.id}/>)
                             })
                         }
                     </tbody>
@@ -59,14 +62,13 @@ const mapStateToProps = state => {
     console.log(state)
     return {
         user: state.user? state.user:false,
-        order: state.order? state.order:false
+        orders: state.order? state.order:false
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         getOrderByUser: (userId) => dispatch(getOrderByUser(userId)),
-        setUserCart: (userId) => dispatch(setUserCart(userId))
     }
 }
 

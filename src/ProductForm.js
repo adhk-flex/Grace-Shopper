@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { updateProduct, delProduct } from './store/product';
+import Errors from './Errors';
 
 class ProductForm extends Component{
     constructor(props){
@@ -12,7 +13,8 @@ class ProductForm extends Component{
             description: this.props.product&&this.props.product.description || '',
             imgUrl: this.props.product&&this.props.product.imgUrl || '',
             productNumber: this.props.product&&this.props.product.productNumber || '',
-            id: this.props.product&&this.props.product.id || null
+            id: this.props.product&&this.props.product.id || null,
+            errors: []
         }
         this.handleDelete = this.handleDelete.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -34,12 +36,17 @@ class ProductForm extends Component{
             imgUrl: p.imgUrl,
             productNumber: p.productNumber
         }
-        this.props.updateProduct(p.id, final);
+
+        this.props.updateProduct(p.id, final)
+        .then(()=>this.setState({...this.state, errors: []}))
+        .catch(e=>this.setState({...this.state, errors: e.response.data.errors}));
     }
 
     handleDelete(ev){
         ev.preventDefault()
-        this.props.deleteProduct(this.state.id);
+        this.props.deleteProduct(this.state.id)
+        .then(()=>this.setState({...this.state, errors: []}))
+        .catch(e=>this.setState({...this.state, errors: e.response.data.errors}));
     }
    
     render(){
@@ -55,6 +62,7 @@ class ProductForm extends Component{
             <td> <input type='text' onChange={this.handleChange} name='productNumber' value={p.productNumber}/> </td>
             <td> <button className='btn btn-primary' type='submit' onClick={this.handleSubmit}/></td>
             <td> <button className='btn btn-danger' onClick={this.handleDelete}/></td>
+            <td> <Errors errors={this.state.errors} /></td>
         </tr>
         )
     }

@@ -17,6 +17,7 @@ export const order = (state = [], action) => {
 };
 
 export const getOrderByUser = userId => dispatch => {
+  console.log('reducer for order')
   return axios.get(`/api/orders/user/${userId}`)
     .then(orders => dispatch(setOrder(orders.data)))
 };
@@ -31,7 +32,7 @@ export const createOrder = (userId) => dispatch => {
     .then(() => dispatch(getOrderByUser(userId)))
 };
 
-const updateOrder = (orderId, formData, userId) => dispatch => {
+export const updateOrder = (orderId, formData, userId) => dispatch => {
   return axios.put(`/api/orders/${orderId}`, formData)
     .then(() => dispatch(getOrderByUser(userId)))
 };
