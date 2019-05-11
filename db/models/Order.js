@@ -19,6 +19,11 @@ const Order = db.define("order", {
                 }
             }
             return `GSHO${pad}${num}`;
+        },
+        set(num){
+            const _num = num.toString();
+            const start = _num.match(/[1-9]/).index;
+            this.setDataValue('orderNumber', _num.slice(start))
         }
     },
     status: {
@@ -30,7 +35,7 @@ const Order = db.define("order", {
                 msg: "Order must have a status"
             },
             isIn: {
-                args: [["created", "processing", "canceled", "closed"]],
+                args: [["created", "processing", "cancelled", "closed"]],
                 msg: "Order status must be created, processing, cancelled or closed"
             }
         }
