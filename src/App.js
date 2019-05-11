@@ -23,9 +23,8 @@ class App extends Component{
     componentDidMount() {
         this.props.fetchProducts();
         this.props.sessionLogin();
-        if(!this.props.isLogin){
-            const lineItems = []
-            localStorage.setItem('lineItems', JSON.stringify(lineItems))
+        if(!localStorage.getItem('lineItems')){
+            localStorage.setItem('lineItems', JSON.stringify([]))
         }
     }
     
