@@ -33,27 +33,10 @@ class BillAddress extends Component{
     onChange = (e) => {
         this.setState({[e.target.name]: e.target.value})
     }
-
-    onSave = (e) => {
-        e.preventDefault()
-        const address = {
-                addressType: 'billing',
-                firstName: this.state.firstName,
-                lastName: this.state.lastName,
-                addressLine1: this.state.addressLine1,
-                addressLine2: this.state.addressLine2,
-                city: this.state.city,
-                state: this.state.state,
-                zip: this.state.zip,
-            }
-        const userId = this.props.user.id;
-        this.props.postAddress(address, userId, address.addressType)
-        .catch(ex=>console.log(ex))
-    }
     
-    Addressform = (addressType, firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange, onSave) => (
+    Addressform = (firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange) => (
         <div>
-        <form onSubmit={(e) => onSave(e)}>
+        <form>
                 <label htmlFor={`firstName`}>FirstName</label>
                 <input type="text" name={`firstName`} value={firstName} onChange = {onChange}/>
                 <br/>
@@ -75,29 +58,31 @@ class BillAddress extends Component{
                 <label htmlFor={`city`}>City</label>
                 <input type="text" name={`city`} value = {city} onChange = {onChange}/>
                 <br/>
-                <button type='submit'>  
-                    {`Save ${addressType}`}
-                </button>
         </form>
         <button onClick={()=>{
-                    this.props.postOrder(this.props.user.id)
-                    .then((order)=>{
-                        console.log('create an order: ', order)
-                        this.props.history.push('/order')
-                     })
-                    .catch(ex=>console.log(ex))
+                    this.props.postAddress(this.state, this.props.user.id, 'billing')
+                        .then(()=>{
+                            this.props.postOrder(this.props.user.id)
+                                .then((order)=>{
+                                    console.log('create an order: ', order)
+                                    this.props.history.push('/order')
+                                })
+                                .catch(ex=>console.log(ex))
+                        })
+                        .catch(ex=>console.log(ex))
+                    
                     }}>place an order</button>
         </div>
     )
 
     render(){
         const {firstName, lastName, addressLine1, addressLine2, zip, state, city} = this.state
-        const {onChange, onSave} = this
+        const {onChange} = this
         return(
             <div>
                 <h3>Billing Address</h3>
                 {
-                    this.Addressform('billing', firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange, onSave)
+                    this.Addressform(firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange)
                 }
             </div>
         )

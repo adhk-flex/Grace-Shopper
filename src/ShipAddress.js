@@ -27,43 +27,25 @@ class ShipAddress extends Component{
             state: address ? address.state : '',
             zip: address ? address.zip : '',
         }
-        
     }
 
     onChange = (e) => {
         this.setState({[e.target.name]: e.target.value})
     }
-
-    onSave = (e) => {
-        e.preventDefault()
-        const address = {
-                addressType: 'shipping',
-                firstName: this.state.firstName,
-                lastName: this.state.lastName,
-                addressLine1: this.state.addressLine1,
-                addressLine2: this.state.addressLine2,
-                city: this.state.city,
-                state: this.state.state,
-                zip: this.state.zip,
-            }
-        const userId = this.props.user.id;
-        this.props.postAddress(address, userId, address.addressType)
-        .catch(ex=>console.log(ex))
-    }
     
-    Addressform = (addressType, firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange, onSave) => (
+    Addressform = (firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange) => (
         <div>
-        <form onSubmit={(e) => onSave(e)}>
-                <label htmlFor={`firstName`}>FirstName</label>
+        <form>
+                <label htmlFor={`firstName`}>First Name</label>
                 <input type="text" name={`firstName`} value={firstName} onChange = {onChange}/>
                 <br/>
-                <label htmlFor={`lastName`}>LastName</label>
+                <label htmlFor={`lastName`}>Last Name</label>
                 <input type="text" name={`lastName`} value={lastName} onChange = {onChange}/>
                 <br/>
-                <label htmlFor={`addressLine1`}>address Line1</label>
+                <label htmlFor={`addressLine1`}>Address Line1</label>
                 <input type="text" name={`addressLine1`} value = {addressLine1} onChange = {onChange}/>
                 <br/>
-                <label htmlFor={`addressLine2`}>address Line2 Optional</label>
+                <label htmlFor={`addressLine2`}>Address Line2 (Optional)</label>
                 <input type="text" name={`addressLine2`} value = {addressLine2} onChange = {onChange}/>
                 <br/>
                 <label htmlFor={`zip`}>Zip Code</label>
@@ -74,25 +56,26 @@ class ShipAddress extends Component{
                 <br/>
                 <label htmlFor={`city`}>City</label>
                 <input type="text" name={`city`} value = {city} onChange = {onChange}/>
-                <br/>
-                <button type='submit'>  
-                    {`Save ${addressType}`}
-                </button>
         </form>
         <button  
-            onClick={()=>this.props.history.push('/checkoutStep2')}
-        >proceed</button>
+            onClick={
+                ()=>{
+                    this.props.postAddress(this.state, this.props.user.id, 'shipping')
+                    this.props.history.push('/checkoutStep2')
+                }
+            }
+        >save and proceed</button>
         </div>
     )
 
     render(){
         const {firstName, lastName, addressLine1, addressLine2, zip, state, city} = this.state
-        const {onChange, onSave} = this
+        const {onChange} = this
         return(
             <div>
                 <h3>Shipping Address</h3>
                 {
-                    this.Addressform('shipping', firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange, onSave)
+                    this.Addressform(firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange)
                 }
             </div>
         )
