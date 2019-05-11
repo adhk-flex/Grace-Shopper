@@ -39,14 +39,21 @@ class Product extends Component{
             cartId: cartId,
             productId: product.id
         }
-        if (lineItems.find(i => i.productId === item.productId)) {
-            const i = lineItems.find(i => i.productId === item.productId)
-            i.quantity = Number(i.quantity) + Number(this.state.selectedQuantity)
-            this.props.updateLineItem(i.id, i, cartId)
-                .catch(e => {this.setState({errors: e.response.data.errors})})
+        console.log(this.props.isLogin)
+        if (this.props.isLogin){
+            if (lineItems.find(i => i.productId === item.productId)) {
+                const i = lineItems.find(i => i.productId === item.productId)
+                i.quantity = Number(i.quantity) + Number(this.state.selectedQuantity)
+                this.props.updateLineItem(i.id, i, cartId)
+                    .catch(e => {this.setState({errors: e.response.data.errors})})
+            } else {
+                this.props.addLineItem(item, cartId)
+                    .catch(e => {this.setState({errors: e.response.data.errors})})
+            }
         } else {
-            this.props.addLineItem(item, cartId)
-                .catch(e => {this.setState({errors: e.response.data.errors})})
+            const localLineItems = JSON.parse(localStorage.getItem('lineItems'))
+            localLineItems.push(item)
+            localStorage.setItem('lineItems', JSON.stringify(localLineItems))
         }
     }
 
@@ -110,6 +117,7 @@ class Product extends Component{
 
 const mapStateToProps = (state) => {
     return {
+        isLogin: state.user.id? true: false,
         products: state.products? state.products: false,
         lineItems: state.lineItems? state.lineItems:false,
         cart: state.cart? state.cart:false

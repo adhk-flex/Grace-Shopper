@@ -23,6 +23,9 @@ class App extends Component{
     componentDidMount() {
         this.props.fetchProducts();
         this.props.sessionLogin();
+        if(!localStorage.getItem('lineItems')){
+            localStorage.setItem('lineItems', JSON.stringify([]))
+        }
     }
     
     componentDidUpdate(prevProps){
@@ -33,9 +36,9 @@ class App extends Component{
 
     render(){
         let isLogin = this.props.isLogin
-        if(isLogin){
+        if (isLogin){
             console.log('we have a user')
-        }else{
+        } else {
             console.log('user is not login')
         }
         const {lineItems} = this.props
