@@ -16,7 +16,7 @@ export const categories = (state = [], action) => {
   }
 };
 
-const fetchCategories = () => dispatch => {
+export const fetchCategories = () => dispatch => {
   return axios.get('/api/categories')
     .then(categories => dispatch(setCategory(categories.data)))
 }

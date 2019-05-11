@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { fetchFilteredProducts } from './store/product';
 import { getProductByPg, fetchProducts } from './store/product'
 import Pager from './Pager';
+import CategoryNav from './CategoryNav';
 import { lineItems, fetchLineItems } from './store/lineitem';
 import Search from "./Search";
 
@@ -58,9 +59,10 @@ class ProductList extends Component {
         }, 0)
         return(
             <div>
-                <Pager history={history} match ={this.props.match}/>
+                <Pager history={history} match ={this.props.match} />
                 <h1>Here are All of our Products:</h1>
-                <Search history={history} match={this.props.match}/>
+                <Search history={history} match={this.props.match} />
+                <CategoryNav history={history} match={this.props.match} />
                 <ul className='list-group'>
                     {
                         Products.map(p=>{
