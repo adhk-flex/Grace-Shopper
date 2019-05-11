@@ -15,7 +15,7 @@ import { sessionLogin } from './store/user';
 import { connect } from 'react-redux';
 import Login from './login';
 import ShipAddress from './ShipAddress';
-
+import CreditCard from './CreditCard';
 
 class App extends Component{
     
@@ -49,6 +49,7 @@ class App extends Component{
                     <Route exact path = '/cart' component={Cart}/>
                     <Route exact path = '/checkout' component={CheckoutForm}/>
                     <Route exact path = '/checkoutStep1' component={ShipAddress}/>
+                    <Route exact path = '/checkoutStep2' component={CreditCard}/>
                     <Route exact path = '/order' component={Order}/>
                     <Route exact path = '/manageOrder' component={ManageOrder}/>
                     <Route component={ProductList}/>

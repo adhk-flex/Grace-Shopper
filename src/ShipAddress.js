@@ -51,6 +51,7 @@ class ShipAddress extends Component{
     }
     
     Addressform = (addressType, firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange, onSave) => (
+        <div>
         <form onSubmit={(e) => onSave(e)}>
                 <label htmlFor={`firstName`}>FirstName</label>
                 <input type="text" name={`firstName`} value={firstName} onChange = {onChange}/>
@@ -73,8 +74,14 @@ class ShipAddress extends Component{
                 <label htmlFor={`city`}>City</label>
                 <input type="text" name={`city`} value = {city} onChange = {onChange}/>
                 <br/>
-                <button type='submit'>{`Save ${addressType}`}</button>
+                <button type='submit'>  
+                    {`Save ${addressType}`}
+                </button>
         </form>
+        <button  
+            onClick={()=>this.props.history.push('/checkoutStep2')}
+        >proceed</button>
+        </div>
     )
 
     render(){
@@ -104,6 +111,5 @@ const mapDispatchToProps = (dispatch) => {
         postAddress: (dataForm, userId, type) => dispatch(postAddress(dataForm, userId, type))
     }
 }
-
 
 export default connect(mapStateToProps,mapDispatchToProps)(ShipAddress);
