@@ -30,8 +30,8 @@ const Order = db.define("order", {
                 msg: "Order must have a status"
             },
             isIn: {
-                args: [["purchased", "shipped"]],
-                msg: "Order status must be either 'purchased' or 'shipped'"
+                args: [["created", "processing", "canceled", "closed"]],
+                msg: "Order status must be created, processing, cancelled or closed"
             }
         }
     },
