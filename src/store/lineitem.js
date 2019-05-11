@@ -28,8 +28,17 @@ export const fetchLineItems = cartId => dispatch => {
 
 
 export const addLineItem = (product, cartId) => dispatch => {
-  return axios.post('/api/lineitems', product)
-    .then(() => dispatch(fetchLineItems(cartId)))
+
+  if(cartId === undefined){
+    const items = JSON.parse(localStorage.getItem('lineItems'))  
+    items.push(product)
+    localStorage.setItem('lineItems', JSON.stringify(items));
+    return new Promise(() => dispatch(fetchLineItems()))
+  }
+  else{
+    return axios.post('/api/lineitems', product)
+      .then(() => dispatch(fetchLineItems(cartId)))
+  }
 };
 
 export const delLineItem = (id, cartId) => dispatch => {
@@ -38,8 +47,20 @@ export const delLineItem = (id, cartId) => dispatch => {
 };
 
 export const updateLineItem = (id, formData, cartId) => dispatch => {
-  return axios.put(`/api/lineitems/${id}`, formData)
+  if(cartId===undefined){
+    const items = JSON.parse(localStorage.getItem('lineItems'))  
+    let newItems = items.map(item=>{
+      if(item.productId===product.productId){
+        item.quantity=product.quantity+Number(item.quantity)
+        console.log(item.quantity)
+      }
+      return item;
+    })
+    localStorage.setItem('lineItems', JSON.stringify(newItems))
+    return new Promise(() => dispatch(fetchLineItems()))
+  }
+  else{
+    return axios.put(`/api/lineitems/${id}`, formData)
     .then(() => dispatch(fetchLineItems(cartId)))
+  }
 }
-
-
