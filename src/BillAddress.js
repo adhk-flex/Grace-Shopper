@@ -3,19 +3,32 @@ import {connect} from 'react-redux';
 
 import {userAddress, postAddress} from './store/address';
 import {createOrder} from './store/order';
+import Errors from './Errors';
 
 class BillAddress extends Component{
 
     constructor(props){
         super(props)
-        this.state = this.userBillAddress()
+        this.state = {...this.userBillAddress(), errors: []}
+    }
+
+    _mounted = false
+
+    componentDidMount(){
+        this._mounted = true
     }
 
     componentDidUpdate(prevProps){
-        if(JSON.stringify(prevProps) !== JSON.stringify(this.props)){
-            this.props.getBillAddress(this.props.user.id, 'billing')
-            .then(({address})=>this.setState({...address}))
+        if(JSON.stringify(prevProps.address) !== JSON.stringify(this.props.address)){
+            if(this._mounted){
+                this.props.getBillAddress(this.props.user.id, 'billing')
+                .then(({address})=>this.setState({...address}))
+            }
         }
+    }
+
+    componentWillUnmount(){
+        this._mounted = false
     }
 
     userBillAddress = (address) => {
@@ -34,9 +47,20 @@ class BillAddress extends Component{
         this.setState({[e.target.name]: e.target.value})
     }
     
-    Addressform = (firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange) => (
+    onSave = (e) => {
+        e.preventDefault()
+        this.props.postAddress(this.state, this.props.user.id, 'billing')
+            .then(()=>{
+                this.props.postOrder(this.props.user.id)
+                    .then((order)=>{this.props.history.push('/order')})
+                    .catch(e=>this.setState({errors: e.response.data.errors}))
+            })
+            .catch(e=>this.setState({errors: e.response.data.errors}))
+    }
+
+    Addressform = (firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange, onSave) => (
         <div>
-        <form>
+            <form onSubmit={onSave}>
                 <label htmlFor={`firstName`}>FirstName</label>
                 <input type="text" name={`firstName`} value={firstName} onChange = {onChange}/>
                 <br/>
@@ -58,31 +82,20 @@ class BillAddress extends Component{
                 <label htmlFor={`city`}>City</label>
                 <input type="text" name={`city`} value = {city} onChange = {onChange}/>
                 <br/>
-        </form>
-        <button onClick={()=>{
-                    this.props.postAddress(this.state, this.props.user.id, 'billing')
-                        .then(()=>{
-                            this.props.postOrder(this.props.user.id)
-                                .then((order)=>{
-                                    console.log('create an order: ', order)
-                                    this.props.history.push('/order')
-                                })
-                                .catch(ex=>console.log(ex))
-                        })
-                        .catch(ex=>console.log(ex))
-                    
-                    }}>place an order</button>
+                <button type='submit'>Place Order</button>
+            </form>
+            <Errors errors={this.state.errors}/>
         </div>
     )
 
     render(){
         const {firstName, lastName, addressLine1, addressLine2, zip, state, city} = this.state
-        const {onChange} = this
+        const {onChange, onSave} = this
         return(
             <div>
                 <h3>Billing Address</h3>
                 {
-                    this.Addressform(firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange)
+                    this.Addressform(firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange, onSave)
                 }
             </div>
         )

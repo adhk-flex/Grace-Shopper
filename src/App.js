@@ -11,6 +11,7 @@ import ManageOrder from './ManageOrder';
 import { fetchProducts } from './store/product';
 import { sessionLogin } from './store/user';
 import { fetchCategories } from './store/category';
+import { fetchLineItems } from './store/lineitem';
 import { connect } from 'react-redux';
 import Login from './login';
 import ShipAddress from './ShipAddress';
@@ -22,7 +23,12 @@ class App extends Component{
     componentDidMount() {
         this.props.fetchProducts();
         this.props.sessionLogin();
-        this.props.fetchCategories();
+    }
+    
+    componentDidUpdate(prevProps){
+        if (prevProps.cart.id !== this.props.cart.id) {
+            this.props.fetchLineItems(this.props.cart.id)
+        }
     }
 
     render(){
@@ -32,9 +38,10 @@ class App extends Component{
         }else{
             console.log('user is not login')
         }
+        const {lineItems} = this.props
         return(
             <Router>
-                <Route path = '/' render={(({location}) => Nav(isLogin, {location}))}/>
+                <Route path = '/' render={(({location}) => Nav(isLogin, {location}, lineItems))}/>
                 <Switch>
                     <Route exact path = '/home' component={Home}/>
                     <Route exact path = '/login' component={Login}/>
@@ -61,9 +68,11 @@ class App extends Component{
 }
 
 // may need modify here
-const mapStateToProps = ({user}) => {
+const mapStateToProps = ({user, cart, lineItems}) => {
     return {
-        isLogin: (user && user.id)? user: false
+        isLogin: (user && user.id) ? user: false,
+        cart: cart,
+        lineItems: lineItems
     }
 }
 
@@ -71,7 +80,8 @@ const mapDispatchToProps = dispatch => {
     return {
         fetchProducts: () => dispatch(fetchProducts()),
         sessionLogin: () => dispatch(sessionLogin()),
-        fetchCategories: () => dispatch(fetchCategories())
+        fetchCategories: () => dispatch(fetchCategories()),
+        fetchLineItems: (cartId) => dispatch(fetchLineItems(cartId))
     }
 };
 
