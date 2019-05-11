@@ -1,16 +1,28 @@
 const express = require('express');
 const db = require('../../db/models');
 const Order = db.Order;
-
+const User = db.User;
 const router = express.Router();
 
 router.get('/user/:userId', (req, res, next) => {
     if(req.params.userId !== req.session.userId){
         res.send(500);
     }
-    Order.findAll({where: {userId: req.params.userId}},
-                  {order: [['orderNumber', 'DESC']]})
-    .then((orders) => res.json(orders))
+
+    User.findOne({where: {id: req.params.userId}})
+    .then((user)=>{
+        if(user.role==='admin'){
+            Order.findAll({order: [['orderNumber', 'ASC']]})
+            .then((orders)=>res.json(orders))
+            .catch(next)
+        }
+        else{
+            Order.findAll({where: {userId: req.params.userId}},
+                {order: [['orderNumber', 'DESC']]})
+            .then((orders) => res.json(orders))
+            .catch(next);
+        }
+    })
     .catch(next);
 });
 
