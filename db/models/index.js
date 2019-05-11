@@ -83,7 +83,7 @@ Order.createOrder = userId => {
       Address.findOne({ where: { userId: userId.userId, addressType: "billing", active: true } }),
       CreditCard.findOne({ where: { userId: userId.userId, active: true } })
     ]))
-    .then(([shippingAddress, billingAddress, creditCard]) => Order.create({ status: "purchased", userId: userId.userId, shippingAddressId: shippingAddress.id, billingAddressId: billingAddress.id, creditCardId: creditCard.id }));
+    .then(([shippingAddress, billingAddress, creditCard]) => Order.create({ status: "created", userId: userId.userId, shippingAddressId: shippingAddress.id, billingAddressId: billingAddress.id, creditCardId: creditCard.id }));
 };
 
 Order.addHook("afterCreate", order => {
