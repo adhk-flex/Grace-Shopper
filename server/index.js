@@ -45,13 +45,7 @@ app.use((req, res, next) => {
     next(err);
 });
 
-// app.use((err, req, res, next) => {
-//     console.error(err, err.stack);
-//     res.status(500).send(err);
-// });
-
 app.use((error, req, res, next) => {
-    console.log(Object.keys(error));
     let errors = [error];
     if (error.errors) {
       error = error.errors.map(_error => {
