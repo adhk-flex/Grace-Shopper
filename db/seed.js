@@ -23,7 +23,7 @@ const seed = () => {
       ])
     )
     .then(categories => {
-      const arr = new Array(20);
+      const arr = new Array(40);
       return Promise.all(
         [...arr].map(() =>
           Product.create({

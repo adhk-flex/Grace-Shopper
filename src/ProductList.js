@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
-import { fetchLineItems } from './store/lineitem';
+import { fetchFilteredProducts } from './store/product';
 import { getProductByPg, fetchProducts } from './store/product'
 import Pager from './Pager';
-
 import { lineItems, fetchLineItems } from './store/lineitem';
 import Search from "./Search";
 
@@ -18,15 +16,37 @@ class ProductList extends Component {
     }
 
     componentDidMount(){
-        this.props.fetchProducts()
+        const { srchVal, catId, pgIdx } = this.props.match.params;     
+
+        if(srchVal || catId){
+            this.props.fetchFilteredProducts(srchVal, catId, pgIdx);
+        } else {
+            this.props.fetchProducts();
+	    }
     }
 
+
+
     componentDidUpdate(prevProps){
+        const { srchVal, catId, pgIdx } = this.props.match.params;
         if(prevProps.cart.id !== this.props.cart.id){
             this.props.fetchLineItems(this.props.cart.id)
+        }     
+
+        if(JSON.stringify(this.props.match.params) !== JSON.stringify(prevProps.match.params)){
+            if(srchVal || catId){
+                this.props.fetchFilteredProducts(srchVal, catId, pgIdx);
+            }
         }   
+        
         if(prevProps.match.params.idx !== this.props.match.params.idx){
-            this.props.getProductByPg(this.props.match.params.idx)
+            if(!srchVal && !catId){
+                if (this.props.match.params.idx === undefined) {
+                    this.props.fetchProducts()
+                } else {
+                this.props.getProductByPg(this.props.match.params.idx)
+                }
+            }
         }  
     }
     render(){
@@ -38,7 +58,7 @@ class ProductList extends Component {
         }, 0)
         return(
             <div>
-                <Pager history={history}/>
+                <Pager history={history} match ={this.props.match}/>
                 <h1>Here are All of our Products:</h1>
                 <Search history={history} match={this.props.match}/>
                 <ul className='list-group'>
@@ -71,6 +91,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchLineItems: cartId => dispatch(fetchLineItems(cartId)),
+        fetchFilteredProducts: (srchVal, catId, pgIdx) => dispatch(fetchFilteredProducts(srchVal, catId, pgIdx)),
         fetchProducts: () => dispatch(fetchProducts()),
         getProductByPg: pgIdx => dispatch(getProductByPg(pgIdx))
     }

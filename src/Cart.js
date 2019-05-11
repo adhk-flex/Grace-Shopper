@@ -3,36 +3,28 @@ import {connect} from 'react-redux';
 import { fetchLineItems, updateLineItem, delLineItem } from './store/lineitem';
 
 class Cart extends Component {
-    constructor (props) {
-        super(props)
-        this.state = { }
+    componentDidMount(){
+        this.props.fetchLineItems(this.props.cart.id)
     }
 
-    async componentDidMount(){
-        const cartId = this.props.cart && this.props.cart.id? this.props.cart.id:false
-        await this.props.fetchLineItems(cartId)
-    }
-
-    async componentDidUpdate(prevProps){
-        if(prevProps.cart.id !== this.props.cart.id){
-            await this.props.fetchLineItems(this.props.cart.id)
+    componentDidUpdate(prevProps){
+        if (prevProps.cart.id !== this.props.cart.id){
+            this.props.fetchLineItems(this.props.cart.id)
         }
     }
 
     onChange = (item, e) => {
-        this.setState(item)
-        this.setState({quantity: e.target.value})
+        const locateItem = this.props.lineItems.find(i => i.id === item.id)
+        locateItem.quantity = Number(e.target.value)
     };
 
-    onUpdate = e => {
+    onUpdate = (item, e) => {
         e.preventDefault()
-        const {id, cartId, quantity} = this.state
-        // console.log(this.state)
-        // console.log("Quantity", quantity)
-        if (quantity === "0") {
+        const {quantity, id, cartId} = item;
+        if (quantity === 0) {
             this.props.delLineItem(id, cartId)
         } else {
-            this.props.updateLineItem(id, this.state, cartId)
+            this.props.updateLineItem(id, item, cartId)
         } 
     }
 
@@ -42,22 +34,17 @@ class Cart extends Component {
 
 
     render () {
-        // console.log("props", this.props)
-        // console.log("state", this.state)
         const {lineItems} = this.props;
         const { onChange, onUpdate, onDelete } = this;
         const totalAmount = lineItems.reduce((acc, item) => {
             acc += item.quantity * item.price
             return acc
         }, 0)
-        console.log(typeof totalAmount)
         const disableCheckout = totalAmount === 0;
-        console.log(disableCheckout)
-        // console.log('isLogin: ', this.props.isLogin)
-        if(!lineItems){
+        if (!lineItems){
             return null
-        }else{
-            return(
+        } else {
+            return (
                 <div>
                     <h1>Here are all the products in your cart!</h1>
                     <ul>
@@ -66,9 +53,9 @@ class Cart extends Component {
                             return (
                                 <li key={p.id}>
                                     <span>{`Name: ${p.name}, Price: ${p.price}`}</span>
-                                    <br/>
+                                    <br />
                                     <img className = 'product-image' src={p.imageUrl}/>
-                                    <form onSubmit={onUpdate}>
+                                    <form onSubmit={(e) => onUpdate(p, e)}>
                                         <label htmlFor='quantity'>Quantity</label>
                                         <input name='quantity' placeholder={p.quantity} onChange={(e) => onChange(p, e)}/>
                                         <button type='submit'>Update</button>
@@ -77,13 +64,13 @@ class Cart extends Component {
                                     <span>Subtotal: ${total}</span>
                                     <br />
                                     <span>Don't want this product?</span>
-                                    <button onClick={() => onDelete(p.id, p.cartId)}>Delete</button>
+                                    <button onClick={() => onDelete(p.id, p.cartId)}> Delete </button>
                                 </li>
                             )
                         })}
                     </ul>
                     <span>{`Total Amount: $${totalAmount}`}</span>
-                    <button onClick={()=>this.props.history.push('/checkout')} disabled={disableCheckout} >Check Out!</button>
+                    <button onClick={()=>this.props.history.push('/checkout')} disabled={disableCheckout} > Check Out! </button>
                 </div>
             )
         }
@@ -93,10 +80,10 @@ class Cart extends Component {
 
 const mapStateToProps = ({products, user, cart, lineItems}) => {
     return {
-        products:  products? products:false,
-        isLogin: user&&user.id? user.id:false,
-        cart: cart? cart:false,
-        lineItems: lineItems? lineItems:false
+        products:  products ? products : false,
+        isLogin: user && user.id ? user.id : false,
+        cart: cart ? cart : false,
+        lineItems: lineItems ? lineItems : false
     }
 };
 

@@ -260,8 +260,8 @@ class CheckoutForm extends Component{
 
 const mapStateToProps = state => {
     return {
-        user: state.user? state.user:false,
-        address: state.address? state.address:{},
+        user: state.user,
+        address: state.address
     }
 }
 
