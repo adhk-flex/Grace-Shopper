@@ -54,6 +54,9 @@ const Nav = (isLogin, {location: {pathname}}, lineItems) => {
         },
         {
             label: 'Checkout', to: '/checkout'
+        },
+        {
+            label: `Cart(${itemQuantity})`, to:'/cart'
         }
     ];
 
