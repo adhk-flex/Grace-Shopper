@@ -22,7 +22,12 @@ export const userAddress = (userId, type) => dispatch => {
 };
 
 export const postAddress = (dataForm, userId, type) => dispatch => {
-  console.log('store', dataForm)
-  return axios.post(`/api/addresses/${type}/user/${userId}`, dataForm)
-    .then(() => dispatch(setAddress(userId, type)))
+  console.log('store', dataForm,'user', userId)
+  if (userId === undefined) {
+    localStorage.setItem(type, JSON.stringify(dataForm))
+    return new Promise(() => dispatch(setAddress(dataForm)))
+  } else {
+    return axios.post(`/api/addresses/${type}/user/${userId}`, dataForm)
+      .then(() => dispatch(setAddress(userId, type)))
+  }
 };

@@ -17,12 +17,14 @@ class ShipAddress extends Component{
 
     componentDidUpdate(prevProps){
         if(JSON.stringify(prevProps.address)!==JSON.stringify(this.props.address)){
-            this.props.getShipAddress(this.props.user.id, 'shipping')
-            .then(({address})=>{
-                if(this._mounted){
-                    this.setState({...address})
-                }
-            })
+            if (this.props.isLogin) {
+                this.props.getShipAddress(this.props.user.id, 'shipping')
+                .then(({address})=>{
+                    if(this._mounted){
+                        this.setState({...address})
+                    }
+                })
+            }
         }
     }
 
@@ -50,9 +52,10 @@ class ShipAddress extends Component{
 
     onSave = (e) => {
         e.preventDefault()
+        console.log(this.props)
         this.props.postAddress(this.state, this.props.user.id, 'shipping')
-        .then(()=>{this.props.history.push('/checkoutStep2')})
-        .catch((e)=>{this.setState({errors: e.response.data.errors})})
+            .then(() => {this.props.history.push('/checkoutStep2')})
+            .catch((e) => {this.setState({errors: e.response.data.errors})})
     }
     
     Addressform = (firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange, onSave) => (
@@ -88,6 +91,7 @@ class ShipAddress extends Component{
     render(){
         const {firstName, lastName, addressLine1, addressLine2, zip, state, city} = this.state
         const {onChange, onSave} = this
+        // console.log(this.props.address)
         return(
             <div>
                 <h3>Shipping Address</h3>
@@ -101,6 +105,7 @@ class ShipAddress extends Component{
 
 const mapStateToProps = (state) => {
     return {
+        isLogin: state.user && state.user.id ? state.user.id : false,
         address: state.address,
         user: state.user
     }

@@ -17,12 +17,14 @@ class CreditCard extends Component{
 
     componentDidUpdate(prevProps){
         if(JSON.stringify(prevProps) !== JSON.stringify(this.props)){
-            this.props.getCreditCard(this.props.user.id)
-            .then(({creditCard})=>{
-                if(this._mounted){
-                    this.setState({...creditCard})
-                }
-            })
+            if (this.props.isLogin) {
+                this.props.getCreditCard(this.props.user.id)
+                .then(({creditCard})=>{
+                    if (this._mounted){
+                        this.setState({...creditCard})
+                    }
+                })
+            }
         }
     }
 
@@ -109,6 +111,7 @@ class CreditCard extends Component{
 
 const mapStateToProps = (state) => {
     return {
+        isLogin: state.user && state.user.id ? state.user.id : false,
         user: state.user,
         creditCard: state.creditCard
     }
