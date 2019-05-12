@@ -20,9 +20,11 @@ class BillAddress extends Component{
 
     componentDidUpdate(prevProps){
         if(JSON.stringify(prevProps.address) !== JSON.stringify(this.props.address)){
-            if(this._mounted){
-                this.props.getBillAddress(this.props.user.id, 'billing')
-                .then(({address})=>this.setState({...address}))
+            if (this.props.isLogin) {
+                if(this._mounted){
+                    this.props.getBillAddress(this.props.user.id, 'billing')
+                    .then(({address})=>this.setState({...address}))
+                }
             }
         }
     }
@@ -104,6 +106,7 @@ class BillAddress extends Component{
 
 const mapStateToProps = (state) => {
     return {
+        isLogin: state.user && state.user.id ? state.user.id : false,
         address: state.address,
         user: state.user
     }
