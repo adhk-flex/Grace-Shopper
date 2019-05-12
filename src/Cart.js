@@ -7,7 +7,8 @@ class Cart extends Component {
     constructor(){
         super()
         this.state = {
-            errors: []
+            errors: [],
+            quantity: '',
         }
     }
     componentDidMount(){
@@ -23,21 +24,23 @@ class Cart extends Component {
         }
     }
 
-    onChange = (item, e) => {
-        const locateItem = this.props.lineItems.find(i => i.id === item.id)
-        locateItem.quantity = Number(e.target.value)
+    onChange = (e) => {
+        this.setState({quantity: e.target.value})
     };
 
     onUpdate = (item, e) => {
         e.preventDefault()
-        const {quantity, id, cartId} = item;
-        if (quantity === 0) {
+        item.quantity = Number(this.state.quantity)
+        console.log('item on Update', item)
+        if (item.quantity === 0) {
+            console.log('deleting')
             this.props.delLineItem(item)
                 .catch(e => {this.setState({errors: e.response.data.errors})})
         } else {
-            this.props.updateLineItem(id, item, cartId)
+            console.log('updating')
+            this.props.updateLineItem(item)
                 .catch(e => {this.setState({errors: e.response.data.errors})})
-        } 
+        }
     }
 
     onDelete = (item) => {
@@ -71,7 +74,7 @@ class Cart extends Component {
                                     <img className = 'product-image' src={p.imgUrl}/>
                                     <form onSubmit={(e) => onUpdate(p, e)}>
                                         <label htmlFor='quantity'>Quantity</label>
-                                        <input name='quantity' placeholder={p.quantity} onChange={(e) => onChange(p, e)}/>
+                                        <input name='quantity' placeholder={p.quantity} onChange={onChange}/>
                                         <button type='submit'>Update</button>
                                     </form>
                                     <br />

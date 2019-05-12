@@ -40,14 +40,16 @@ class Product extends Component{
             cartId: cartId,
             productId: product.id
         }
+        console.log('onSave', item)
+        console.log('lineItems', lineItems)
         if (lineItems.find(i => i.productId === item.productId)) {
             console.log('Found a dupe!')
             const i = lineItems.find(i => i.productId === item.productId)
             i.quantity = Number(i.quantity) + Number(this.state.selectedQuantity)
-            this.props.updateLineItem(i.id, i, cartId)
+            this.props.updateLineItem(i)
                 .catch(e => {this.setState({errors: e.response.data.errors})})
         } else {
-            this.props.addLineItem(item, cartId)
+            this.props.addLineItem(item)
                 .catch(e => {this.setState({errors: e.response.data.errors})})
         }
     }
