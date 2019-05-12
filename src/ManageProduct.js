@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchProducts } from './store/product';
 import { fetchCategories } from './store/category';
@@ -20,7 +21,7 @@ class ManageProduct extends Component {
                 {/* <Pager history={history} match ={this.props.match}/> */}
                 <h1>Manage All Products</h1>
                 {/* <Search history={history} match={this.props.match}/> */}
-               
+                <Link to='/manageProduct/addCategory' className='btn btn-primary'>Add Category</Link>
                 <div>
                     <table className='table'>
                     <thead>
