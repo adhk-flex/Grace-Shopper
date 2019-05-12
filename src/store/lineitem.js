@@ -44,9 +44,16 @@ export const addLineItem = (product, cartId) => dispatch => {
   }
 };
 
-export const delLineItem = (id, cartId) => dispatch => {
-  return axios.delete(`/api/lineitems/${id}`)
-    .then(() => dispatch(fetchLineItems(cartId)))
+export const delLineItem = (item) => dispatch => {
+  if(item.cartId === undefined){
+    let items = JSON.parse(localStorage.getItem('lineItems'))  
+    localStorage.setItem('lineItems', JSON.stringify(items.filter(item=>item.productId!==item.productId)))
+    return new Promise(() => dispatch(fetchLineItems()))
+  }
+  else{
+    return axios.delete(`/api/lineitems/${item.id}`)
+    .then(() => dispatch(fetchLineItems(item.cartId)))
+  }
 };
 
 export const updateLineItem = (id, formData, cartId) => dispatch => {
