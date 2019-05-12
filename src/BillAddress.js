@@ -106,7 +106,7 @@ class BillAddress extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        isLogin: state.user && state.user.id ? state.user.id : false,
+        isLogin: state.user && state.user.id ? state.user : false,
         address: state.address,
         user: state.user
     }

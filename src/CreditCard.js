@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { getCreditCard, postCreditCard } from './store/creditcards';
+//mport { getCreditCard, postCreditCard } from './store/creditcards';
 import Errors from './Errors';
 
 class CreditCard extends Component{
@@ -16,16 +16,16 @@ class CreditCard extends Component{
     }
 
     componentDidUpdate(prevProps){
-        if(JSON.stringify(prevProps) !== JSON.stringify(this.props)){
-            if (this.props.isLogin) {
-                this.props.getCreditCard(this.props.user.id)
-                .then(({creditCard})=>{
-                    if (this._mounted){
-                        this.setState({...creditCard})
-                    }
-                })
-            }
-        }
+        // if(JSON.stringify(prevProps) !== JSON.stringify(this.props)){
+        //     if (this.props.isLogin) {
+        //         this.props.getCreditCard(this.props.user.id)
+        //         .then(({creditCard})=>{
+        //             if (this._mounted){
+        //                 this.setState({...creditCard})
+        //             }
+        //         })
+        //     }
+        // }
     }
 
     componentWillUnmount(){
@@ -50,9 +50,14 @@ class CreditCard extends Component{
 
     onSave = (e) => {
         e.preventDefault()
-        this.props.postCreditCard(this.props.user.id, this.state)
-        .then(()=>{this.props.history.push('/checkoutStep3')})
-        .catch(e=>this.setState({errors: e.response.data.errors}))
+        //add validations here for credit card number @Haoyu
+
+        //Removing the following POST call since we no longer want to persist CC info.
+
+        // this.props.postCreditCard(this.props.user.id, this.state)
+        // .then(()=>{this.props.history.push('/checkoutStep3')})
+        // .catch(e=>this.setState({errors: e.response.data.errors}))
+        this.props.history.push('/checkoutStep3')
     }
 
     render(){
@@ -111,17 +116,17 @@ class CreditCard extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        isLogin: state.user && state.user.id ? state.user.id : false,
+        isLogin: state.user && state.user.id ? state.user : false,
         user: state.user,
-        creditCard: state.creditCard
+        //creditCard: state.creditCard
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getCreditCard: (userId) => dispatch(getCreditCard(userId)),
-        postCreditCard: (userId, cardInfo) => dispatch(postCreditCard(userId, cardInfo))
-    }
-}
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         //getCreditCard: (userId) => dispatch(getCreditCard(userId)),
+//         postCreditCard: (userId, cardInfo) => dispatch(postCreditCard(userId, cardInfo))
+//     }
+// }
 
-export default connect(mapStateToProps,mapDispatchToProps)(CreditCard);
+export default connect(mapStateToProps,null)(CreditCard);

@@ -17,15 +17,22 @@ export const address = (state = [], action) => {
 };
 
 export const userAddress = (userId, type) => dispatch => {
-  return axios.get(`/api/addresses/${type}/user/${userId}`)
+  if(userId === undefined){
+    const address = JSON.parse(localStorage.getItem(type))
+    return Promise.resolve(dispatch(setAddress(address)))
+  }
+  else{
+    return axios.get(`/api/addresses/${type}/user/${userId}`)
     .then(add => dispatch(setAddress(add.data)))
+  }
 };
 
 export const postAddress = (dataForm, userId, type) => dispatch => {
-  console.log('store', dataForm,'user', userId)
   if (userId === undefined) {
+    delete dataForm.errors
     localStorage.setItem(type, JSON.stringify(dataForm))
-    return new Promise(() => dispatch(setAddress(dataForm)))
+    return Promise.resolve(dispatch(setAddress(dataForm)))
+    //return new Promise((res, rej) => dispatch(setAddress(dataForm)))
   } else {
     return axios.post(`/api/addresses/${type}/user/${userId}`, dataForm)
       .then(() => dispatch(setAddress(userId, type)))

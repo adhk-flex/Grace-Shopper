@@ -19,7 +19,7 @@ export const lineItems = (state = [], action) => {
 export const fetchLineItems = cartId => dispatch => {
   if (cartId === undefined) {
     const items = JSON.parse(localStorage.getItem('lineItems'))
-    return new Promise(() => dispatch(setLineItems(items)))
+    return Promise.resolve(dispatch(setLineItems(items)))
   } else {
   return axios.get(`/api/lineitems/cart/${cartId}`)
     .then(items => dispatch(setLineItems(items.data)))
@@ -35,7 +35,7 @@ export const addLineItem = (item) => dispatch => {
     }
     items.push(item)
     localStorage.setItem('lineItems', JSON.stringify(items));
-    return new Promise(() => dispatch(fetchLineItems()))
+    return Promise.resolve(dispatch(fetchLineItems()))
   }
   else {
     return axios.post('/api/lineitems', item)
@@ -47,7 +47,7 @@ export const delLineItem = (item) => dispatch => {
   if (item.cartId === undefined){
     let items = JSON.parse(localStorage.getItem('lineItems'))  
     localStorage.setItem('lineItems', JSON.stringify(items.filter(i => i.productId !== item.productId)))
-    return new Promise(() => dispatch(fetchLineItems()))
+    return Promise.resolve(dispatch(fetchLineItems()))
   }
   else {
     return axios.delete(`/api/lineitems/${item.id}`)
@@ -64,7 +64,7 @@ export const updateLineItem = (item) => dispatch => {
     }
     newitems.push(item)
     localStorage.setItem('lineItems', JSON.stringify(newitems))
-    return new Promise(() => dispatch(fetchLineItems()))
+    return Promise.resolve(dispatch(fetchLineItems()))
   }
   else {
     const {id, cartId} = item
