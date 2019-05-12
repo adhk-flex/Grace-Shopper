@@ -31,7 +31,7 @@ export const getOneCatById = id => {
     .then(response => response.data);
 }
 
-const addCategory = category => dispatch => {
+export const addCategory = category => dispatch => {
   return axios.post('/api/categories', category)
     .then(() => dispatch(fetchCategories()))
 };

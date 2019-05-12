@@ -8,6 +8,7 @@ import Product from './Product';
 import Cart from './Cart';
 import Order from './Order'
 import ManageOrder from './ManageOrder';
+import CategoryForm from './CategoryForm';
 import { fetchProducts } from './store/product';
 import { sessionLogin } from './store/user';
 import { fetchCategories } from './store/category';
@@ -62,6 +63,7 @@ class App extends Component{
                     <Route exact path = '/productList/search/:srchVal/:pgIdx?' component={ProductList} />
                     <Route exact path = '/productList/:idx' component={ProductList}/>
                     <Route exact path = '/productList' component={ProductList}/>
+                    <Route exact path = '/manageProduct/addCategory' component={CategoryForm} />
                     <Route exact path = '/manageProduct' component={ManageProduct}/>
                     <Route exact path = '/product/:id' component={Product}/>
                     <Route exact path = '/cart' component={Cart}/>
