@@ -32,8 +32,8 @@ export const getOrderbyStatus = status => dispatch => {
     .then(orders => dispatch(setOrder(orders.data)))
 };
 
-export const getOrdersWithUsers = () => dispatch => {
-  return axios.get('/api/orders/include/users')
+export const getOrdersWithUsers = userId => dispatch => {
+  return axios.get(`/api/orders/include/users/${userId}`)
     .then(orders => dispatch(setOrder(orders.data)))
 }
 

@@ -38,10 +38,22 @@ router.get('/status/:status', (req, res, next) => {
         .catch(next);
 });
 
-router.get('/include/users', (req, res, next) => {
-    Order.findAll({ include:[User], order: [["orderNumber", "DESC"]] })
-        .then(orders => res.json(orders))
-        .catch(next);
+router.get('/include/users/:userId', (req, res, next) => {
+    if(req.params.userId !== req.session.userId){
+        res.send(500);
+    }
+    User.findOne({where: {id: req.params.userId}})
+    .then((user)=>{
+        if(user.role==='admin'){
+            Order.findAll({include: [User], order: [['orderNumber', 'ASC']]})
+            .then((orders)=>res.json(orders))
+            .catch(next)
+        }
+        else{
+            throw new Error('NOT AN ADMIN');
+        }
+    })
+    .catch(next);
 });
 
 router.post('/user/:userId', (req, res, next) => {

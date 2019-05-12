@@ -14,7 +14,7 @@ class ManageOrder extends Component {
     componentDidMount(){
         if(this.props.user){
             // this.props.getOrderByUser(this.props.user.id)
-            this.props.getOrdersWithUsers();
+            this.props.getOrdersWithUsers(this.props.user.id);
         }
     }
 
@@ -22,7 +22,7 @@ class ManageOrder extends Component {
         if(JSON.stringify(prevProps)!==JSON.stringify(this.props)){
             if(this.props.user.id){
                 // this.props.getOrderByUser(this.props.user.id)
-                this.props.getOrdersWithUsers();
+                this.props.getOrdersWithUsers(this.props.user.id);
             }
         }
     }
@@ -69,7 +69,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getOrderByUser: (userId) => dispatch(getOrderByUser(userId)),
-        getOrdersWithUsers: () => dispatch(getOrdersWithUsers())
+        getOrdersWithUsers: (userId) => dispatch(getOrdersWithUsers(userId))
     }
 }
 
