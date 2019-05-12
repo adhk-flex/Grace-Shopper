@@ -27,8 +27,8 @@ const getOrderById = orderId => dispatch => {
     .then(order => dispatch(setOrder(order.data)))
 };
 
-export const getOrderbyStatus = status => dispatch => {
-  return axios.get(`/api/orders/status/${status}`)
+export const getOrdersByStatus = (status, userId) => dispatch => {
+  return axios.get(`/api/orders/status/${status}/${userId}`)
     .then(orders => dispatch(setOrder(orders.data)))
 };
 
