@@ -11,8 +11,8 @@ class OrderForm extends Component{
             status: this.props.order&&this.props.order.status || '',
             totalAmount: this.props.order&&this.props.order.totalAmount || 0,
             id: this.props.order&&this.props.order.id || null,
-            firstName: this.props.user&&this.props.user.firstName || '',
-            lastName: this.props.user&&this.props.user.lastName || '',
+            firstName: this.props.order&&this.props.order.user.firstName || '',
+            lastName: this.props.order&&this.props.order.user.lastName || '',
             createdDate: this.props.order&& new Date(this.props.order.createdAt) || '',
             lastUpdated: this.props.order&& new Date(this.props.order.updatedAt) || '',
             errors: []

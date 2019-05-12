@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { getOrderByUser } from './store/order';
+import { getOrderByUser, getOrdersWithUsers } from './store/order';
 import OrderForm from './OrderForm';
 
 class ManageOrder extends Component {
@@ -13,21 +13,17 @@ class ManageOrder extends Component {
 
     componentDidMount(){
         if(this.props.user){
-            this.props.getOrderByUser(this.props.user.id)
+            // this.props.getOrderByUser(this.props.user.id)
+            this.props.getOrdersWithUsers();
         }
     }
 
     componentDidUpdate(prevProps){
         if(JSON.stringify(prevProps)!==JSON.stringify(this.props)){
             if(this.props.user.id){
-                this.props.getOrderByUser(this.props.user.id)
+                // this.props.getOrderByUser(this.props.user.id)
+                this.props.getOrdersWithUsers();
             }
-        }
-    }
-
-    componentDidMount(){
-        if(this.props.user.id){
-            this.props.getOrderByUser(this.props.user.id)
         }
     }
         
@@ -73,6 +69,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getOrderByUser: (userId) => dispatch(getOrderByUser(userId)),
+        getOrdersWithUsers: () => dispatch(getOrdersWithUsers())
     }
 }
 

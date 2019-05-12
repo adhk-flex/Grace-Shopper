@@ -33,7 +33,13 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.get('/status/:status', (req, res, next) => {
-    Order.findAll({ where: { status: req.params.status } })
+    Order.findAll({ where: { status: req.params.status }, include: [db.User] })
+        .then(orders => res.json(orders))
+        .catch(next);
+});
+
+router.get('/include/users', (req, res, next) => {
+    Order.findAll({ include:[User], order: [["orderNumber", "DESC"]] })
         .then(orders => res.json(orders))
         .catch(next);
 });
