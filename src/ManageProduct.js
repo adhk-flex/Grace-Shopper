@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchProducts } from './store/product';
+import { fetchCategories } from './store/category';
 import ProductForm from './ProductForm';
 
 class ManageProduct extends Component {
@@ -8,6 +9,9 @@ class ManageProduct extends Component {
         super(props)
     }
 
+    componentDidMount(){
+        this.props.fetchCategories();
+    }
     render(){
         const history = this.props.history;
         const products = this.props.products;
@@ -27,6 +31,7 @@ class ManageProduct extends Component {
                             <th>Description</th>
                             <th>Image URL</th>
                             <th>Product Number</th>
+                            <th>Product Category</th>
                             <th>Save</th>
                             <th>Delete</th>
                         </tr>
@@ -34,7 +39,7 @@ class ManageProduct extends Component {
                     <tbody>  
                         {
                             products.map(p=>{
-                                return (<ProductForm product={p} key={p.id}/>)
+                                return (<ProductForm product={p} categories={this.props.categories} key={p.id}/>)
                             })
                         }
                     </tbody>    
@@ -47,13 +52,15 @@ class ManageProduct extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        products: state.products
+        products: state.products,
+        categories: state.categories
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         fetchProducts: () => dispatch(fetchProducts()),
+        fetchCategories: () => dispatch(fetchCategories())
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ManageProduct);

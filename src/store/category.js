@@ -26,6 +26,11 @@ const getCategoriesWId = id => dispatch => {
     .then(categories => dispatch(setCategory(categories.data)))
 }
 
+export const getOneCatById = id => {
+  return axios.get(`/api/categories/${id}`)
+    .then(response => response.data);
+}
+
 const addCategory = category => dispatch => {
   return axios.post('/api/categories', category)
     .then(() => dispatch(fetchCategories()))
