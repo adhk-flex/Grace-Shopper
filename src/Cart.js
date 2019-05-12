@@ -32,7 +32,7 @@ class Cart extends Component {
         e.preventDefault()
         const {quantity, id, cartId} = item;
         if (quantity === 0) {
-            this.props.delLineItem(id, cartId)
+            this.props.delLineItem(item)
                 .catch(e => {this.setState({errors: e.response.data.errors})})
         } else {
             this.props.updateLineItem(id, item, cartId)
@@ -40,8 +40,8 @@ class Cart extends Component {
         } 
     }
 
-    onDelete = (id, cartId) => {
-        this.props.delLineItem(id, cartId)
+    onDelete = (item) => {
+        this.props.delLineItem(item)
             .catch(e => {this.setState({errors: e.response.data.errors})})
     }
 
@@ -78,7 +78,7 @@ class Cart extends Component {
                                     <span>Subtotal: ${total}</span>
                                     <br />
                                     <span>Don't want this product?</span>
-                                    <button onClick={() => onDelete(p.id, p.cartId)}> Delete </button>
+                                    <button onClick={() => onDelete(p)}> Delete </button>
                                 </li>
                             )
                         })}

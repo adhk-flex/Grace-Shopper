@@ -41,6 +41,7 @@ class Product extends Component{
             productId: product.id
         }
         if (lineItems.find(i => i.productId === item.productId)) {
+            console.log('Found a dupe!')
             const i = lineItems.find(i => i.productId === item.productId)
             i.quantity = Number(i.quantity) + Number(this.state.selectedQuantity)
             this.props.updateLineItem(i.id, i, cartId)
