@@ -11,6 +11,10 @@ class OrderForm extends Component{
             status: this.props.order&&this.props.order.status || '',
             totalAmount: this.props.order&&this.props.order.totalAmount || 0,
             id: this.props.order&&this.props.order.id || null,
+            firstName: this.props.user&&this.props.user.firstName || '',
+            lastName: this.props.user&&this.props.user.lastName || '',
+            createdDate: this.props.order&& new Date(this.props.order.createdAt) || '',
+            lastUpdated: this.props.order&& new Date(this.props.order.updatedAt) || '',
             errors: []
         }
         this.handleChange = this.handleChange.bind(this);
@@ -40,8 +44,10 @@ class OrderForm extends Component{
         return(
         
         <tr key={o.id}>
-            <td> <input type='text' onChange={this.handleChange} name='orderNumber' value={o.orderNumber}/> </td>
-            <td> <input type='text' onChange={this.handleChange} name='totalAmount' value={o.totalAmount}/> </td>
+            <td> {o.orderNumber} </td>
+            <td> {o.firstName} </td>
+            <td> {o.lastName} </td>
+            <td> {o.totalAmount} </td>
             <td> <select onChange={this.handleChange} name='status' value={o.status}>
                     <option value="created">Created</option>
                     <option value="processing">Processing</option>
@@ -49,6 +55,8 @@ class OrderForm extends Component{
                     <option value="closed">Closed</option>
                 </select> 
             </td>
+            <td> {o.createdDate.getFullYear()}-{(o.createdDate.getMonth() + 1)}-{o.createdDate.getDate()}  {o.createdDate.getHours()}:{o.createdDate.getMinutes()}:{o.createdDate.getSeconds()} </td>
+            <td> {o.lastUpdated.getFullYear()}-{(o.lastUpdated.getMonth() + 1)}-{o.lastUpdated.getDate()}  {o.lastUpdated.getHours()}:{o.lastUpdated.getMinutes()}:{o.lastUpdated.getSeconds()} </td>
             <td> <button className='btn btn-primary' type='submit' onClick={this.handleSubmit}/></td>
             <td> <Errors errors={this.state.errors} /></td>
         </tr>
@@ -56,9 +64,13 @@ class OrderForm extends Component{
     }
 }
 
+const mapStateToProps = state => ({
+    user: state.user
+});
+
 const mapDispatchToProps = dispatch => {
     return {
         updateOrder: (id, order) => dispatch(updateOrder(id, order))
     }
 }
-export default connect(null, mapDispatchToProps)(OrderForm);
+export default connect(mapStateToProps, mapDispatchToProps)(OrderForm);

@@ -40,8 +40,12 @@ class ManageOrder extends Component {
                     <thead>
                         <tr>
                             <th>Order Number</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
                             <th>Total Amount</th>
                             <th>Order Status</th>
+                            <th>Order Date</th>
+                            <th>Last Update Date</th>
                             <th>Save</th>
                         </tr>
                     </thead>
