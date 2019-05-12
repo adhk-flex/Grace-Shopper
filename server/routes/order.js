@@ -32,6 +32,12 @@ router.get('/:id', (req, res, next) => {
         .catch(next);
 });
 
+router.get('/status/:status', (req, res, next) => {
+    Order.findAll({ where: { status: req.params.status } })
+        .then(orders => res.json(orders))
+        .catch(next);
+});
+
 router.post('/user/:userId', (req, res, next) => {
     if(req.params.userId !== req.session.userId){
         res.send(500);

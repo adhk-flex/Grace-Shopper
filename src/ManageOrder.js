@@ -6,9 +6,9 @@ import OrderForm from './OrderForm';
 class ManageOrder extends Component {
     constructor(props){
         super(props)
-        // this.state = {
-        //     orders: []
-        // }
+        this.state = {
+            orders: []
+        }
     }
 
     componentDidMount(){
