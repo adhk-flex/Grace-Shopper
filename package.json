@@ -49,7 +49,8 @@
     "dbTestProductStatus": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/product.js --watch",
     "dbTestAddress": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/address.js --watch",
     "dbTestCC": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/creditCards.js --watch",
-    "dbTestReview": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/review.js --watch"
+    "dbTestReview": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/review.js --watch",
+    "dbTestUser": "DATABASE_URL=postgres://localhost/grace-shopper node ./node_modules/mocha/bin/mocha ./tests/db/user.js --watch"
   },
   "keywords": [],
   "author": "",
