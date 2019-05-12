@@ -27,20 +27,19 @@ export const fetchLineItems = cartId => dispatch => {
 };
 
 
-export const addLineItem = (product, cartId) => dispatch => {
-
-  if (cartId === undefined){
+export const addLineItem = (item) => dispatch => {
+  if (item.cartId === undefined){
     let items = JSON.parse(localStorage.getItem('lineItems'))  
     if (!items){
       items = []
     }
-    items.push(product)
+    items.push(item)
     localStorage.setItem('lineItems', JSON.stringify(items));
     return new Promise(() => dispatch(fetchLineItems()))
   }
   else {
-    return axios.post('/api/lineitems', product)
-      .then(() => dispatch(fetchLineItems(cartId)))
+    return axios.post('/api/lineitems', item)
+      .then(() => dispatch(fetchLineItems(item.cartId)))
   }
 };
 
