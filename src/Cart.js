@@ -35,9 +35,11 @@ class Cart extends Component {
         if (item.quantity === 0) {
             console.log('deleting')
             this.props.delLineItem(item)
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         } else {
             console.log('updating')
             this.props.updateLineItem(item)
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         }
     }
 
