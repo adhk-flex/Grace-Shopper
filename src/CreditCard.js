@@ -96,7 +96,8 @@ class CreditCard extends Component{
         const {firstName, lastName, number, cardType, expMonth, expYear, cvv} = this.state
         const {onChange, onSave} = this
         const creditCardTypeArr = ['cardType', 'visa', 'mastercard', 'amex', 'discover'];
-        const expMonthArr = ['month', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        const expMonthArr = ['month', ...Array.from({length:12},(v,k)=>k+1)];
+        const expYearArr = ['year', ...Array.from({length:10},(v,k)=>k+2019)]
         return (
             <div>
                 <h3>Credit Card Information</h3>
@@ -133,7 +134,15 @@ class CreditCard extends Component{
                     </select>
                     <br/>
                     <label htmlFor='expYear'>Exp. Year</label>
-                    <input text='expYear' name='expYear' value={expYear} onChange={onChange}/>
+                    <select type="text" name="expYear" value={expYear} onChange= {onChange}>
+                        {
+                            expYearArr.map(year=>{
+                                return (
+                                    <option key={year} value={year}>{year}</option>
+                                )
+                            })
+                        }
+                    </select>
                     <br/>
                     <label htmlFor='cvv'>cvv</label>
                     <input text='cvv' name='cvv' value={cvv} onChange={onChange}/>  
