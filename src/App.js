@@ -24,6 +24,7 @@ import Review from './Review';
 class App extends Component{
     
     componentDidMount() {
+        this.props.fetchCategories();
         this.props.fetchProducts();
         this.props.sessionLogin();
         if(!localStorage.getItem('lineItems')){
