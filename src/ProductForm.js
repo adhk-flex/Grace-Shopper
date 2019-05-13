@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { updateProduct, delProduct } from './store/product';
-import { getOneCatById } from './store/category';
 import Errors from './Errors';
 
 class ProductForm extends Component{

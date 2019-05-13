@@ -51,19 +51,50 @@ class SingleProductForm extends Component {
         }
     }
 
+    handleChange = evt => {
+        this.setState({ [evt.target.name]: evt.target.value }, () => console.log(this.state));
+    };
+
+    handleSubmit = evt => {
+        evt.preventDefault();
+        this.props.updateProduct(this.state.id, this.state)
+            .then(() => this.props.history.push('/manageProduct'))
+            .catch(e => this.setState({ errors: e.response.data.errors }));
+    };
+
+    handleDelete = evt => {
+        evt.preventDefault()
+        this.props.delProduct(this.state.id)
+        .then(()=>this.setState({...this.state, errors: []}, () => this.props.history.push('/manageProduct')))
+        .catch(e=>this.setState({...this.state, errors: e.response.data.errors}));
+    }
+
     render() {
-        return (
-            <div>
-                { this.state.productNumber ? <div>{this.state.productNumber}</div> : null }
-                { this.state.categories ? 
-                        <ul>
-                            {
-                                this.state.categories.map(category => <li key={category.id}>{category.name}</li>)
-                            }
-                        </ul> : null
-                }
-            </div>
-        );
+        const product = this.state;
+        if(product.productNumber){
+            return (
+                <div className='container'>
+                    <form onSubmit={this.handleSubmit}>
+                        <label htmlFor='name'>Name: </label>
+                        <input type='text' className='form-control' onChange={this.handleChange} name='name' value={product.name}/>
+                        <label htmlFor='quantity'>Quantity: </label>
+                        <input type='text' className='form-control' onChange={this.handleChange} name='quantity' value={product.quantity}/>
+                        <label htmlFor='price'>Price: </label>
+                        <input type='text' className='form-control' onChange={this.handleChange} name='price' value={product.price}/>
+                        <label htmlFor='description'>Description: </label>
+                        <input type='text' className='form-control' onChange={this.handleChange} name='description' value={product.description}/>
+                        <label htmlFor='imgUrl'>Image URL: </label>
+                        <input type='text' className='form-control' onChange={this.handleChange} name='imgUrl' value={product.imgUrl}/>
+                        <label htmlFor='productNumber'>ProductNumber: </label>
+                        <input type='text' className='form-control' onChange={this.handleChange} name='productNumber' value={product.productNumber}/>
+                        <button className='btn btn-primary' type='submit'>Update</button>
+                        <button className='btn btn-danger' onClick={this.handleDelete}>Delete</button>
+                    </form>
+                </div>
+            );
+        } else {
+            return null;
+        }
     }
 }
 
@@ -71,4 +102,9 @@ const mapStateToProps = state => ({
     products: state.products
 });
 
-export default connect(mapStateToProps)(SingleProductForm);
+const mapDispatchToProps = dispatch => ({
+    updateProduct: (id, data) => dispatch(updateProduct(id, data)),
+    delProduct: id => dispatch(delProduct(id))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SingleProductForm);
