@@ -38,3 +38,17 @@ export const postAddress = (dataForm, userId, type) => dispatch => {
       .then(() => dispatch(setAddress(userId, type)))
   }
 };
+
+export const convertAddresses = () => dispatch => {
+  let shipping = JSON.parse(localStorage.getItem('shipping'))
+  let billing = JSON.parse(localStorage.getItem('billing'))
+  console.log('converted all addresses')
+  return Promise.all([ axios.post(`/api/addresses/shipping`, shipping),
+                axios.post(`/api/addresses/billing`, billing) ])
+                .then((arr)=>{
+                  localStorage.setItem('shipping', '{}');
+                  localStorage.setItem('billing', '{}');
+                  console.log(arr)
+                  return arr;
+                })  
+};
