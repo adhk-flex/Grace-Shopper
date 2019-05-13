@@ -20,9 +20,10 @@ export const fetchLineItems = cartId => dispatch => {
   if (cartId === undefined) {
     const items = JSON.parse(localStorage.getItem('lineItems'))
     return Promise.resolve(dispatch(setLineItems(items)))
-  } else {
-  return axios.get(`/api/lineitems/cart/${cartId}`)
-    .then(items => dispatch(setLineItems(items.data)))
+  } 
+  else {
+    return axios.get(`/api/lineitems/cart/${cartId}`)
+      .then(items => dispatch(setLineItems(items.data)))
   }
 };
 
@@ -49,13 +50,15 @@ export const convertLineItem = (orderId) => dispatch => {
   if (!items){
     items = []
   }
+  let itemsFromDB = []
   items.forEach((item)=>{
     axios.post(`/api/lineitems/${orderId}`, item)
+    .then((item)=>itemsFromDB.push(item.data))
     .catch((error)=>console.log(error))
   })
   localStorage.setItem('lineItems', '[]');
   console.log('converted all line items')
-  return Promise.resolve(dispatch(fetchLineItems()))
+  return Promise.resolve(dispatch(setLineItems(itemsFromDB)))
 };
 
 export const delLineItem = (item) => dispatch => {

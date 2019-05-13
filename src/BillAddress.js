@@ -81,8 +81,18 @@ class BillAddress extends Component{
                         order=neworder;
                     })
                     .then(()=> this.props.convertLineItem(order.id))
-                    .then(()=>this.props.convertAddresses())
-                    .then((arr)=>this.props.updateGuestOrder(order.id, {...order, shippingAddressId: arr[0].id, billingAddressId: arr[1].id}))
+                    .then(()=> this.props.convertAddresses())
+                    .then((arr)=>{
+                        console.log('line items from store', this.props.lineItems)
+                        let totalAmount = this.props.lineItems.reduce((orderTotal, item)=>
+                            item.quantity*item.price, 0);
+                        console.log('totalAmount', totalAmount)
+                        return this.props.updateGuestOrder(order.id, {...order, 
+                                                                        totalAmount: totalAmount*1, 
+                                                                        shippingAddressId: arr[0].id, 
+                                                                        billingAddressId: arr[1].id
+                                                                    })
+                    })
                     .catch(e=>this.setState({errors: e?e.response.data.errors:[]    }))
                 }
                 else{
@@ -148,7 +158,8 @@ const mapStateToProps = (state) => {
         isLogin: state.user && state.user.id ? state.user : false,
         address: state.address,
         user: state.user,
-        order: state.order
+        order: state.order,
+        lineItems: state.lineItems
     }
 }
 
