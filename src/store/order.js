@@ -37,6 +37,11 @@ export const getOrdersWithUsers = userId => dispatch => {
     .then(orders => dispatch(setOrder(orders.data)))
 }
 
+export const getSingleOrderItemsUsers = (userId, orderId) => dispatch => {
+  return axios.get(`/api/orders/user/single/${orderId}/${userId}`)
+    .then(order => dispatch(setOrder(order.data)))
+}
+
 export const createOrder = (userId) => dispatch => {
   return axios.post(`/api/orders/user/${userId}`)
   .then(() => dispatch(getOrderByUser(userId)))

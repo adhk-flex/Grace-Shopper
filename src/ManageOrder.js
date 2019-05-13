@@ -69,9 +69,9 @@ class ManageOrder extends Component {
                     </thead>
                     <tbody>
                         {
-                            orders.map(o => {
+                            orders ? orders.map(o => {
                                 return (<OrderForm order={o} location={this.props.location} key={o.id}/>)
-                            })
+                            }) : ''
                         }
                     </tbody>
                 </table>

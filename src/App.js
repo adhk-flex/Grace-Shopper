@@ -21,6 +21,7 @@ import ShipAddress from './ShipAddress';
 import CreditCard from './CreditCard';
 import BillAddress from './BillAddress'
 import Review from './Review';
+import SingleOrderForm from './SingleOrderForm';
 
 class App extends Component{
     
@@ -69,7 +70,7 @@ class App extends Component{
                     <Route exact path = '/checkoutStep2' component={CreditCard}/>
                     <Route exact path = '/checkoutStep3' component={BillAddress}/>
                     <Route exact path = '/order' component={Order}/>
-                    <Route exact path = '/manageOrder/single/:orderId' component={OrderForm}/>
+                    <Route exact path = '/manageOrder/single/:orderId' component={SingleOrderForm}/>
                     <Route exact path = '/manageOrder' component={ManageOrder}/>
                     <Route component={ProductList}/>
                 </Switch>

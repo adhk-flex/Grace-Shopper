@@ -27,6 +27,10 @@ export const fetchLineItems = cartId => dispatch => {
   }
 };
 
+export const fetchLineItemsByOrder = orderId => {
+  return axios.get(`/api/lineitems/order/${orderId}`)
+};
+
 
 export const addLineItem = (item) => dispatch => {
   if (item.cartId === undefined){

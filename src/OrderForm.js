@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { updateOrder } from './store/order';
 import Errors from './Errors';
 
@@ -36,9 +37,9 @@ class OrderForm extends Component{
         o.lastUpdated = new Date(o.updatedAt);
         return(        
         <tr key={o.id}>
-            <td> {o.orderNumber} </td>
-            <td> {o.user.firstName} </td>
-            <td> {o.user.lastName} </td>
+            <td> <Link to={`/manageOrder/single/${o.id}`}>{o.orderNumber}</Link> </td>
+            <td> {o.user ? o.user.firstName : 'No User'} </td>
+            <td> {o.user ? o.user.lastName : 'No User'} </td>
             <td> ${o.totalAmount} </td>
             <td> <select onChange={this.handleChange} name='status' value={this.state.status}>
                     <option value="created">Created</option>
