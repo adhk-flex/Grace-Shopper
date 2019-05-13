@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import Errors from './Errors';
 
 import { loginNewUser, login, logout } from './store/user';
+import { addLineItem } from './store/lineitem';
 
 class Login extends Component{
 
@@ -31,6 +32,15 @@ class Login extends Component{
             .catch((e)=>{this.setState({errors: e.response.data.errors})})
         }else if(this.props.match.path === '/login'){
             this.props.login(this.state)
+            .then(() => {
+                const items = JSON.parse(localStorage.getItem('lineItems'))
+                items.forEach(item => {
+                    item.cartId = this.props.cart.id;
+                    item.quantity = Number(item.quantity);
+                    this.props.addLineItem(item)
+                })
+            })
+            .then(() => localStorage.clear())
             .then(()=>this.props.history.push('/home'))
             .catch((e)=>{this.setState({errors: e.response.data.errors})})
         }   
@@ -89,12 +99,20 @@ class Login extends Component{
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        cart: state.cart,
+        lineItems: state.lineItems
+    }
+}
+
 const mapDispatchToProps = dispatch => {
     return {
         signup: user => dispatch(loginNewUser(user)),
         login: user => dispatch(login(user)),
-        logout: () => dispatch(logout())
+        logout: () => dispatch(logout()),
+        addLineItem: item => dispatch(addLineItem(item))
     }
 }
 
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
