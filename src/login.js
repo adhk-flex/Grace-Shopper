@@ -28,6 +28,15 @@ class Login extends Component{
         ev.preventDefault()
         if(this.props.match.path === '/signup'){
             this.props.signup(this.state)
+            .then(() => {
+                const items = JSON.parse(localStorage.getItem('lineItems'))
+                items.forEach(item => {
+                    item.cartId = this.props.cart.id;
+                    item.quantity = Number(item.quantity);
+                    this.props.addLineItem(item)
+                })
+            })
+            .then(() => localStorage.clear())
             .then(()=>this.props.history.push('/home'))
             .catch((e)=>{this.setState({errors: e.response.data.errors})})
         }else if(this.props.match.path === '/login'){
