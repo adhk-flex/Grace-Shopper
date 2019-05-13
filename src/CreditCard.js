@@ -46,6 +46,7 @@ class CreditCard extends Component{
 
     checkCreditCard = (creditCard) => {
         const errorArr = []
+        const today = new Date();
         if(creditCard.number.length !== 16){
             "card number is not 16!"
             let error = new Error();
@@ -58,6 +59,13 @@ class CreditCard extends Component{
             let error = new Error();
             error.name = 'custom error2';
             error.errors = [{message: 'cvv must be three numbers long'}]
+            this.setState({...this.state, errors: [...this.state.errors, error]})
+            errorArr.push(error)
+        }
+        if (today.getFullYear() > Number(creditCard.expYear) || Number(creditCard.expMonth) < today.getMonth() && today.getFullYear() === Number(creditCard.expYear)){
+            let error = new Error();
+            error.name = 'custom error3';
+            error.errors = [{message: 'Card expiration date has passed'}]
             this.setState({...this.state, errors: [...this.state.errors, error]})
             errorArr.push(error)
         }

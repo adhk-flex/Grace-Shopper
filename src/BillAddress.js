@@ -71,7 +71,6 @@ class BillAddress extends Component{
     onSave = (e) => {
         e.preventDefault()
         this.checkAddress(this.state)
-        console.log('this.state: ',this.state)
         if(!this.state.errors.length){
             this.props.postAddress(this.state, this.props.user.id, 'billing')
             .then(()=>{

@@ -69,7 +69,7 @@ class ShipAddress extends Component{
     }
 
     onChange = (e) => {
-        this.setState({[e.target.name]: e.target.value})
+        this.setState({[e.target.name]: e.target.value}, ()=>console.log(this.state))
     } 
 
     onSave = (e) => {
@@ -115,7 +115,6 @@ class ShipAddress extends Component{
     render(){
         const {firstName, lastName, addressLine1, addressLine2, zip, state, city} = this.state
         const {onChange, onSave} = this
-        // console.log(this.props.address)
         return(
             <div>
                 <h3>Shipping Address</h3>
