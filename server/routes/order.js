@@ -72,13 +72,7 @@ router.get('/include/users/:userId', (req, res, next) => {
 });
 
 router.post('/user/:userId', (req, res, next) => {
-    // if(req.params.userId !== req.session.userId){
-    //     res.send(500);
-    // }
-    let order = {};
-    console.log(req.params.userId)
     if(req.params.userId==='undefined'){
-        console.log('I am in the order post express route - unauth');
         Order.create({status: "created"})
             .then((order)=>{
                 console.log('order got created', order)
@@ -87,33 +81,17 @@ router.post('/user/:userId', (req, res, next) => {
             .catch(next);
     }
     else{
+        console.log('in route: ', req.params.userId)
         Order.createOrder({userId: req.params.userId})
-            .then((neworder) => {
-                res.json(neworder); 
-                order=neworder;
-            })
-            .then(()=>Cart.findOne({ where: { userId: order.userId } }))
-            .then(cart =>
-                LineItem.update({ orderId: order.id }, { where: { cartId: cart.id } }))
-            .then(() => LineItem.findAll({ where: { orderId: order.id } }))
-            .then(orderItems => {
-                order.totalAmount = orderItems.reduce(
-                (acc, item) => (acc += item.price * item.quantity),
-                0
-                );
-                return order.save();
-            })
-            .then(() => Cart.destroy({ where: { userId: order.userId } }))
-            .then(() => Cart.create({ userId: order.userId }))
-            .catch(next);
-    }
-    
+        .then((order) => res.json(order))
+        .catch(next);
+    }    
 });
 
 router.put('/:id', (req, res, next) => {
     Order.update(req.body, 
         {returning: true, where: {id: req.params.id}})
-        .catch(next);
+    .catch(next);
 });
 
 router.delete('/:id', (req, res, next) => {
