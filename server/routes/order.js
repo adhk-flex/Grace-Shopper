@@ -74,10 +74,7 @@ router.get('/include/users/:userId', (req, res, next) => {
 router.post('/user/:userId', (req, res, next) => {
     if(req.params.userId==='undefined'){
         Order.create({status: "created"})
-            .then((order)=>{
-                console.log('order got created', order)
-                res.json(order)
-            })
+            .then(() => {res.json()})
             .catch(next);
     }
     else{
