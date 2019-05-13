@@ -40,7 +40,7 @@ class ManageOrder extends Component {
     }
         
     render(){
-        const orders = this.props.orders;
+        const orders = Array.isArray(this.props.orders) ? this.props.orders : [];
         return (
             <div>
                 <h3>Order Page</h3>

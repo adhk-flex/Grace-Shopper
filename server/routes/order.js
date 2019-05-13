@@ -110,6 +110,7 @@ router.post('/user/:userId', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
     Order.update(req.body, 
         {returning: true, where: {id: req.params.id}})
+        .then(order => res.json(order))
     .catch(next);
 });
 
