@@ -51,7 +51,7 @@ class Login extends Component{
             })
             .then(() => localStorage.clear())
             .then(()=>this.props.history.push('/home'))
-            .catch((e)=>{this.setState({errors: e.response.data.errors})})
+            .catch((e)=>{this.setState({errors: ['Incorrect Email/password']})})
         }   
     }
 
