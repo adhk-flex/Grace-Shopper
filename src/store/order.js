@@ -22,7 +22,7 @@ export const getOrderByUser = userId => dispatch => {
     .then(orders => dispatch(setOrder(orders.data)))
 };
 
-const getOrderById = orderId => dispatch => {
+export const getOrderById = orderId => dispatch => {
   return axios.get(`/api/orders/${orderId}`)
     .then(order => dispatch(setOrder(order.data)))
 };

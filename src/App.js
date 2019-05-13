@@ -8,6 +8,7 @@ import Product from './Product';
 import Cart from './Cart';
 import Order from './Order'
 import ManageOrder from './ManageOrder';
+import OrderForm from './OrderForm';
 import CategoryForm from './CategoryForm';
 import { fetchProducts } from './store/product';
 import { sessionLogin } from './store/user';
@@ -65,6 +66,7 @@ class App extends Component{
                     <Route exact path = '/checkoutStep2' component={CreditCard}/>
                     <Route exact path = '/checkoutStep3' component={BillAddress}/>
                     <Route exact path = '/order' component={Order}/>
+                    <Route exact path = '/manageOrder/single/:orderId' component={OrderForm}/>
                     <Route exact path = '/manageOrder' component={ManageOrder}/>
                     <Route component={ProductList}/>
                 </Switch>
