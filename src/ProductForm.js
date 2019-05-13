@@ -15,7 +15,6 @@ class ProductForm extends Component{
             imgUrl: this.props.product&&this.props.product.imgUrl || '',
             productNumber: this.props.product&&this.props.product.productNumber || '',
             id: this.props.product&&this.props.product.id || null,
-            categoryId: this.props.product && this.props.product.categoryId,
             errors: []
         }
         this.handleDelete = this.handleDelete.bind(this);
@@ -37,7 +36,6 @@ class ProductForm extends Component{
             description: p.description,
             imgUrl: p.imgUrl,
             productNumber: p.productNumber,
-            categoryId: p.categoryId
         }
 
         this.props.updateProduct(p.id, final)
@@ -63,18 +61,6 @@ class ProductForm extends Component{
             <td> <input type='text' onChange={this.handleChange} name='description' value={p.description}/> </td>
             <td> <input type='text' onChange={this.handleChange} name='imgUrl' value={p.imgUrl}/> </td>
             <td> <input type='text' onChange={this.handleChange} name='productNumber' value={p.productNumber}/> </td>
-            <td> <select onChange={this.handleChange} name='categoryId' value={p.categoryId}>
-                    {
-                        this.props.categories.map(category => 
-                        <option 
-                            value={category.id} 
-                            key={category.id}
-                        >
-                            {category.name}
-                        </option>)
-                    }
-                </select> 
-            </td>
             <td> <button className='btn btn-primary' type='submit' onClick={this.handleSubmit}/></td>
             <td> <button className='btn btn-danger' onClick={this.handleDelete}/></td>
             <td> <Errors errors={this.state.errors} /></td>

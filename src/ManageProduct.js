@@ -32,7 +32,6 @@ class ManageProduct extends Component {
                             <th>Description</th>
                             <th>Image URL</th>
                             <th>Product Number</th>
-                            <th>Product Category</th>
                             <th>Save</th>
                             <th>Delete</th>
                         </tr>
