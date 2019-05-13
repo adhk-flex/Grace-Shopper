@@ -31,6 +31,8 @@ class Cart extends Component {
     onUpdate = (item, e) => {
         e.preventDefault()
         item.quantity = Number(this.state.quantity)
+        const productQuantity = this.props.products.find(p => p.id === item.productId).quantity
+        console.log(productQuantity)
         console.log('item on Update', item)
         if (item.quantity === 0) {
             console.log('deleting')
@@ -38,9 +40,14 @@ class Cart extends Component {
                 .catch(e => {this.setState({errors: e.response.data.errors})})
         } else {
             console.log('updating')
-            this.props.updateLineItem(item)
-                .catch(e => {this.setState({errors: e.response.data.errors})})
+            if (item.quantity <= productQuantity) {
+                this.props.updateLineItem(item)
+                    .catch(e => {this.setState({errors: e.response.data.errors})})
+            } else {
+                this.setState({errors: [`entered quantity must less or equal to the stock available quantity: ${productQuantity}`]})
+            }
         }
+
     }
 
     onDelete = (item) => {
@@ -67,11 +74,15 @@ class Cart extends Component {
                     <ul>
                         {lineItems.map((p, idx)=>{
                             const total = parseFloat(p.quantity * p.price).toFixed(2);
+                            const productQuantity = this.props.products.find(product => product.id === p.productId).quantity
                             return (
                                 <li key={idx}>
                                     <span>{`Name: ${p.name}, Price: ${p.price}`}</span>
                                     <br />
                                     <img className = 'product-image' src={p.imgUrl}/>
+                                    <br />
+                                    <span>{`Available Quantity: ${productQuantity} `}</span>
+                                    <br />
                                     <form onSubmit={(e) => onUpdate(p, e)}>
                                         <label htmlFor='quantity'>Quantity</label>
                                         <input name='quantity' placeholder={p.quantity} onChange={onChange}/>
