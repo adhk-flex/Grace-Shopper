@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {userAddress, postAddress, convertAddresses} from './store/address';
-import {createOrder, createGuestOrder, updateGuestOrder} from './store/order';
-import {convertLineItem} from './store/lineitem';
+import {createOrder, createGuestOrder, updateGuestOrder, updateOrder} from './store/order';
+import {convertLineItem, updateLineItem} from './store/lineitem';
 import Errors from './Errors';
 
 class BillAddress extends Component{
@@ -71,11 +71,13 @@ class BillAddress extends Component{
     onSave = (e) => {
         e.preventDefault()
         this.checkAddress(this.state)
+        const userId = this.props.user.id;
         if(!this.state.errors.length){
-            this.props.postAddress(this.state, this.props.user.id, 'billing')
+            console.log('logging onSave', this.state, userId)
+            this.props.postAddress(this.state, userId, 'billing')
             .then(()=>{
                 let order={};
-                if(!this.props.user.id){
+                if(!userId){
                     this.props.createGuestOrder()
                     .then((neworder)=>{
                         order=neworder;
@@ -96,8 +98,23 @@ class BillAddress extends Component{
                     .catch(e=>this.setState({errors: e?e.response.data.errors:[]    }))
                 }
                 else{
-                    this.props.postOrder(this.props.user.id)
-                    .then(()=>{this.props.history.push('/order')})
+                    console.log('logging userId', userId)
+                    this.props.postOrder(userId)
+                        .then(() => this.props.lineItems.forEach(item => {
+                            item.orderId = this.props.order.id
+                            item.cartId = null
+                            console.log(item)
+                            this.props.updateLineItem(item)
+                        }))
+                        .then(() => console.log('lineitems', this.props.lineItems))
+                        .then(() => {
+                            let total = this.props.lineItems.reduce((acc, item) => {
+                                acc += item.quantity * item.price
+                                return acc
+                            }, 0)
+                            this.props.updateOrder(this.props.order.id, {...this.props.order, totalAmount: total}, userId)
+                        })
+                        // .then(() => this.props.history.push('./order'))
                     .catch(e=>this.setState({errors: e.response.data.errors}))
                 }
                     
@@ -171,7 +188,9 @@ const mapDispatchToProps = (dispatch) => {
         convertLineItem: (orderId) => dispatch(convertLineItem(orderId)),
         getBillAddress: (userId, type) => dispatch(userAddress(userId, type)),
         postAddress: (dataForm, userId, type) => dispatch(postAddress(dataForm, userId, type)),
-        postOrder: (userId) => dispatch(createOrder(userId))
+        postOrder: (userId) => dispatch(createOrder(userId)),
+        updateOrder: (orderId, formData, userId) => dispatch(updateOrder(orderId, formData, userId)),
+        updateLineItem: (item) => dispatch(updateLineItem(item))
     }
 }
 
