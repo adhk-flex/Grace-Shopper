@@ -34,6 +34,12 @@ router.post('/', (req, res, next) => {
     .catch(next);
 });
 
+router.post('/:orderId', (req, res, next) => {
+    LineItem.create({...req.body, orderId: req.params.orderId})
+    .then((lineitem) => res.json(lineitem))
+    .catch(next);
+});
+
 router.put('/:id', (req, res, next) => {
     LineItem.update({quantity: req.body.quantity}, 
                 {returning: true, where: {id: req.params.id}})

@@ -43,6 +43,21 @@ export const addLineItem = (item) => dispatch => {
   }
 };
 
+export const convertLineItem = (orderId) => dispatch => {
+  console.log('in convertLineItem')
+  let items = JSON.parse(localStorage.getItem('lineItems'))  
+  if (!items){
+    items = []
+  }
+  items.forEach((item)=>{
+    axios.post(`/api/lineitems/${orderId}`, item)
+    .catch((error)=>console.log(error))
+  })
+  localStorage.setItem('lineItems', '[]');
+  console.log('converted all line items')
+  return Promise.resolve(dispatch(fetchLineItems()))
+};
+
 export const delLineItem = (item) => dispatch => {
   if (item.cartId === undefined){
     let items = JSON.parse(localStorage.getItem('lineItems'))  

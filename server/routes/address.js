@@ -36,4 +36,22 @@ router.post('/:type/user/:userId', (req, res, next) => {
         .catch(next);
 });
 
+router.post('/:type', (req, res, next) => {
+
+    let argument = {
+        addressType: req.params.type,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        addressLine1: req.body.addressLine1,
+        addressLine2: req.body.addressLine2,
+        city: req.body.city,
+        state: req.body.state,
+        zip: req.body.zip
+    }
+    Address.create(argument)
+        .then((address) => res.json(address))
+        .catch(next);
+});
+
+
 module.exports = router;
