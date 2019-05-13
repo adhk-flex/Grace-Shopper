@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
-import {userAddress, postAddress} from './store/address';
-import {createOrder} from './store/order';
+import {userAddress, postAddress, convertAddresses} from './store/address';
+import {createOrder, createGuestOrder, updateGuestOrder} from './store/order';
+import {convertLineItem} from './store/lineitem';
 import Errors from './Errors';
 
 class BillAddress extends Component{
@@ -45,19 +45,66 @@ class BillAddress extends Component{
         }
     }
 
+    checkAddress = (address) => {
+        const errorArr = []
+        if(address.zip.length !== 5){
+            let error = new Error();
+            error.name = 'custom error1';
+            error.errors = [{message: 'zip code must be 5 digits'}]
+            this.setState({...this.state, errors: [...this.state.errors, error]})
+            errorArr.push(error)
+        }
+        if(address.state.length !==2){
+            let error = new Error();
+            error.name = 'custom error2';
+            error.errors = [{message: 'state must contain exact two letters'}]
+            this.setState({...this.state, errors: [...this.state.errors, error]})
+            errorArr.push(error)
+        }
+        if(errorArr.length){throw errorArr}      
+    }
+
     onChange = (e) => {
         this.setState({[e.target.name]: e.target.value})
     }
     
     onSave = (e) => {
         e.preventDefault()
-        this.props.postAddress(this.state, this.props.user.id, 'billing')
+        this.checkAddress(this.state)
+        if(!this.state.errors.length){
+            this.props.postAddress(this.state, this.props.user.id, 'billing')
             .then(()=>{
-                this.props.postOrder(this.props.user.id)
-                    .then((order)=>{this.props.history.push('/order')})
+                let order={};
+                if(!this.props.user.id){
+                    this.props.createGuestOrder()
+                    .then((neworder)=>{
+                        order=neworder;
+                    })
+                    .then(()=> this.props.convertLineItem(order.id))
+                    .then(()=> this.props.convertAddresses())
+                    .then((arr)=>{
+                        console.log('line items from store', this.props.lineItems)
+                        let totalAmount = this.props.lineItems.reduce((orderTotal, item)=>
+                            item.quantity*item.price, 0);
+                        console.log('totalAmount', totalAmount)
+                        return this.props.updateGuestOrder(order.id, {...order, 
+                                                                        totalAmount: totalAmount*1, 
+                                                                        shippingAddressId: arr[0].id, 
+                                                                        billingAddressId: arr[1].id
+                                                                    })
+                    })
+                    .catch(e=>this.setState({errors: e?e.response.data.errors:[]    }))
+                }
+                else{
+                    this.props.postOrder(this.props.user.id)
+                    .then(()=>{this.props.history.push('/order')})
                     .catch(e=>this.setState({errors: e.response.data.errors}))
+                }
+                    
             })
             .catch(e=>this.setState({errors: e.response.data.errors}))
+        }
+        
     }
 
     Addressform = (firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange, onSave) => (
@@ -85,6 +132,7 @@ class BillAddress extends Component{
                 <input type="text" name={`city`} value = {city} onChange = {onChange}/>
                 <br/>
                 <button type='submit'>Place Order</button>
+                {!this.props.user.id&&this.props.order?<h4>You order has been placed: {this.props.order.orderNumber}</h4>:null}
             </form>
             <Errors errors={this.state.errors}/>
         </div>
@@ -98,6 +146,7 @@ class BillAddress extends Component{
                 <h3>Billing Address</h3>
                 {
                     this.Addressform(firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange, onSave)
+                    
                 }
             </div>
         )
@@ -106,14 +155,20 @@ class BillAddress extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        isLogin: state.user && state.user.id ? state.user.id : false,
+        isLogin: state.user && state.user.id ? state.user : false,
         address: state.address,
-        user: state.user
+        user: state.user,
+        order: state.order,
+        lineItems: state.lineItems
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        createGuestOrder: () => dispatch(createGuestOrder()),
+        updateGuestOrder: (orderId, order) => dispatch(updateGuestOrder(orderId, order)),
+        convertAddresses: () => dispatch(convertAddresses()),
+        convertLineItem: (orderId) => dispatch(convertLineItem(orderId)),
         getBillAddress: (userId, type) => dispatch(userAddress(userId, type)),
         postAddress: (dataForm, userId, type) => dispatch(postAddress(dataForm, userId, type)),
         postOrder: (userId) => dispatch(createOrder(userId))

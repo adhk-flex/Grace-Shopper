@@ -72,14 +72,20 @@ router.get('/include/users/:userId', (req, res, next) => {
 });
 
 router.post('/user/:userId', (req, res, next) => {
-    if(req.params.userId !== req.session.userId){
-        res.send(500);
+    if(req.params.userId==='undefined'){
+        Order.create({status: "created"})
+            .then((order)=>{
+                console.log('order got created', order)
+                res.json(order)
+            })
+            .catch(next);
     }
-    //req.body is expecting {userId: 123}
-    console.log('in route: ', req.params.userId)
-    Order.createOrder({userId: req.params.userId})
-    .then((order) => res.json(order))
-    .catch(next);
+    else{
+        console.log('in route: ', req.params.userId)
+        Order.createOrder({userId: req.params.userId})
+        .then((order) => res.json(order))
+        .catch(next);
+    }    
 });
 
 router.put('/:id', (req, res, next) => {

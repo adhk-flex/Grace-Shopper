@@ -39,12 +39,25 @@ export const getOrdersWithUsers = userId => dispatch => {
 
 export const createOrder = (userId) => dispatch => {
   return axios.post(`/api/orders/user/${userId}`)
-    .then(() => dispatch(getOrderByUser(userId)))
+  .then(() => dispatch(getOrderByUser(userId)))
+};
+
+export const createGuestOrder = () => dispatch => {
+  return axios.post(`/api/orders/user/undefined`)
+  .then((order) => {
+    dispatch(getOrderById(order.data.id));
+    return order.data;
+  })
 };
 
 export const updateOrder = (orderId, formData, userId) => dispatch => {
   return axios.put(`/api/orders/${orderId}`, formData)
     .then(() => dispatch(getOrderByUser(userId)))
+};
+
+export const updateGuestOrder = (orderId, formData) => dispatch => {
+  return axios.put(`/api/orders/${orderId}`, formData)
+    .then((order) => dispatch(getOrderById(order.id)))
 };
 
 const deleteOrder = (orderId, userId) => dispatch => {

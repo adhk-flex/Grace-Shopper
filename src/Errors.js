@@ -1,7 +1,8 @@
 import React from "react";
 
 const Errors = ({ errors }) => {
-  return errors.length > 0 ? (
+  console.log("ERROR COMPONENT", errors);
+  return errors&&errors.length > 0 ? (
     <ul className="alert alert-danger">
       {errors.map((error, i) => {
         return error.errors ? (

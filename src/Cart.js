@@ -65,10 +65,10 @@ class Cart extends Component {
                 <div>
                     <h1>Here are all the products in your cart!</h1>
                     <ul>
-                        {lineItems.map(p=>{
+                        {lineItems.map((p, idx)=>{
                             const total = parseFloat(p.quantity * p.price).toFixed(2);
                             return (
-                                <li key={p.id}>
+                                <li key={idx}>
                                     <span>{`Name: ${p.name}, Price: ${p.price}`}</span>
                                     <br />
                                     <img className = 'product-image' src={p.imgUrl}/>
@@ -87,7 +87,12 @@ class Cart extends Component {
                         })}
                     </ul>
                     <span>{`Total Amount: $${totalAmount}`}</span>
-                    <button onClick={()=>this.props.history.push('/checkoutStep1')} disabled={disableCheckout} >Check Out!</button>
+                    <button onClick={()=>{
+                        if (!this.props.isLogin){
+                            this.props.history.push('/checkoutStep0')
+                        } else {
+                            this.props.history.push('./checkoutStep1')
+                        }}} disabled={disableCheckout} >Check Out!</button>
                 <Errors errors={this.state.errors} />
                 </div>
             )

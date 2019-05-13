@@ -59,7 +59,7 @@ Product.addHook("beforeValidate", product => {
 //TODO FIND AND ASSIGN ADDRESSES AND CC
 //order hooks and methods
 Order.createOrder = userId => {
-  console.log('this is what comes into Order.createOrder in the db model: ', userId.userId)
+  console.log('this is what comes into Order.createOrder in the db model: ', userId)
   return Cart.findOne({ where: { userId: userId.userId} })
     .then(cart => LineItem.findAll({ where: { cartId: cart.id } }))
     .then(items =>
@@ -81,27 +81,28 @@ Order.createOrder = userId => {
     .then(() => Promise.all([
       Address.findOne({ where: { userId: userId.userId, addressType: "shipping", active: true } }),
       Address.findOne({ where: { userId: userId.userId, addressType: "billing", active: true } }),
-      CreditCard.findOne({ where: { userId: userId.userId, active: true } })
+      //CreditCard.findOne({ where: { userId: userId.userId, active: true } })
     ]))
-    .then(([shippingAddress, billingAddress, creditCard]) => Order.create({ status: "created", userId: userId.userId, shippingAddressId: shippingAddress.id, billingAddressId: billingAddress.id, creditCardId: creditCard.id }));
+    .then(([shippingAddress, billingAddress]) => Order.create({ status: "created", userId: userId.userId, shippingAddressId: shippingAddress.id, billingAddressId: billingAddress.id }));
+    //.then(([shippingAddress, billingAddress, creditCard]) => Order.create({ status: "created", userId: userId.userId, shippingAddressId: shippingAddress.id, billingAddressId: billingAddress.id, creditCardId: creditCard.id }));
 };
 
-Order.addHook("afterCreate", order => {
-  return Cart.findOne({ where: { userId: order.userId } })
-    .then(cart =>
-      LineItem.update({ orderId: order.id }, { where: { cartId: cart.id } })
-    )
-    .then(() => LineItem.findAll({ where: { orderId: order.id } }))
-    .then(orderItems => {
-      order.totalAmount = orderItems.reduce(
-        (acc, item) => (acc += item.price * item.quantity),
-        0
-      );
-      return order.save();
-    })
-    .then(() => Cart.destroy({ where: { userId: order.userId } }))
-    .then(() => Cart.create({ userId: order.userId }));
-});
+// Order.addHook("afterCreate", order => {
+//   return Cart.findOne({ where: { userId: order.userId } })
+//     .then(cart =>
+//       LineItem.update({ orderId: order.id }, { where: { cartId: cart.id } })
+//     )
+//     .then(() => LineItem.findAll({ where: { orderId: order.id } }))
+//     .then(orderItems => {
+//       order.totalAmount = orderItems.reduce(
+//         (acc, item) => (acc += item.price * item.quantity),
+//         0
+//       );
+//       return order.save();
+//     })
+//     .then(() => Cart.destroy({ where: { userId: order.userId } }))
+//     .then(() => Cart.create({ userId: order.userId }));
+// });
 
 //line item create method
 LineItem.createLineItem = item => {

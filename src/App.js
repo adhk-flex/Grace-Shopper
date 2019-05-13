@@ -16,6 +16,7 @@ import { fetchCategories } from './store/category';
 import { fetchLineItems } from './store/lineitem';
 import { connect } from 'react-redux';
 import Login from './login';
+import CheckoutChoice from './CheckoutChoice';
 import ShipAddress from './ShipAddress';
 import CreditCard from './CreditCard';
 import BillAddress from './BillAddress'
@@ -24,6 +25,7 @@ import Review from './Review';
 class App extends Component{
     
     componentDidMount() {
+        this.props.fetchCategories();
         this.props.fetchProducts();
         this.props.sessionLogin();
         if(!localStorage.getItem('lineItems')){
@@ -62,6 +64,7 @@ class App extends Component{
                     <Route exact path = '/manageProduct' component={ManageProduct}/>
                     <Route exact path = '/product/:id' component={Product}/>
                     <Route exact path = '/cart' component={Cart}/>
+                    <Route exact path = '/checkoutStep0' component={CheckoutChoice}/>
                     <Route exact path = '/checkoutStep1' component={ShipAddress}/>
                     <Route exact path = '/checkoutStep2' component={CreditCard}/>
                     <Route exact path = '/checkoutStep3' component={BillAddress}/>

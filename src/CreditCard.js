@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { getCreditCard, postCreditCard } from './store/creditcards';
+//mport { getCreditCard, postCreditCard } from './store/creditcards';
 import Errors from './Errors';
 
 class CreditCard extends Component{
@@ -16,16 +16,16 @@ class CreditCard extends Component{
     }
 
     componentDidUpdate(prevProps){
-        if(JSON.stringify(prevProps) !== JSON.stringify(this.props)){
-            if (this.props.isLogin) {
-                this.props.getCreditCard(this.props.user.id)
-                .then(({creditCard})=>{
-                    if (this._mounted){
-                        this.setState({...creditCard})
-                    }
-                })
-            }
-        }
+        // if(JSON.stringify(prevProps) !== JSON.stringify(this.props)){
+        //     if (this.props.isLogin) {
+        //         this.props.getCreditCard(this.props.user.id)
+        //         .then(({creditCard})=>{
+        //             if (this._mounted){
+        //                 this.setState({...creditCard})
+        //             }
+        //         })
+        //     }
+        // }
     }
 
     componentWillUnmount(){
@@ -44,22 +44,60 @@ class CreditCard extends Component{
         }
     }
 
+    checkCreditCard = (creditCard) => {
+        const errorArr = []
+        const today = new Date();
+        if(creditCard.number.length !== 16){
+            "card number is not 16!"
+            let error = new Error();
+            error.name = 'custom error1';
+            error.errors = [{message: 'card number must be 16 digits'}]
+            this.setState({...this.state, errors: [...this.state.errors, error]})
+            errorArr.push(error)
+        }
+        if(creditCard.cvv.length !==3){
+            let error = new Error();
+            error.name = 'custom error2';
+            error.errors = [{message: 'cvv must be three numbers long'}]
+            this.setState({...this.state, errors: [...this.state.errors, error]})
+            errorArr.push(error)
+        }
+        if (today.getFullYear() > Number(creditCard.expYear) || Number(creditCard.expMonth) < today.getMonth() && today.getFullYear() === Number(creditCard.expYear)){
+            let error = new Error();
+            error.name = 'custom error3';
+            error.errors = [{message: 'Card expiration date has passed'}]
+            this.setState({...this.state, errors: [...this.state.errors, error]})
+            errorArr.push(error)
+        }
+        if(errorArr.length){throw errorArr}
+    }
+
     onChange = (e) => {
         this.setState({[e.target.name]: e.target.value})
     }
 
     onSave = (e) => {
         e.preventDefault()
-        this.props.postCreditCard(this.props.user.id, this.state)
-        .then(()=>{this.props.history.push('/checkoutStep3')})
-        .catch(e=>this.setState({errors: e.response.data.errors}))
+        this.checkCreditCard(this.state)
+        console.log('this.state: ', this.state)
+        if(!this.state.errors.length){
+            this.props.history.push('/checkoutStep3')
+        }
+        //add validations here for credit card number @Haoyu
+
+        //Removing the following POST call since we no longer want to persist CC info.
+
+        // this.props.postCreditCard(this.props.user.id, this.state)
+        // .then(()=>{this.props.history.push('/checkoutStep3')})
+        // .catch(e=>this.setState({errors: e.response.data.errors}))  
     }
 
     render(){
         const {firstName, lastName, number, cardType, expMonth, expYear, cvv} = this.state
         const {onChange, onSave} = this
         const creditCardTypeArr = ['cardType', 'visa', 'mastercard', 'amex', 'discover'];
-        const expMonthArr = ['month', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        const expMonthArr = ['month', ...Array.from({length:12},(v,k)=>k+1)];
+        const expYearArr = ['year', ...Array.from({length:10},(v,k)=>k+2019)]
         return (
             <div>
                 <h3>Credit Card Information</h3>
@@ -96,7 +134,15 @@ class CreditCard extends Component{
                     </select>
                     <br/>
                     <label htmlFor='expYear'>Exp. Year</label>
-                    <input text='expYear' name='expYear' value={expYear} onChange={onChange}/>
+                    <select type="text" name="expYear" value={expYear} onChange= {onChange}>
+                        {
+                            expYearArr.map(year=>{
+                                return (
+                                    <option key={year} value={year}>{year}</option>
+                                )
+                            })
+                        }
+                    </select>
                     <br/>
                     <label htmlFor='cvv'>cvv</label>
                     <input text='cvv' name='cvv' value={cvv} onChange={onChange}/>  
@@ -111,17 +157,17 @@ class CreditCard extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        isLogin: state.user && state.user.id ? state.user.id : false,
+        isLogin: state.user && state.user.id ? state.user : false,
         user: state.user,
-        creditCard: state.creditCard
+        //creditCard: state.creditCard
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getCreditCard: (userId) => dispatch(getCreditCard(userId)),
-        postCreditCard: (userId, cardInfo) => dispatch(postCreditCard(userId, cardInfo))
-    }
-}
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         //getCreditCard: (userId) => dispatch(getCreditCard(userId)),
+//         postCreditCard: (userId, cardInfo) => dispatch(postCreditCard(userId, cardInfo))
+//     }
+// }
 
-export default connect(mapStateToProps,mapDispatchToProps)(CreditCard);
+export default connect(mapStateToProps,null)(CreditCard);
