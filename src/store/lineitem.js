@@ -17,15 +17,20 @@ export const lineItems = (state = [], action) => {
 };
 
 export const fetchLineItems = cartId => dispatch => {
-  if (cartId === undefined) {
+  if (cartId === undefined || null) {
     const items = JSON.parse(localStorage.getItem('lineItems'))
-    return Promise.resolve(dispatch(setLineItems(items)))
+    console.log('items in fetchLineItems in store: ', items)
+    return Promise.resolve(dispatch(setLineItems([])))
   } 
   else {
     return axios.get(`/api/lineitems/cart/${cartId}`)
       .then(items => dispatch(setLineItems(items.data)))
   }
 };
+
+const cleanLineItems = () => dispatch => {
+  return Promise.resolve(dispatch(setLineItems([])))
+}
 
 
 export const addLineItem = (item) => dispatch => {
@@ -75,8 +80,16 @@ export const delLineItem = (item) => dispatch => {
 };
 
 export const updateLineItem = (item) => dispatch => {
-  if (item.cartId === undefined) {
+  console.log('item pass in store is: ', item)
+  if(item.clean){
+    return Promise.resolve(dispatch(cleanLineItems()))
+  }
+  if (item.cartId === null || undefined) {
     let items = JSON.parse(localStorage.getItem('lineItems'))
+    console.log('items after localStorage is: ', items)
+    if(!items){
+      newitems = []
+    } 
     let newitems = items.filter(i => i.productId !== item.productId)
     if (!newitems) {
       newitems = []

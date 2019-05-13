@@ -103,7 +103,7 @@ class BillAddress extends Component{
                         .then(() => this.props.lineItems.forEach(item => {
                             item.orderId = this.props.order.id
                             item.cartId = null
-                            console.log(item)
+                            console.log("item: ", item)
                             this.props.updateLineItem(item)
                         }))
                         .then(() => console.log('lineitems', this.props.lineItems))
@@ -114,8 +114,10 @@ class BillAddress extends Component{
                             }, 0)
                             this.props.updateOrder(this.props.order.id, {...this.props.order, totalAmount: total}, userId)
                         })
-                        // .then(() => this.props.history.push('./order'))
-                    .catch(e=>this.setState({errors: e.response.data.errors}))
+                        .then(()=>this.props.updateLineItem({clean: true}))
+                    
+                        .then(() => this.props.history.push('./order'))
+                    // .catch(e=>this.setState({errors: e.response.data.errors}))
                 }
                     
             })

@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 
 const Nav = (isLogin, {location: {pathname}}, lineItems) => {
     let finalLinks=[];
+    console.log('lineItems is: ', lineItems)
     const itemQuantity = lineItems.reduce((acc, item) => {
         acc += Number(item.quantity)
         return acc

@@ -21,6 +21,9 @@ class Order extends Component {
         
     render(){
         const {order} = this.props
+        if(!order.length){
+            return null
+        }
         return (
             <div>
                 <h3>Order Page</h3>
