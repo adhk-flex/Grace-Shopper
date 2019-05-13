@@ -46,7 +46,7 @@ class Pager extends Component {
     if (catId) baseUrl += `/category/${catId}`;
     if (srchVal) baseUrl += `/search/${srchVal}`
     this.props.history.push(`${baseUrl}/${value}`)
-      .catch(e => {this.setState({errors: e.response.data.errors})})
+      // .catch(e => {this.setState({errors: e.response.data.errors})})
   }
 
   render(){
