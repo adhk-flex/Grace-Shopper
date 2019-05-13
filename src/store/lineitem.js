@@ -49,6 +49,7 @@ export const convertLineItem = (orderId) => dispatch => {
   let items = JSON.parse(localStorage.getItem('lineItems'))  
   if (!items){
     items = []
+    console.log('items in convert', items)
   }
   let itemsFromDB = []
   items.forEach((item)=>{
