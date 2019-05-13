@@ -44,20 +44,52 @@ class CreditCard extends Component{
         }
     }
 
+    checkCreditCard = (creditCard) => {
+        const errorArr = []
+        const today = new Date();
+        if(creditCard.number.length !== 16){
+            "card number is not 16!"
+            let error = new Error();
+            error.name = 'custom error1';
+            error.errors = [{message: 'card number must be 16 digits'}]
+            this.setState({...this.state, errors: [...this.state.errors, error]})
+            errorArr.push(error)
+        }
+        if(creditCard.cvv.length !==3){
+            let error = new Error();
+            error.name = 'custom error2';
+            error.errors = [{message: 'cvv must be three numbers long'}]
+            this.setState({...this.state, errors: [...this.state.errors, error]})
+            errorArr.push(error)
+        }
+        if (today.getFullYear() > Number(creditCard.expYear) || Number(creditCard.expMonth) < today.getMonth() && today.getFullYear() === Number(creditCard.expYear)){
+            let error = new Error();
+            error.name = 'custom error3';
+            error.errors = [{message: 'Card expiration date has passed'}]
+            this.setState({...this.state, errors: [...this.state.errors, error]})
+            errorArr.push(error)
+        }
+        if(errorArr.length){throw errorArr}
+    }
+
     onChange = (e) => {
         this.setState({[e.target.name]: e.target.value})
     }
 
     onSave = (e) => {
         e.preventDefault()
+        this.checkCreditCard(this.state)
+        console.log('this.state: ', this.state)
+        if(!this.state.errors.length){
+            this.props.history.push('/checkoutStep3')
+        }
         //add validations here for credit card number @Haoyu
 
         //Removing the following POST call since we no longer want to persist CC info.
 
         // this.props.postCreditCard(this.props.user.id, this.state)
         // .then(()=>{this.props.history.push('/checkoutStep3')})
-        // .catch(e=>this.setState({errors: e.response.data.errors}))
-        this.props.history.push('/checkoutStep3')
+        // .catch(e=>this.setState({errors: e.response.data.errors}))  
     }
 
     render(){
