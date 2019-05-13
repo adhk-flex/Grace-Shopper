@@ -59,7 +59,7 @@ Product.addHook("beforeValidate", product => {
 //TODO FIND AND ASSIGN ADDRESSES AND CC
 //order hooks and methods
 Order.createOrder = userId => {
-  console.log('this is what comes into Order.createOrder in the db model: ', userId.userId)
+  console.log('this is what comes into Order.createOrder in the db model: ', userId)
   return Cart.findOne({ where: { userId: userId.userId} })
     .then(cart => LineItem.findAll({ where: { cartId: cart.id } }))
     .then(items =>
