@@ -90,27 +90,27 @@ class ShipAddress extends Component{
         <div>
             <form onSubmit={onSave}>
                 <label htmlFor={`firstName`}>First Name</label>
-                <input type="text" name={`firstName`} value={firstName} onChange = {onChange}/>
+                <input className='form-control' type="text" name={`firstName`} value={firstName} onChange = {onChange}/>
                 <br/>
                 <label htmlFor={`lastName`}>Last Name</label>
-                <input type="text" name={`lastName`} value={lastName} onChange = {onChange}/>
+                <input className='form-control' type="text" name={`lastName`} value={lastName} onChange = {onChange}/>
                 <br/>
                 <label htmlFor={`addressLine1`}>Address Line1</label>
-                <input type="text" name={`addressLine1`} value = {addressLine1} onChange = {onChange}/>
+                <input className='form-control' type="text" name={`addressLine1`} value = {addressLine1} onChange = {onChange}/>
                 <br/>
                 <label htmlFor={`addressLine2`}>Address Line2 (Optional)</label>
-                <input type="text" name={`addressLine2`} value = {addressLine2} onChange = {onChange}/>
+                <input className='form-control' type="text" name={`addressLine2`} value = {addressLine2} onChange = {onChange}/>
                 <br/>
                 <label htmlFor={`zip`}>Zip Code</label>
-                <input type="text" name={`zip`} value = {zip} onChange = {onChange}/>
+                <input className='form-control' type="text" name={`zip`} value = {zip} onChange = {onChange}/>
                 <br/>
                 <label htmlFor={`state`}>State</label>
-                <input type="text" name={`state`} value = {state} onChange = {onChange}/>
+                <input className='form-control' type="text" name={`state`} value = {state} onChange = {onChange}/>
                 <br/>
                 <label htmlFor={`city`}>City</label>
-                <input type="text" name={`city`} value = {city} onChange = {onChange}/>
+                <input className='form-control' type="text" name={`city`} value = {city} onChange = {onChange}/>
                 <br/>
-                <button type='submit'>Save and Proceed</button>
+                <button type='submit' className='btn btn-primary'>Save and Proceed</button>
             </form>
             <Errors errors={this.state.errors}/>
         </div>
@@ -121,7 +121,7 @@ class ShipAddress extends Component{
         const {onChange, onSave} = this
         return(
             <div>
-                <h3>Shipping Address</h3>
+                <h1>Shipping Address</h1>
                 {
                     this.Addressform(firstName, lastName, addressLine1, addressLine2, zip, state, city, onChange, onSave)
                 }

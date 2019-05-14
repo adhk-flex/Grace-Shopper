@@ -6,7 +6,6 @@ body{
   h1{
     background-color: black;
     color: white;
-    width: 13%;
   }
 
   .list-group-item{
@@ -96,5 +95,16 @@ body{
   
   .list-group {
     margin-bottom: 10px;
+  }
+
+  label {
+    background-color: black;
+    color: white;
+    font-size: 18px;
+  }
+
+  .form-control {
+    border-color: black;
+    border-width: 1px
   }
   
