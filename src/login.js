@@ -67,8 +67,8 @@ class Login extends Component{
                     <button onClick={()=>{
                         this.props.logout()
                         .then(()=>this.props.history.push('/home'))
-                    }}>Yes</button>
-                    <button onClick={()=>this.props.history.push('/home')}>No</button>
+                    }} className='btn btn-primary'>Yes</button>
+                    <button onClick={()=>this.props.history.push('/home')} className='btn btn-info'>No</button>
                 </div>
                 ) 
                 : (
@@ -76,19 +76,19 @@ class Login extends Component{
                         <h2>{`This is the ${toSignup ? 'signup' : 'login'} page`}</h2>
                         <form onSubmit={onSave}>
                             <label htmlFor = 'email'>Email</label>
-                            <input name = 'email' value = {email} onChange={onChange}/>
+                            <input  className='form-control' name = 'email' value = {email} onChange={onChange}/>
                             <label htmlFor = 'password'>Password</label>
-                            <input name = 'password' value = {password} onChange={onChange}/>
+                            <input className='form-control' name = 'password' value = {password} onChange={onChange}/>
                             {
                                 toSignup ? 
                                 (
                                     <div>
                                     <label htmlFor = 'firstName'>FirstName</label>
-                                    <input name = 'firstName' value = {firstName} onChange = {onChange}/>
+                                    <input className='form-control' name = 'firstName' value = {firstName} onChange = {onChange}/>
                                     <label htmlFor = 'lastName'>LastName</label>
-                                    <input name = 'lastName' value = {lastName} onChange = {onChange}/>
+                                    <input className='form-control' name = 'lastName' value = {lastName} onChange = {onChange}/>
                                     <label htmlFor = 'imgUrl'>ImageUrl</label>
-                                    <input name = 'imgUrl' value = {imgUrl} onChange = {onChange}/>
+                                    <input className='form-control' name = 'imgUrl' value = {imgUrl} onChange = {onChange}/>
                                     {/* <label htmlFor = 'role'>Role</label>
                                     <select name = 'role' value = {role} onChange = {onChange}>
                                         <option defaultValue = 'shopper' >shopper</option>
@@ -98,7 +98,7 @@ class Login extends Component{
                                 )  
                                 : null
                             }
-                            <button type='submit'>submit</button>
+                            <button type='submit' className='btn btn-primary'>submit</button>
                         </form>
                     </div>
                 )}
