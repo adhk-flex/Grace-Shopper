@@ -4,6 +4,7 @@ import Nav from './Nav';
 import Home from './Home'; 
 import ProductList from './ProductList';
 import ManageProduct from './ManageProduct';
+import ManageUser from './ManageUser';
 import Product from './Product';
 import Cart from './Cart';
 import Order from './Order'
@@ -64,6 +65,7 @@ class App extends Component{
                     <Route exact path = '/manageProduct/addCategory' component={CategoryForm} />
                     <Route exact path = '/manageProduct' component={ManageProduct}/>
                     <Route exact path = '/product/:id' component={Product}/>
+                    <Route exact path = '/manageUser' component={ManageUser}/>
                     <Route exact path = '/cart' component={Cart}/>
                     <Route exact path = '/checkoutStep0' component={CheckoutChoice}/>
                     <Route exact path = '/checkoutStep1' component={ShipAddress}/>

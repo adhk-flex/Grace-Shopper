@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import {products} from './product';
 import {categories} from './category';
 import {lineItems} from './lineitem';
-import {user} from './user';
+import {user, allUsers} from './user';
 import {cart} from './cart';
 import {order} from './order';
 import {address} from './address';
@@ -15,6 +15,7 @@ const reducer = combineReducers({
   products,
   lineItems,
   user,
+  allUsers,
   cart,
   order,
   address,
