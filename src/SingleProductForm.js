@@ -113,7 +113,7 @@ class SingleProductForm extends Component {
                         <button className='btn btn-info' onClick={() => this.props.history.push('/manageProduct')}>Cancel</button>
                         <button className='btn btn-danger' onClick={this.handleDeleteProduct}>Delete</button>
                     </form>
-                    Categories:
+                    <label htmlFor='categories'>Categories</label>
                     <ul className='list-group'>
                         {
                             Array.isArray(this.state.categories) ? this.state.categories.map(category => <li 
@@ -123,8 +123,8 @@ class SingleProductForm extends Component {
                                 </li>) : null
                         }
                     </ul>
-                    Add Category:
-                    <select value={this.state.selectedAddCatId} name='selectedAddCatId' onChange={this.handleChange}>
+                    <label htmlFor='addCategory'>Add Category</label>
+                    <select className='form-control' value={this.state.selectedAddCatId} name='selectedAddCatId' onChange={this.handleChange}>
                         <option value=''>Select Category</option>
                         {
                             this.props.allCategories && Array.isArray(this.state.categories) ?
