@@ -74,7 +74,9 @@ class Cart extends Component {
                     <ul className='list-group'>
                         {lineItems.map((p, idx)=>{
                             const total = parseFloat(p.quantity * p.price).toFixed(2);
-                            const productQuantity = this.props.products.find(product => product.id === p.productId).quantity
+                            const productQuantitytmp = this.props.products.find(product => product.id === p.productId)
+                            let productQuantity = 0
+                            if(productQuantitytmp){productQuantity = productQuantitytmp.quantity}
                             return (
                                 <li className='list-group-item' key={idx}>
                                     <span style={{ fontSize: '24px' }}>{`Name: ${p.name}, Price: ${p.price}`}</span>
