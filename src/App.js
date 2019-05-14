@@ -25,6 +25,7 @@ import Review from './Review';
 import SingleOrderForm from './SingleOrderForm';
 import AddUser from './AddUser';
 import SingleProductForm from './SingleProductForm';
+import './style.css';
 
 class App extends Component{
     
