@@ -35,15 +35,27 @@ class Review extends Component{
         .catch(e=>this.setState({errors: e.response.data.errors}))
     }
 
+    avgRating = () => {
+        const { reviews } = this.state;
+        if(reviews.length){
+            const total = reviews.reduce((score, review) => score + review.stars, 0);
+            return total/reviews.length;
+        } 
+    }
+
     render(){
         const {onChange, onSave} = this
         const {reviews ,content, stars} = this.state
         const starsArr = [1,2,3,4,5]
         return (
             <div>
-                <h4>Please add Review Here:</h4>
+                {
+                    reviews.length ?
+                    <span style={{ backgroundColor: 'black', color: 'white' }}>Average Score: {this.avgRating()} Stars</span>
+                    : null
+                }
                 <form onSubmit={onSave}>
-                    <label htmlFor='reviewContent'>Review Comments</label>
+                    <label htmlFor='reviewContent'>Your Review Here</label>
                     <br/>
                     <textarea name='content' value={content} onChange={onChange} rows="4" cols="50"/>
                     <br/>
@@ -58,32 +70,35 @@ class Review extends Component{
                         }
                     </select>
                     <br/>
-                    <button type='submit'>Save Comments</button>
+                    <button type='submit' className={'btn btn-primary'}>Save Comments</button>
                 </form>
-                <h4>Here are the Reviews for this Product:</h4>
                 {
                     reviews.length ? 
-                    <table className='table'>
-                    <thead>
-                        <tr>
-                            <th>Comments</th>
-                            <th>Stars</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            reviews.map(review => {
-                                return (
-                                    <tr key={review.id}>
-                                        <td>{review.content}</td>
-                                        <td>{review.stars}</td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
-                    </table>
-                    : null
+                    <div>
+                        <h4>Customer Reviews for this Product:</h4>
+                            
+                            <table className='table'>
+                            <thead>
+                                <tr>
+                                    <th>Comments</th>
+                                    <th>Stars</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    reviews.map(review => {
+                                        return (
+                                            <tr key={review.id}>
+                                                <td>{review.content}</td>
+                                                <td>{review.stars}</td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                            </table>
+                        </div>
+                        : null
                 }
                 <Errors errors={this.state.errors}/>
             </div>

@@ -51,6 +51,11 @@ body{
     color: black;
     border-color: black;
   }
+
+  .btn-primary:focus {
+    background-color: black;
+    color: white;
+  }
   
   a {
     color: black;
@@ -108,3 +113,24 @@ body{
     border-width: 1px
   }
   
+  .pager {
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+
+  .m-2 {
+    width: 30%;
+  }
+
+  .input-group-append {
+    margin-top: 5px;
+  }
+  
+  .category-nav {
+    width: 30%;
+    margin-bottom: 5px;
+  }
+
+  .product-page {
+    font-size: 24px;
+  }
