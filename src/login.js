@@ -89,11 +89,11 @@ class Login extends Component{
                                     <input name = 'lastName' value = {lastName} onChange = {onChange}/>
                                     <label htmlFor = 'imgUrl'>ImageUrl</label>
                                     <input name = 'imgUrl' value = {imgUrl} onChange = {onChange}/>
-                                    <label htmlFor = 'role'>Role</label>
+                                    {/* <label htmlFor = 'role'>Role</label>
                                     <select name = 'role' value = {role} onChange = {onChange}>
                                         <option defaultValue = 'shopper' >shopper</option>
                                         <option value = 'admin'>admin</option>
-                                    </select>
+                                    </select> */}
                                     </div>
                                 )  
                                 : null
