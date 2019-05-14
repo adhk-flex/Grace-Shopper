@@ -30,7 +30,7 @@ router.delete('/:userId', (req, res, next) => {
     User.findOne({where: {id: req.session.userId}})
     .then((user)=>{
         if(user.role==='admin'){
-            User.delete({where: {id: req.params.userId}})
+            User.destroy({where: {id: req.params.userId}})
             .then(()=>res.status(204).end())
         }
     })
