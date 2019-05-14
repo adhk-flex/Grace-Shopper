@@ -64,7 +64,7 @@ class UserForm extends Component{
           </select>
         </td>
         <td> <button className='btn btn-primary' type='submit' onClick={saveHandler}/></td>
-        <td> <button className='btn btn-primary' onClick={deleteHandler}/></td>
+        <td> <button className='btn btn-danger' onClick={deleteHandler}/></td>
       </tr>
     )
   }
