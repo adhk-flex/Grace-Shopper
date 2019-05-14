@@ -4,6 +4,11 @@ import {Link} from 'react-router-dom'
 const Nav = (isLogin, {location: {pathname}}, lineItems) => {
     let finalLinks=[];
     console.log('lineItems is: ', lineItems)
+    if(lineItems.length){
+        if(lineItems[0].clean){
+            lineItems = []
+        }
+    }
     const itemQuantity = lineItems ? lineItems.reduce((acc, item) => {
         acc += Number(item.quantity)
         return acc

@@ -38,7 +38,7 @@ class Login extends Component{
             })
             .then(() => localStorage.clear())
             .then(()=>this.props.history.push('/home'))
-            .catch((e)=>{this.setState({errors: e.response.data.errors})})
+            // .catch((e)=>{this.setState({errors: e.response.data.errors})})
         }else if(this.props.match.path === '/login'){
             this.props.login(this.state)
             .then(() => {
