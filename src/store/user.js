@@ -32,9 +32,15 @@ export const allUsers = (state = [], action) => {
   }
 };
 
+
 export const getAllUsers = () => dispatch => {
   return axios.get('/auth/users')
     .then(users => dispatch(setAllUsers(users.data)))
+}
+
+export const addUser = user => dispatch => {
+  return axios.post('/auth/login', user)
+    .then(() => dispatch(getAllUsers()))
 }
 
 export const updateUser = user => dispatch => {
@@ -43,7 +49,6 @@ export const updateUser = user => dispatch => {
 }
 
 export const deleteUser = userId => dispatch => {
-  console.log('store deleting', userId)
   return axios.delete(`/auth/${userId}`)
     .then(() => dispatch(getAllUsers()))
     .then(() => console.log('delete finished'))

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import UserForm from './UserForm';
 import {getAllUsers} from './store/user';
 
@@ -19,6 +20,7 @@ class ManageUser extends Component {
   componentDidUpdate(prevProps){
     if (JSON.stringify(prevProps.users) !== JSON.stringify(this.props.users)){
       this.props.getAllUsers()
+        .then(() => this.setState({users: this.props.users}))
     }
   }
 
@@ -28,6 +30,7 @@ class ManageUser extends Component {
     return (
       <div>
         <h1>Manage All Users</h1>
+        <Link to='/manageUser/addUser' className='btn btn-primary'>Add User</Link>
         <div>
           <table className='table'>
           <thead>

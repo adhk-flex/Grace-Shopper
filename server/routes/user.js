@@ -38,7 +38,6 @@ router.delete('/:userId', (req, res, next) => {
 });
 
 router.post('/user', (req, res, next) => {
-    
     User.findOne({where: {id: req.session.userId}})
     .then((user)=>{
         if(user.role==='admin'){
