@@ -22,7 +22,9 @@ class Order extends Component {
     render(){
         const {order} = this.props
         if(!order.length){
-            return null
+            return (
+                <h2>You don't have any order yet!</h2>
+            )
         }
         return (
             <div>
