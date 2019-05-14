@@ -41,7 +41,7 @@ export const addCategory = category => dispatch => {
     .then(() => dispatch(fetchCategories()))
 };
 
-const delCategory = id => dispatch => {
+export const delCategory = id => dispatch => {
   return axios.delete(`/api/categories/${id}`)
     .then(() => dispatch(fetchCategories()))
 }

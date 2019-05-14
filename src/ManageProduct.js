@@ -33,13 +33,14 @@ class ManageProduct extends Component {
                             <th>Image URL</th>
                             <th>Product Number</th>
                             <th>Save</th>
+                            <th>Edit</th>
                             <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>  
                         {
                             products.map(p=>{
-                                return (<ProductForm product={p} categories={this.props.categories} key={p.id}/>)
+                                return (<ProductForm product={p} history={this.props.history} categories={this.props.categories} key={p.id}/>)
                             })
                         }
                     </tbody>    

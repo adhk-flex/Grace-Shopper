@@ -61,6 +61,7 @@ class ProductForm extends Component{
             <td> <input type='text' onChange={this.handleChange} name='imgUrl' value={p.imgUrl}/> </td>
             <td> <input type='text' onChange={this.handleChange} name='productNumber' value={p.productNumber}/> </td>
             <td> <button className='btn btn-primary' type='submit' onClick={this.handleSubmit}/></td>
+            <td> <button className='btn btn-info' onClick={() => this.props.history.push(`/manageProduct/single/${p.id}`)}/> </td>
             <td> <button className='btn btn-danger' onClick={this.handleDelete}/></td>
             <td> <Errors errors={this.state.errors} /></td>
         </tr>

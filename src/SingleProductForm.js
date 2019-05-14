@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Errors from './Errors';
-import { updateProduct, delProduct } from './store/product';
+import { updateProduct, delProduct, delProductCategory } from './store/product';
 import { getProductCats } from './store/category'; 
 
 class SingleProductForm extends Component {
@@ -45,8 +45,8 @@ class SingleProductForm extends Component {
         this.load();
     }
     
-    componentDidUpdate(prevProps) {
-        if(JSON.stringify(prevProps.products) !== JSON.stringify(this.props.products)){
+    componentDidUpdate(prevProps, prevState) {
+        if(JSON.stringify(prevProps.products) !== JSON.stringify(this.props.products) || JSON.stringify(prevState.categories) !== JSON.stringify(this.state.categories)){
             this.load();
         }
     }
@@ -62,11 +62,16 @@ class SingleProductForm extends Component {
             .catch(e => this.setState({ errors: e.response.data.errors }));
     };
 
-    handleDelete = evt => {
+    handleDeleteProduct = evt => {
         evt.preventDefault()
         this.props.delProduct(this.state.id)
-        .then(()=>this.setState({...this.state, errors: []}, () => this.props.history.push('/manageProduct')))
         .catch(e=>this.setState({...this.state, errors: e.response.data.errors}));
+    }
+
+    handleDeleteCategory = (id) => {
+        delProductCategory(this.state.id, id)
+            .then(categories =>this.setState({ categories, errors: [] }))
+            .catch(e=>this.setState({ ...this.state, errors: e.response.data.errors }));
     }
 
     render() {
@@ -88,8 +93,19 @@ class SingleProductForm extends Component {
                         <label htmlFor='productNumber'>ProductNumber: </label>
                         <input type='text' className='form-control' onChange={this.handleChange} name='productNumber' value={product.productNumber}/>
                         <button className='btn btn-primary' type='submit'>Update</button>
-                        <button className='btn btn-danger' onClick={this.handleDelete}>Delete</button>
+                        <button className='btn btn-info' onClick={() => this.props.history.push('/manageProduct')}>Cancel</button>
+                        <button className='btn btn-danger' onClick={this.handleDeleteProduct}>Delete</button>
                     </form>
+                    Categories
+                    <ul className='list-group'>
+                        {
+                            Array.isArray(this.state.categories) ? this.state.categories.map(category => <li 
+                                    key={category.id} 
+                                    className='list-group-item'
+                                    >{category.name} <button className='btn btn-danger' onClick={() => this.handleDeleteCategory(category.id)}></button>
+                                </li>) : null
+                        }
+                    </ul>
                 </div>
             );
         } else {
@@ -99,12 +115,13 @@ class SingleProductForm extends Component {
 }
 
 const mapStateToProps = state => ({
-    products: state.products
+    products: state.products,
+    allCategories: state.categories
 });
 
 const mapDispatchToProps = dispatch => ({
     updateProduct: (id, data) => dispatch(updateProduct(id, data)),
-    delProduct: id => dispatch(delProduct(id))
+    delProduct: id => dispatch(delProduct(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SingleProductForm);

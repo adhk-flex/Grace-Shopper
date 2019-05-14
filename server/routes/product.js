@@ -115,4 +115,13 @@ router.put('/:id', (req, res, next) => {
     .catch(next);
 });
 
+router.delete('/category/:productId/:categoryId', (req, res, next) => {
+    Product.findByPk(req.params.productId)
+        .then(product => product.removeCategory(req.params.categoryId)
+            .then(() => product.getCategories())
+            .then(categories => res.json(categories))
+        )
+        .catch(next);
+});
+
 module.exports = router;

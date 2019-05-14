@@ -53,3 +53,7 @@ export const delProduct = id => dispatch => {
   return axios.delete(`/api/products/${id}`)
     .then(() => dispatch(fetchProducts()))
 };
+
+export const delProductCategory = (productId, categoryId) => {
+  return axios.delete(`/api/products/category/${productId}/${categoryId}`)
+}
