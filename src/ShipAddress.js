@@ -36,24 +36,28 @@ class ShipAddress extends Component{
 
     checkAddress = (address) => {
         const errorArr = []
-        
-            if(address.zip.length !== 5){
-                let error = new Error();
-                error.name = 'custom error1';
-                error.errors = [{message: 'zip code must be 5 digits'}]
-                this.setState({...this.state, errors: [...this.state.errors, error]})
-                errorArr.push(error)
-            }
-            if(address.state.length !==2){
-                let error = new Error();
-                error.name = 'custom error2';
-                error.errors = [{message: 'state must contain exact two letters'}]
-                this.setState({...this.state, errors: [...this.state.errors, error]})
-                errorArr.push(error)
-            }
-            if(errorArr.length){throw errorArr}
-        
-        
+        let hasError = false
+        if(address.zip.length !== 5){
+            let error = new Error();
+            error.name = 'custom error1';
+            error.errors = [{message: 'zip code must be 5 digits'}]
+            hasError = true
+            errorArr.push(error)
+            this.setState({...this.state, errors: [...this.state.errors, error]})
+        }
+        if(address.state.length !==2){
+            let error = new Error();
+            error.name = 'custom error2';
+            error.errors = [{message: 'state must contain exact two letters'}]
+            hasError = true
+            errorArr.push(error)
+            this.setState({...this.state, errors: [...this.state.errors, error]})
+        }
+        if(hasError){throw errorArr}
+        else{
+            this.setState({...this.state, errors: []})
+        }
+        return hasError
     }
 
     userShipAddress = (address) => {
@@ -74,8 +78,8 @@ class ShipAddress extends Component{
 
     onSave = (e) => {
         e.preventDefault()
-        this.checkAddress(this.state)
-        if(!this.state.errors.length){
+        let retError = this.checkAddress(this.state)
+        if(!retError){
             this.props.postAddress(this.state, this.props.user.id, 'shipping')
             .then(() => {this.props.history.push('/checkoutStep2')})
             .catch((e) => {this.setState({errors: e.response.data.errors})})
