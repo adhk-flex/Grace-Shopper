@@ -17,23 +17,52 @@ export const order = (state = [], action) => {
 };
 
 export const getOrderByUser = userId => dispatch => {
+  console.log('reducer for order')
   return axios.get(`/api/orders/user/${userId}`)
     .then(orders => dispatch(setOrder(orders.data)))
 };
 
-const getOrderById = orderId => dispatch => {
+export const getOrderById = orderId => dispatch => {
   return axios.get(`/api/orders/${orderId}`)
     .then(order => dispatch(setOrder(order.data)))
 };
 
+export const getOrdersByStatus = (status, userId) => dispatch => {
+  return axios.get(`/api/orders/status/${status}/${userId}`)
+    .then(orders => dispatch(setOrder(orders.data)))
+};
+
+export const getOrdersWithUsers = userId => dispatch => {
+  return axios.get(`/api/orders/include/users/${userId}`)
+    .then(orders => dispatch(setOrder(orders.data)))
+}
+
+export const getSingleOrderItemsUsers = (userId, orderId) => dispatch => {
+  return axios.get(`/api/orders/user/single/${orderId}/${userId}`)
+    .then(order => dispatch(setOrder(order.data)))
+}
+
 export const createOrder = (userId) => dispatch => {
   return axios.post(`/api/orders/user/${userId}`)
+    .then(order => dispatch(getOrderById(order.data.id)))
+};
+
+export const createGuestOrder = () => dispatch => {
+  return axios.post(`/api/orders/user/undefined`)
+  .then((order) => {
+    dispatch(getOrderById(order.data.id));
+    return order.data;
+  })
+};
+
+export const updateOrder = (orderId, formData, userId) => dispatch => {
+  return axios.put(`/api/orders/${orderId}`, formData)
     .then(() => dispatch(getOrderByUser(userId)))
 };
 
-const updateOrder = (orderId, formData, userId) => dispatch => {
+export const updateGuestOrder = (orderId, formData) => dispatch => {
   return axios.put(`/api/orders/${orderId}`, formData)
-    .then(() => dispatch(getOrderByUser(userId)))
+    .then((order) => dispatch(getOrderById(order.id)))
 };
 
 const deleteOrder = (orderId, userId) => dispatch => {

@@ -1,25 +1,52 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchProducts } from './store/product';
+import { fetchProducts, fetchFilteredProducts } from './store/product';
+import Errors from './Errors';
 
 class Pager extends Component {
   constructor (props) {
     super(props)
     this.state = {
       count: 0,
-      pageNum: 1
+      pageNum: 1,
+      errors: [],
+    }
+  }
+
+  load = () => {
+    const { catId, srchVal, pgIdx } = this.props.match.params;
+    const { fetchFilteredProducts, fetchProducts } = this.props;
+    if(catId || srchVal){
+      fetchFilteredProducts(srchVal, catId, pgIdx)
+        .then(() => this.setState({ count: this.props.products.length, pageNum: +pgIdx || 1 }))
+        .catch(e => {this.setState({errors: e.response.data.errors})})
+    } else {
+      fetchProducts()
+        .then(() => this.setState({ count: this.props.products.length, pageNum: +pgIdx || 1 }))
+        .catch(e => {this.setState({errors: e.response.data.errors})})
     }
   }
 
   componentDidMount () {
-    this.props.fetchProducts()
-      .then(() => this.setState({count: this.props.products.length}))
+    this.load();
+  }
+
+  componentDidUpdate (prevProps) {
+    const { srchVal, catId } = this.props.match.params;
+    if(srchVal !== prevProps.match.params.srchVal || catId !== prevProps.match.params.catId){
+      this.load();
+    }
   }
 
   onClick = (value) => {
+    const { srchVal, catId } = this.props.match.params;
     this.setState({pageNum: value})
-    this.props.history.push(`/productList/${value}`)
+    let baseUrl = "/productList";
+    if (catId) baseUrl += `/category/${catId}`;
+    if (srchVal) baseUrl += `/search/${srchVal}`
+    this.props.history.push(`${baseUrl}/${value}`)
+      // .catch(e => {this.setState({errors: e.response.data.errors})})
   }
 
   render(){
@@ -34,7 +61,7 @@ class Pager extends Component {
       {text: 'Last', value: lastPage, disabled: pageNum === lastPage || lastPage ===1}
     ]
     return (
-      <div>
+      <div className="pager">
         <div>You are viewing page {pageNum} of {lastPage}</div>
         <div className='btn-group'>
           {pgButtons.map(button => (
@@ -47,6 +74,7 @@ class Pager extends Component {
             </button>
           ))}
         </div>
+      <Errors errors={this.state.errors} />
       </div>
     )
   }
@@ -60,7 +88,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchProducts: () => dispatch(fetchProducts())
+    fetchProducts: () => dispatch(fetchProducts()),
+    fetchFilteredProducts: (srchVal, catId) => dispatch(fetchFilteredProducts(srchVal, catId))
   }
 };
 

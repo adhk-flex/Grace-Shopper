@@ -1,40 +1,57 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { lineItems, fetchLineItems } from './store/product';
+import { fetchProducts } from './store/product';
+import { fetchCategories } from './store/category';
+import ProductForm from './ProductForm';
 
 class ManageProduct extends Component {
     constructor(props){
         super(props)
-        this.state = {
-        }
     }
-    componentDidUpdate(prevProps){
-        if(prevProps.cart.id !== this.props.cart.id){
-            this.props.fetchLineItems(this.props.cart.id)
-        }     
+
+    componentDidMount(){
+        this.props.fetchCategories();
     }
     render(){
         const history = this.props.history;
-        const Products = this.props.products;
-        const totalItems = this.props.lineItems.reduce((acc, item) => {
-            acc += item.quantity
-            return acc
-        }, 0)
+        const products = this.props.products;
+        if(this.props.user.role !== 'admin') {
+            return (
+              <h1>Admin User Access Only!</h1>
+            )
+          }
         return(
             <div>
-                <h1>Here are All of our Products:</h1>
-                <ul className='list-group'>
-                    {
-                        Products.map(p=>{
-                            return (
-                                <li key={p.id} className='list-group-item'>
-                                    <span>{p.name}</span>
-                                    <img className='product-image' onClick={()=>history.push(`/product/${p.id}`)} src={p.imageUrl}/>
-                                    <p>${p.price}</p>
-                                </li>)
-                        })
-                    }
-                </ul>
+                {/* <Pager history={history} match ={this.props.match}/> */}
+                <h1>Manage All Products</h1>
+                {/* <Search history={history} match={this.props.match}/> */}
+                <Link to='/manageProduct/addCategory' className='btn btn-primary'>Add Category</Link>
+                <Link to='/manageProduct/addProduct' className='btn btn-primary'>Add Product</Link>
+                <div>
+                    <table className='table'>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Stock</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                            <th>Image URL</th>
+                            <th>Product Number</th>
+                            <th>Save</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>  
+                        {
+                            products.map(p=>{
+                                return (<ProductForm product={p} history={history} categories={this.props.categories} key={p.id}/>)
+                            })
+                        }
+                    </tbody>    
+                    </table>
+                </div>
             </div>
         )
     }
@@ -42,15 +59,16 @@ class ManageProduct extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        user: state.user,
         products: state.products,
-        lineItems: state.lineItems,
-        cart: state.cart
+        categories: state.categories
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchLineItems: cartId => dispatch(fetchLineItems(cartId)),
+        fetchProducts: () => dispatch(fetchProducts()),
+        fetchCategories: () => dispatch(fetchCategories())
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ManageProduct);

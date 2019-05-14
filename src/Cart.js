@@ -1,89 +1,112 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { fetchLineItems, updateLineItem, delLineItem } from './store/lineitem';
+import Errors from './Errors';
 
 class Cart extends Component {
-    constructor (props) {
-        super(props)
-        this.state = { }
+    constructor(){
+        super()
+        this.state = {
+            errors: [],
+            quantity: '',
+        }
+    }
+    componentDidMount(){
+        this.props.fetchLineItems(this.props.cart.id)
+            .catch(e => {this.setState({errors: e.response.data.errors})})
+
     }
 
-    async componentDidMount(){
-        const cartId = this.props.cart && this.props.cart.id? this.props.cart.id:false
-        await this.props.fetchLineItems(cartId)
-    }
-
-    async componentDidUpdate(prevProps){
-        if(prevProps.cart.id !== this.props.cart.id){
-            await this.props.fetchLineItems(this.props.cart.id)
+    componentDidUpdate(prevProps){
+        if (prevProps.cart.id !== this.props.cart.id){
+            this.props.fetchLineItems(this.props.cart.id)
+            .catch(e => {this.setState({errors: e.response.data.errors})})
         }
     }
 
-    onChange = (item, e) => {
-        this.setState(item)
+    onChange = (e) => {
         this.setState({quantity: e.target.value})
     };
 
-    onUpdate = e => {
+    onUpdate = (item, e) => {
         e.preventDefault()
-        const {id, cartId, quantity} = this.state
-        // console.log(this.state)
-        // console.log("Quantity", quantity)
-        if (quantity === "0") {
-            this.props.delLineItem(id, cartId)
+        item.quantity = Number(this.state.quantity)
+        const productQuantity = this.props.products.find(p => p.id === item.productId).quantity
+        console.log(productQuantity)
+        console.log('item on Update', item)
+        if (item.quantity === 0) {
+            console.log('deleting')
+            this.props.delLineItem(item)
+                .catch(e => {this.setState({errors: e.response.data.errors})})
         } else {
-            this.props.updateLineItem(id, this.state, cartId)
-        } 
+            console.log('updating')
+            if (item.quantity <= productQuantity) {
+                this.props.updateLineItem(item)
+                    .catch(e => {this.setState({errors: e.response.data.errors})})
+            } else {
+                this.setState({errors: [`entered quantity must less or equal to the stock available quantity: ${productQuantity}`]})
+            }
+        }
+
     }
 
-    onDelete = (id, cartId) => {
-        this.props.delLineItem(id, cartId)
+    onDelete = (item) => {
+        this.props.delLineItem(item)
+            .catch(e => {this.setState({errors: e.response.data.errors})})
     }
 
 
     render () {
-        // console.log("props", this.props)
-        // console.log("state", this.state)
         const {lineItems} = this.props;
+        console.log('loggingline in cart', lineItems)
         const { onChange, onUpdate, onDelete } = this;
         const totalAmount = lineItems.reduce((acc, item) => {
             acc += item.quantity * item.price
             return acc
         }, 0)
-        console.log(typeof totalAmount)
         const disableCheckout = totalAmount === 0;
-        console.log(disableCheckout)
-        // console.log('isLogin: ', this.props.isLogin)
-        if(!lineItems){
+        if (!lineItems){
             return null
-        }else{
-            return(
+        } else {
+            return (
                 <div>
                     <h1>Here are all the products in your cart!</h1>
-                    <ul>
-                        {lineItems.map(p=>{
+                    <ul className='list-group'>
+                        {lineItems.map((p, idx)=>{
                             const total = parseFloat(p.quantity * p.price).toFixed(2);
+                            const productQuantitytmp = this.props.products.find(product => product.id === p.productId)
+                            let productQuantity = 0
+                            if(productQuantitytmp){productQuantity = productQuantitytmp.quantity}
                             return (
-                                <li key={p.id}>
-                                    <span>{`Name: ${p.name}, Price: ${p.price}`}</span>
-                                    <br/>
-                                    <img className = 'product-image' src={p.imageUrl}/>
-                                    <form onSubmit={onUpdate}>
+                                <li className='list-group-item' key={idx}>
+                                    <span style={{ fontSize: '24px' }}>{`Name: ${p.name}, Price: ${p.price}`}</span>
+                                    <br />
+                                    <img className = 'product-image' src={p.imgUrl}/>
+                                    <br />
+                                    <span style={{marginLeft: '5px' }}>{`Available Quantity: ${productQuantity} `}</span>
+                                    <br />
+                                    <form onSubmit={(e) => onUpdate(p, e)}>
                                         <label htmlFor='quantity'>Quantity</label>
-                                        <input name='quantity' placeholder={p.quantity} onChange={(e) => onChange(p, e)}/>
-                                        <button type='submit'>Update</button>
+                                        <input className='form-control' name='quantity' placeholder={p.quantity} onChange={onChange}/>
+                                        <button type='submit' className='btn btn-primary' style={{ marginTop: '10px' }}>Update</button>
                                     </form>
                                     <br />
-                                    <span>Subtotal: ${total}</span>
+                                    <span style={{marginLeft: '5px' }}>Subtotal: ${total}</span>
                                     <br />
                                     <span>Don't want this product?</span>
-                                    <button onClick={() => onDelete(p.id, p.cartId)}>Delete</button>
+                                    <button onClick={() => onDelete(p)} className='btn btn-danger'> Delete </button>
                                 </li>
                             )
                         })}
                     </ul>
-                    <span>{`Total Amount: $${totalAmount}`}</span>
-                    <button onClick={()=>this.props.history.push('/checkout')} disabled={disableCheckout} >Check Out!</button>
+                    <span style={{ fontSize: '20px', marginRight: '10px' }}><span style={{ backgroundColor: 'black', color: 'white' }}>Total Amount</span> ${totalAmount}</span>
+                    <button onClick={()=>{
+                        if (!this.props.isLogin){
+                            this.props.history.push('/checkoutStep0')
+                        } else {
+                            this.props.history.push('./checkoutStep1')
+                        }}} disabled={disableCheckout} className='btn btn-primary'>Check Out!</button>
+                <Errors errors={this.state.errors} />
                 </div>
             )
         }
@@ -93,10 +116,10 @@ class Cart extends Component {
 
 const mapStateToProps = ({products, user, cart, lineItems}) => {
     return {
-        products:  products? products:false,
-        isLogin: user&&user.id? user.id:false,
-        cart: cart? cart:false,
-        lineItems: lineItems? lineItems:false
+        products:  products ? products : false,
+        isLogin: user && user.id ? user.id : false,
+        cart: cart ? cart : false,
+        lineItems: lineItems ? lineItems : false
     }
 };
 

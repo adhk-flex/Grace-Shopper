@@ -23,7 +23,8 @@ const seed = () => {
       ])
     )
     .then(categories => {
-      const arr = new Array(20);
+      const categoryConfigs = [[categories[0]], [categories[0], categories[2]], [categories[1], categories[2]]];
+      const arr = new Array(40);
       return Promise.all(
         [...arr].map(() =>
           Product.create({
@@ -34,8 +35,8 @@ const seed = () => {
             stockStatus: statuses[Math.floor(Math.random() * 2)],
             quantity: Math.floor(Math.random() * 100),
             imgUrl: faker.image.abstract(),
-            categoryId: categories[Math.floor(Math.random() * 3)].id
           })
+            .then(product => product.setCategories(categoryConfigs[Math.floor(Math.random() * 3)]))
         )
       );
     })

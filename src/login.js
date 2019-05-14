@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import Errors from './Errors';
 
 import { loginNewUser, login, logout } from './store/user';
+import { addLineItem } from './store/lineitem';
 
 class Login extends Component{
 
@@ -10,7 +12,7 @@ class Login extends Component{
         this.state = {
             email: '',
             password: '',
-            error: '',
+            errors: [],
             firstName: '',
             lastName: '',
             imgUrl: '',
@@ -26,12 +28,30 @@ class Login extends Component{
         ev.preventDefault()
         if(this.props.match.path === '/signup'){
             this.props.signup(this.state)
+            .then(() => {
+                const items = JSON.parse(localStorage.getItem('lineItems'))
+                items.forEach(item => {
+                    item.cartId = this.props.cart.id;
+                    item.quantity = Number(item.quantity);
+                    this.props.addLineItem(item)
+                })
+            })
+            .then(() => localStorage.clear())
             .then(()=>this.props.history.push('/home'))
-            .catch(({response})=>{this.setState({error: response.data})})
+            // .catch((e)=>{this.setState({errors: e.response.data.errors})})
         }else if(this.props.match.path === '/login'){
             this.props.login(this.state)
+            .then(() => {
+                const items = JSON.parse(localStorage.getItem('lineItems'))
+                items.forEach(item => {
+                    item.cartId = this.props.cart.id;
+                    item.quantity = Number(item.quantity);
+                    this.props.addLineItem(item)
+                })
+            })
+            .then(() => localStorage.clear())
             .then(()=>this.props.history.push('/home'))
-            .catch(({response})=>{this.setState({error: response.data})})
+            .catch((e)=>{this.setState({errors: ['Incorrect Email/password']})})
         }   
     }
 
@@ -44,8 +64,11 @@ class Login extends Component{
                 {this.props.match.path === '/logout' ? 
                 (<div>
                     <span>Do you want to Logout?</span>
-                    <button onClick={()=>this.props.logout()}>Yes</button>
-                    <button onClick={()=>this.props.history.push('/home')}>No</button>
+                    <button onClick={()=>{
+                        this.props.logout()
+                        .then(()=>this.props.history.push('/home'))
+                    }} className='btn btn-primary'>Yes</button>
+                    <button onClick={()=>this.props.history.push('/home')} className='btn btn-info'>No</button>
                 </div>
                 ) 
                 : (
@@ -53,35 +76,42 @@ class Login extends Component{
                         <h2>{`This is the ${toSignup ? 'signup' : 'login'} page`}</h2>
                         <form onSubmit={onSave}>
                             <label htmlFor = 'email'>Email</label>
-                            <input name = 'email' value = {email} onChange={onChange}/>
+                            <input  className='form-control' name = 'email' value = {email} onChange={onChange}/>
                             <label htmlFor = 'password'>Password</label>
-                            <input name = 'password' value = {password} onChange={onChange}/>
+                            <input className='form-control' name = 'password' value = {password} onChange={onChange}/>
                             {
                                 toSignup ? 
                                 (
                                     <div>
                                     <label htmlFor = 'firstName'>FirstName</label>
-                                    <input name = 'firstName' value = {firstName} onChange = {onChange}/>
+                                    <input className='form-control' name = 'firstName' value = {firstName} onChange = {onChange}/>
                                     <label htmlFor = 'lastName'>LastName</label>
-                                    <input name = 'lastName' value = {lastName} onChange = {onChange}/>
+                                    <input className='form-control' name = 'lastName' value = {lastName} onChange = {onChange}/>
                                     <label htmlFor = 'imgUrl'>ImageUrl</label>
-                                    <input name = 'imgUrl' value = {imgUrl} onChange = {onChange}/>
-                                    <label htmlFor = 'role'>Role</label>
+                                    <input className='form-control' name = 'imgUrl' value = {imgUrl} onChange = {onChange}/>
+                                    {/* <label htmlFor = 'role'>Role</label>
                                     <select name = 'role' value = {role} onChange = {onChange}>
                                         <option defaultValue = 'shopper' >shopper</option>
                                         <option value = 'admin'>admin</option>
-                                    </select>
+                                    </select> */}
                                     </div>
                                 )  
                                 : null
                             }
-                            <button type='submit'>submit</button>
+                            <button type='submit' className='btn btn-primary'>submit</button>
                         </form>
                     </div>
                 )}
-                
+                <Errors errors={this.state.errors} />
             </div>
         )     
+    }
+}
+
+const mapStateToProps = state => {
+    return {
+        cart: state.cart,
+        lineItems: state.lineItems
     }
 }
 
@@ -89,8 +119,9 @@ const mapDispatchToProps = dispatch => {
     return {
         signup: user => dispatch(loginNewUser(user)),
         login: user => dispatch(login(user)),
-        logout: () => dispatch(logout())
+        logout: () => dispatch(logout()),
+        addLineItem: item => dispatch(addLineItem(item))
     }
 }
 
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

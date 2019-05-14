@@ -3,7 +3,8 @@ const app = express();
 const path = require('path');
 const morgan = require('morgan');
 const session = require('express-session');
-const { dbSync } = require("../db");
+const pluralize = require('pluralize');
+const { dbSync } = require('../db');
 
 const port = process.env.PORT || 3000;
 app.get('/app.js', (req, res, next) => res.sendFile(path.join(__dirname, '../dist', 'main.js')));
@@ -27,13 +28,12 @@ app.use(session({
 
 app.use('/auth', require('./routes/user'));
 
-app.use('/api/products', require('./routes/product'));
-app.use('/api/categories', require('./routes/category'));
-app.use('/api/carts', require('./routes/cart'));
-app.use('/api/lineitems', require('./routes/lineitem'));
-app.use('/api/orders', require('./routes/order'));
-app.use('/api/addresses', require('./routes/address'));
-app.use('/api/creditcards', require('./routes/creditcard'));
+let routearray = ['product', 'category', 'cart', 
+                    'lineitem', 'order', 'address', 
+                    'creditcard', 'review'];
+routearray.forEach(item => {
+    app.use(`/api/${pluralize(item)}`, require(`./routes/${item}`));
+});
 
 app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, '../index.html')));
 app.get('/style.css', (req, res, next)=> res.sendFile(path.join(__dirname, 'style.css')));
@@ -45,10 +45,17 @@ app.use((req, res, next) => {
     next(err);
 });
 
-app.use((err, req, res, next) => {
-    console.error(err, err.stack);
-    res.status(500).send(err);
-});
+app.use((error, req, res, next) => {
+    let errors = [error];
+    if (error.errors) {
+      error = error.errors.map(_error => {
+        return _error.message;
+      });
+    } else if (error.original) {
+      errors = [error.original.message];
+    }
+    res.status(error.status || 500).send({ errors });
+  });
 
 dbSync()
     .then(() => app.listen(port, ()=> console.log(`listening on port ${port}`)))

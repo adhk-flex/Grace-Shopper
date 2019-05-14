@@ -17,13 +17,19 @@ export const creditCard = (state = [], action) => {
 };
 
 export const getCreditCard = userId => dispatch => {
-  return axios.get(`/api/creditcards/user/${userId}`)
-    .then(card => dispatch(setCreditCard(card.data)))
+  // return axios.get(`/api/creditcards/user/${userId}`)
+  //   .then(card => dispatch(setCreditCard(card.data)))
+  return Promise.resolve('Yes, authorized!')
 }
 
 export const postCreditCard = (userId, cardInfo)=> dispatch => {
   console.log(cardInfo)
-  return axios.post(`/api/creditcards/user/${userId}`, cardInfo)
-    .then(() => console.log("posted"))  
-  // .then(() => dispatch(getCreditCard(userId)))
+  if (userId === undefined) {
+    localStorage.setItem('creditCard', JSON.stringify({}))
+    return Promise.resolve(dispatch(setCreditCard(cardInfo)))
+  } else {
+    return axios.post(`/api/creditcards/user/${userId}`, cardInfo)
+      .then(() => console.log("posted"))  
+    // .then(() => dispatch(getCreditCard(userId)))
+  }
 }

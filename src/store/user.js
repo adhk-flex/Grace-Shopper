@@ -2,11 +2,17 @@ import axios from 'axios';
 import {setUserCart} from './cart';
 
 const SET_USER = 'SET_USER';
+const SET_ALLUSERS = 'SET_ALLUSERS';
 
 const setUser = user => ({
   type: SET_USER,
   user
 });
+
+const setAllUsers = users => ({
+  type: SET_ALLUSERS,
+  users
+})
 
 export const user = (state = [], action) => {
   switch (action.type) {
@@ -16,6 +22,37 @@ export const user = (state = [], action) => {
       return state;
   }
 };
+
+export const allUsers = (state = [], action) => {
+  switch (action.type) {
+    case SET_ALLUSERS:
+      return action.users;
+    default: 
+      return state;
+  }
+};
+
+
+export const getAllUsers = () => dispatch => {
+  return axios.get('/auth/users')
+    .then(users => dispatch(setAllUsers(users.data)))
+}
+
+export const addUser = user => dispatch => {
+  return axios.post('/auth/user', user)
+    .then(() => dispatch(getAllUsers()))
+}
+
+export const updateUser = user => dispatch => {
+  return axios.put(`/auth/${user.id}`, user)
+    .then(() => dispatch(getAllUsers()))
+}
+
+export const deleteUser = userId => dispatch => {
+  return axios.delete(`/auth/${userId}`)
+    .then(() => dispatch(getAllUsers()))
+    .then(() => console.log('delete finished'))
+}
 
 export const login = user => dispatch => {
   return axios.put('/auth/login', user)

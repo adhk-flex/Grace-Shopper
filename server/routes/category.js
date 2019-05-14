@@ -5,7 +5,7 @@ const Category = db.Category;
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
-    Category.findAll()
+    Category.findAll({ order: [["name", "asc"]] })
     .then((categories) => res.json(categories))
     .catch(next);
 });
@@ -13,6 +13,13 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
     Category.findOne({where: {id: req.params.id}})
         .then((category) => res.json(category))
+        .catch(next);
+});
+
+router.get('/product/:productId', (req, res, next) => {
+    db.Product.findOne({ where: { id: req.params.productId } })
+        .then(product => product.getCategories({ order: [["name", "asc"]] }))
+        .then(categories => res.json(categories))
         .catch(next);
 });
 

@@ -17,25 +17,96 @@ export const lineItems = (state = [], action) => {
 };
 
 export const fetchLineItems = cartId => dispatch => {
-  console.log('cartId in fetchLineItems store/lineItem.js: ', cartId)
-  return axios.get(`/api/lineitems/cart/${cartId}`)
-    .then(items => dispatch(setLineItems(items.data)))
+  if (cartId === undefined) {
+    const items = JSON.parse(localStorage.getItem('lineItems'))
+    console.log('items in fetchLineItems in store: ', items)
+    return Promise.resolve(dispatch(setLineItems(items)))
+  } 
+  else {
+    return axios.get(`/api/lineitems/cart/${cartId}`)
+      .then(items => dispatch(setLineItems(items.data)))
+  }
 };
 
 
-export const addLineItem = (product, cartId) => dispatch => {
-  return axios.post('/api/lineitems', product)
-    .then(() => dispatch(fetchLineItems(cartId)))
+export const fetchLineItemsByOrder = orderId => {
+  return axios.get(`/api/lineitems/order/${orderId}`)
 };
-
-export const delLineItem = (id, cartId) => dispatch => {
-  return axios.delete(`/api/lineitems/${id}`)
-    .then(() => dispatch(fetchLineItems(cartId)))
-};
-
-export const updateLineItem = (id, formData, cartId) => dispatch => {
-  return axios.put(`/api/lineitems/${id}`, formData)
-    .then(() => dispatch(fetchLineItems(cartId)))
+const cleanLineItems = () => dispatch => {
+  return Promise.resolve(dispatch(setLineItems([])))
 }
 
 
+
+export const addLineItem = (item) => dispatch => {
+  if (item.cartId === undefined){
+    let items = JSON.parse(localStorage.getItem('lineItems'))  
+    if (!items){
+      items = []
+    }
+    items.push(item)
+    localStorage.setItem('lineItems', JSON.stringify(items));
+    return Promise.resolve(dispatch(fetchLineItems()))
+  }
+  else {
+    return axios.post('/api/lineitems', item)
+      .then(() => dispatch(fetchLineItems(item.cartId)))
+  }
+};
+
+export const convertLineItem = (orderId) => dispatch => {
+  console.log('in convertLineItem')
+  let items = JSON.parse(localStorage.getItem('lineItems'))  
+  if (!items){
+    items = []
+    console.log('items in convert', items)
+  }
+  let itemsFromDB = []
+  items.forEach((item)=>{
+    axios.post(`/api/lineitems/${orderId}`, item)
+    .then((item)=>itemsFromDB.push(item.data))
+    .catch((error)=>console.log(error))
+  })
+  localStorage.setItem('lineItems', '[]');
+  console.log('converted all line items')
+  return Promise.resolve(dispatch(setLineItems(itemsFromDB)))
+};
+
+export const delLineItem = (item) => dispatch => {
+  if (item.cartId === undefined){
+    let items = JSON.parse(localStorage.getItem('lineItems'))  
+    localStorage.setItem('lineItems', JSON.stringify(items.filter(i => i.productId !== item.productId)))
+    return Promise.resolve(dispatch(fetchLineItems()))
+  }
+  else {
+    return axios.delete(`/api/lineitems/${item.id}`)
+    .then(() => dispatch(fetchLineItems(item.cartId)))
+  }
+};
+
+export const updateLineItem = (item) => dispatch => {
+  console.log('item pass in store is: ', item)
+  // if(item.clean){
+  //   return Promise.resolve(dispatch(cleanLineItems()))
+  // }
+  console.log('store update', item.cartId)
+  if (item.cartId === undefined) {
+    let items = JSON.parse(localStorage.getItem('lineItems'))
+    console.log('items after localStorage is: ', items)
+    if (!items){
+      items = []
+    } 
+    let newitems = items.filter(i => i.productId !== item.productId)
+    if (!newitems) {
+      newitems = []
+    }
+    newitems.push(item)
+    localStorage.setItem('lineItems', JSON.stringify(newitems))
+    return Promise.resolve(dispatch(fetchLineItems()))
+  }
+  else {
+    const {id, cartId} = item
+    return axios.put(`/api/lineitems/${id}`, item)
+      .then(() => dispatch(fetchLineItems(cartId)))
+  }
+}

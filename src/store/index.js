@@ -3,21 +3,24 @@ import thunk from 'redux-thunk';
 import {products} from './product';
 import {categories} from './category';
 import {lineItems} from './lineitem';
-import {user} from './user';
+import {user, allUsers} from './user';
 import {cart} from './cart';
 import {order} from './order';
 import {address} from './address';
 import {creditCard} from './creditcards';
+import {reviews} from './review';
 
 const reducer = combineReducers({
   categories,
   products,
   lineItems,
   user,
+  allUsers,
   cart,
   order,
   address,
-  creditCard
+  creditCard,
+  reviews
 });
 
 const store = createStore(reducer, applyMiddleware(thunk));

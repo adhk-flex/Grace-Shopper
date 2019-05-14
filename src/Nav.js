@@ -1,8 +1,18 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 
-const Nav = (isLogin, {location: {pathname}}) => {
+const Nav = (isLogin, {location: {pathname}}, lineItems) => {
     let finalLinks=[];
+    console.log('lineItems is: ', lineItems)
+    if(lineItems.length){
+        if(lineItems[0].clean){
+            lineItems = []
+        }
+    }
+    const itemQuantity = lineItems ? lineItems.reduce((acc, item) => {
+        acc += Number(item.quantity)
+        return acc
+    },0) : 0;
     const adminLinks = [
         {
             label: 'Home', to: '/home'
@@ -12,6 +22,9 @@ const Nav = (isLogin, {location: {pathname}}) => {
         },
         {
             label: 'Manage Orders', to: '/manageOrder'
+        },
+        {
+            label: 'Manage Users', to: '/manageUser'
         },
         {
             label: 'Logout', to: '/logout'
@@ -26,13 +39,13 @@ const Nav = (isLogin, {location: {pathname}}) => {
             label: 'ProductList', to: '/productList'
         },
         {
-            label: 'Checkout', to: '/checkout'
-        },
-        {
             label: 'Order', to: '/order'
         },
         {
             label: 'Logout', to: '/logout'
+        },
+        {
+            label: `Cart(${itemQuantity})`, to:'/cart'
         }
     ];
     const guestLinks = [
@@ -49,7 +62,7 @@ const Nav = (isLogin, {location: {pathname}}) => {
             label: 'ProductList', to: '/productList'
         },
         {
-            label: 'Checkout', to: '/checkout'
+            label: `Cart(${itemQuantity})`, to:'/cart'
         }
     ];
 
@@ -64,7 +77,7 @@ const Nav = (isLogin, {location: {pathname}}) => {
     }
 
     return (
-        <ul className='nav nav-pills' style={{marginBottom: '20px'}}>
+        <ul className='nav nav-pills' style={{ marginBottom: '20px', marginTop: '10px' }}>
             {
                 finalLinks.map(link=>
                     (

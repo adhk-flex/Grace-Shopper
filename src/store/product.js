@@ -21,22 +21,46 @@ export const fetchProducts = () => dispatch => {
     .then(products => dispatch(setProducts(products.data)))
 };
 
+export const fetchFilteredProducts = (srchVal, catId, pgIdx) => dispatch => {
+  let url = `/api/products`;
+  if (catId) url += `/category/${catId}`;
+  if (srchVal) url += `/search/${srchVal}`;
+  if (pgIdx) url += `/${pgIdx}`;
+  return axios.get(url)
+    .then(products => {
+      return dispatch(setProducts(products.data))
+    } )
+};
+
 export const getProductByPg = pgIdx => dispatch => {
   return axios.get(`/api/products/${pgIdx}`)
     .then(products => dispatch(setProducts(products.data)))
 }
 
-const addProduct = product => dispatch => {
+export const addProduct = product => dispatch => {
   return axios.post('/api/products/', product)
-    .then(() => dispatch(fetchProducts()))
+    .then(product => {
+      dispatch(fetchProducts());
+      return product;
+    }); 
 };
 
-const updateProduct = (id, product) => dispatch => {
+export const updateProduct = (id, product) => dispatch => {
+  console.log('in update product thunk')
   return axios.put(`/api/products/${id}`, product)
+    .then((res)=>console.log(res))
     .then(() => dispatch(fetchProducts()))
 };
 
-const delProduct = id => dispatch => {
+export const delProduct = id => dispatch => {
   return axios.delete(`/api/products/${id}`)
     .then(() => dispatch(fetchProducts()))
+};
+
+export const delProductCategory = (productId, categoryId) => {
+  return axios.delete(`/api/products/category/${productId}/${categoryId}`)
+};
+
+export const addProductCategory = (productId, categoryId) => {
+  return axios.put(`api/products/category/${productId}/${categoryId}`)
 };
