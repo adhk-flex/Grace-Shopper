@@ -19,6 +19,9 @@ const Nav = (isLogin, {location: {pathname}}, lineItems) => {
             label: 'Manage Orders', to: '/manageOrder'
         },
         {
+            label: 'Manage Users', to: '/manageUser'
+        },
+        {
             label: 'Logout', to: '/logout'
         },
     ]

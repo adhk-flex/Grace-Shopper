@@ -85,8 +85,8 @@ router.put('/login', (req, res, next) => {
 router.put('/:userId', (req, res, next) => {
     User.findOne({where: {id: req.session.userId}})
     .then((user)=>{
-        if(user.role==='admin'){
-            User.update(req.body, {returning: true, where: {id: req.params.Id}})
+        if(user.role ==='admin'){
+            User.update(req.body, {returning: true, where: {id: req.params.userId}})
             .then(([updatedRows, [updatedUser]])=>res.json(updatedUser))
         }
     })
