@@ -77,9 +77,9 @@ body{
   }
   
   .btn.btn-danger {
-    background-color: gray;
-    border-color: gray;
-    color: darkslategray;
+    background-color: white;
+    border-color: red;
+    color: red;
   }
   
   .btn.btn-danger:hover {
