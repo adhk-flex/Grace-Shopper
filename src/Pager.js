@@ -61,7 +61,7 @@ class Pager extends Component {
       {text: 'Last', value: lastPage, disabled: pageNum === lastPage || lastPage ===1}
     ]
     return (
-      <div>
+      <div className="pager">
         <div>You are viewing page {pageNum} of {lastPage}</div>
         <div className='btn-group'>
           {pgButtons.map(button => (

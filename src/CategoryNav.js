@@ -24,7 +24,7 @@ class CategoryNav extends Component {
     render () {
         return (
             <select
-                className="form-control"
+                className="form-control category-nav"
                 name="Category"
                 value={this.state.choice}
                 onChange={this.handleChange}
