@@ -17,10 +17,10 @@ export const lineItems = (state = [], action) => {
 };
 
 export const fetchLineItems = cartId => dispatch => {
-  if (cartId === undefined || null) {
+  if (cartId === undefined) {
     const items = JSON.parse(localStorage.getItem('lineItems'))
     console.log('items in fetchLineItems in store: ', items)
-    return Promise.resolve(dispatch(setLineItems([])))
+    return Promise.resolve(dispatch(setLineItems(items)))
   } 
   else {
     return axios.get(`/api/lineitems/cart/${cartId}`)
