@@ -102,6 +102,17 @@ body{
     margin-bottom: 10px;
   }
 
+  label {
+    background-color: black;
+    color: white;
+    font-size: 18px;
+  }
+
+  .form-control {
+    border-color: black;
+    border-width: 1px
+  }
+  
   .pager {
     margin-bottom: 10px;
     margin-top: 10px;

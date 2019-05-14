@@ -71,39 +71,39 @@ class Cart extends Component {
             return (
                 <div>
                     <h1>Here are all the products in your cart!</h1>
-                    <ul>
+                    <ul className='list-group'>
                         {lineItems.map((p, idx)=>{
                             const total = parseFloat(p.quantity * p.price).toFixed(2);
                             const productQuantity = this.props.products.find(product => product.id === p.productId).quantity
                             return (
-                                <li key={idx}>
-                                    <span>{`Name: ${p.name}, Price: ${p.price}`}</span>
+                                <li className='list-group-item' key={idx}>
+                                    <span style={{ fontSize: '24px' }}>{`Name: ${p.name}, Price: ${p.price}`}</span>
                                     <br />
                                     <img className = 'product-image' src={p.imgUrl}/>
                                     <br />
-                                    <span>{`Available Quantity: ${productQuantity} `}</span>
+                                    <span style={{marginLeft: '5px' }}>{`Available Quantity: ${productQuantity} `}</span>
                                     <br />
                                     <form onSubmit={(e) => onUpdate(p, e)}>
                                         <label htmlFor='quantity'>Quantity</label>
-                                        <input name='quantity' placeholder={p.quantity} onChange={onChange}/>
-                                        <button type='submit'>Update</button>
+                                        <input className='form-control' name='quantity' placeholder={p.quantity} onChange={onChange}/>
+                                        <button type='submit' className='btn btn-primary' style={{ marginTop: '10px' }}>Update</button>
                                     </form>
                                     <br />
-                                    <span>Subtotal: ${total}</span>
+                                    <span style={{marginLeft: '5px' }}>Subtotal: ${total}</span>
                                     <br />
                                     <span>Don't want this product?</span>
-                                    <button onClick={() => onDelete(p)}> Delete </button>
+                                    <button onClick={() => onDelete(p)} className='btn btn-danger'> Delete </button>
                                 </li>
                             )
                         })}
                     </ul>
-                    <span>{`Total Amount: $${totalAmount}`}</span>
+                    <span style={{ fontSize: '20px', marginRight: '10px' }}><span style={{ backgroundColor: 'black', color: 'white' }}>Total Amount</span> ${totalAmount}</span>
                     <button onClick={()=>{
                         if (!this.props.isLogin){
                             this.props.history.push('/checkoutStep0')
                         } else {
                             this.props.history.push('./checkoutStep1')
-                        }}} disabled={disableCheckout} >Check Out!</button>
+                        }}} disabled={disableCheckout} className='btn btn-primary'>Check Out!</button>
                 <Errors errors={this.state.errors} />
                 </div>
             )

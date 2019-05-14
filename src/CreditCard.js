@@ -89,16 +89,16 @@ class CreditCard extends Component{
         const expYearArr = ['year', ...Array.from({length:10},(v,k)=>k+2019)]
         return (
             <div>
-                <h3>Credit Card Information</h3>
+                <h1>Credit Card Information</h1>
                 <form onSubmit={onSave}>
                     <label htmlFor='firstName'>First Name</label>
-                    <input text='firstName' name='firstName' value={firstName} onChange={onChange}/>
+                    <input className='form-control' text='firstName' name='firstName' value={firstName} onChange={onChange}/>
                     <br/>
                     <label htmlFor='lastName'>Last Name</label>
-                    <input text='lastName' name='lastName' value={lastName} onChange={onChange}/>
+                    <input className='form-control' text='lastName' name='lastName' value={lastName} onChange={onChange}/>
                     <br/>
                     <label htmlFor='cardType'>Card Type</label>
-                    <select name="cardType" value={cardType} onChange = {onChange}>
+                    <select className='form-control' name="cardType" value={cardType} onChange = {onChange}>
                         {
                             creditCardTypeArr.map(card=>{
                                 return (
@@ -109,10 +109,10 @@ class CreditCard extends Component{
                     </select>
                     <br/>
                     <label htmlFor='number'>Card Number</label>
-                    <input text='number' name='number' value={number} onChange={onChange}/>
+                    <input className='form-control' text='number' name='number' value={number} onChange={onChange}/>
                     <br/>
                     <label htmlFor='expMonth'>Exp. Month</label>
-                    <select type="text" name="expMonth" value={expMonth} onChange = {onChange}>
+                    <select className='form-control' type="text" name="expMonth" value={expMonth} onChange = {onChange}>
                         {
                             expMonthArr.map(month=>{
                                 return (
@@ -123,7 +123,7 @@ class CreditCard extends Component{
                     </select>
                     <br/>
                     <label htmlFor='expYear'>Exp. Year</label>
-                    <select type="text" name="expYear" value={expYear} onChange= {onChange}>
+                    <select className='form-control' type="text" name="expYear" value={expYear} onChange= {onChange}>
                         {
                             expYearArr.map(year=>{
                                 return (
@@ -134,9 +134,9 @@ class CreditCard extends Component{
                     </select>
                     <br/>
                     <label htmlFor='cvv'>cvv</label>
-                    <input text='cvv' name='cvv' value={cvv} onChange={onChange}/>  
+                    <input className='form-control' text='cvv' name='cvv' value={cvv} onChange={onChange}/>  
                     <br/>
-                    <button type='submit'>Save and Proceed</button>  
+                    <button type='submit' className='btn btn-primary' >Save and Proceed</button>  
                 </form>
                 <Errors errors={this.state.errors}/>
             </div>

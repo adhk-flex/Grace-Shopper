@@ -4,10 +4,10 @@ import {Link} from 'react-router-dom'
 const Nav = (isLogin, {location: {pathname}}, lineItems) => {
     let finalLinks=[];
     console.log('lineItems is: ', lineItems)
-    const itemQuantity = lineItems.reduce((acc, item) => {
+    const itemQuantity = lineItems ? lineItems.reduce((acc, item) => {
         acc += Number(item.quantity)
         return acc
-    },0)
+    },0) : 0;
     const adminLinks = [
         {
             label: 'Home', to: '/home'
@@ -72,7 +72,7 @@ const Nav = (isLogin, {location: {pathname}}, lineItems) => {
     }
 
     return (
-        <ul className='nav nav-pills' style={{marginBottom: '20px'}}>
+        <ul className='nav nav-pills' style={{ marginBottom: '20px', marginTop: '10px' }}>
             {
                 finalLinks.map(link=>
                     (
