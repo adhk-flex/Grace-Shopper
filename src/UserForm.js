@@ -25,6 +25,7 @@ class UserForm extends Component{
   saveHandler = e => {
     e.preventDefault();
     let user = {
+      id: this.state.id,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       email: this.state.email,

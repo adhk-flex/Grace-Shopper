@@ -38,16 +38,15 @@ export const getAllUsers = () => dispatch => {
 }
 
 export const updateUser = user => dispatch => {
-  console.log('upate in store', user)
   return axios.put(`/auth/${user.id}`, user)
     .then(() => dispatch(getAllUsers()))
-    .then(() => console.log('update in store finished'))
 }
 
 export const deleteUser = userId => dispatch => {
   console.log('store deleting', userId)
   return axios.delete(`/auth/${userId}`)
     .then(() => dispatch(getAllUsers()))
+    .then(() => console.log('delete finished'))
 }
 
 export const login = user => dispatch => {

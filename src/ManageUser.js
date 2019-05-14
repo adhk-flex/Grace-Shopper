@@ -16,8 +16,15 @@ class ManageUser extends Component {
       .then(() => this.setState({users: this.props.users}))
   }
 
+  componentDidUpdate(prevProps){
+    if (JSON.stringify(prevProps.users) !== JSON.stringify(this.props.users)){
+      this.props.getAllUsers()
+    }
+  }
+
   render () {
     const {users} = this.state
+    console.log(this.props)
     return (
       <div>
         <h1>Manage All Users</h1>

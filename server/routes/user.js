@@ -28,10 +28,10 @@ router.delete('/logout', (req, res, next) => {
 
 router.delete('/:userId', (req, res, next) => {
     User.findOne({where: {id: req.session.userId}})
-    .then((user)=>{
-        if(user.role==='admin'){
-            User.delete({where: {id: req.params.userId}})
-            .then(()=>res.status(204).end())
+    .then((user) => {
+        if (user.role === 'admin'){
+            User.destroy({where: {id: req.params.userId}})
+                .then(() => res.status(204).end())
         }
     })
     .catch(next);
@@ -85,8 +85,8 @@ router.put('/login', (req, res, next) => {
 router.put('/:userId', (req, res, next) => {
     User.findOne({where: {id: req.session.userId}})
     .then((user)=>{
-        if(user.role==='admin'){
-            User.update(req.body, {returning: true, where: {id: req.params.Id}})
+        if(user.role ==='admin'){
+            User.update(req.body, {returning: true, where: {id: req.params.userId}})
             .then(([updatedRows, [updatedUser]])=>res.json(updatedUser))
         }
     })
