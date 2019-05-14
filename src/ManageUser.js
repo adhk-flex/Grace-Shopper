@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import UserForm from './UserForm';
 import {getAllUsers} from './store/user';
 
@@ -29,6 +30,7 @@ class ManageUser extends Component {
     return (
       <div>
         <h1>Manage All Users</h1>
+        <Link to='/manageUser/addUser' className='btn btn-primary'>Add User</Link>
         <div>
           <table className='table'>
           <thead>

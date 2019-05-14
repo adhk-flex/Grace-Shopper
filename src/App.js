@@ -23,6 +23,7 @@ import CreditCard from './CreditCard';
 import BillAddress from './BillAddress'
 import Review from './Review';
 import SingleOrderForm from './SingleOrderForm';
+import AddUser from './AddUser';
 import SingleProductForm from './SingleProductForm';
 
 class App extends Component{
@@ -69,6 +70,7 @@ class App extends Component{
                     <Route exact path = '/manageProduct' component={ManageProduct}/>
                     <Route exact path = '/product/:id' component={Product}/>
                     <Route exact path = '/manageUser' component={ManageUser}/>
+                    <Route exact path = '/manageUser/addUser' component={AddUser}/>
                     <Route exact path = '/cart' component={Cart}/>
                     <Route exact path = '/checkoutStep0' component={CheckoutChoice}/>
                     <Route exact path = '/checkoutStep1' component={ShipAddress}/>
