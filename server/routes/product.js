@@ -98,14 +98,16 @@ router.delete('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next)=>{
-    return Promise.all([ Product.create(req.body),
-                         Category.findOne({where: {name: req.body.categoryName}}) ])
-    .then(([product, category]) => {
-        product.update({categoryId: category.id});
-        return product;
-    })
-    .then((product) => res.json(product))
-    .catch((error) => console.log(error));
+    // return Promise.all([ Product.create(req.body),
+    //                      Category.findOne({where: {name: req.body.categoryName}}) ])
+    // .then(([product, category]) => {
+    //     product.update({categoryId: category.id});
+    //     return product;
+    // })
+    req.body.stockStatus = req.body.quantity ? 'in stock' : 'out of stock'
+    Product.create(req.body)
+        .then((product) => res.json(product))
+        .catch((error) => console.log(error));
 });
 
 router.put('/:id', (req, res, next) => {

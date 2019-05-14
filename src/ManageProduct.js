@@ -22,6 +22,7 @@ class ManageProduct extends Component {
                 <h1>Manage All Products</h1>
                 {/* <Search history={history} match={this.props.match}/> */}
                 <Link to='/manageProduct/addCategory' className='btn btn-primary'>Add Category</Link>
+                <Link to='/manageProduct/addProduct' className='btn btn-primary'>Add Product</Link>
                 <div>
                     <table className='table'>
                     <thead>
@@ -40,7 +41,7 @@ class ManageProduct extends Component {
                     <tbody>  
                         {
                             products.map(p=>{
-                                return (<ProductForm product={p} history={this.props.history} categories={this.props.categories} key={p.id}/>)
+                                return (<ProductForm product={p} history={history} categories={this.props.categories} key={p.id}/>)
                             })
                         }
                     </tbody>    

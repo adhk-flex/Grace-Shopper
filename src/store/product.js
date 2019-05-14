@@ -37,9 +37,12 @@ export const getProductByPg = pgIdx => dispatch => {
     .then(products => dispatch(setProducts(products.data)))
 }
 
-const addProduct = product => dispatch => {
+export const addProduct = product => dispatch => {
   return axios.post('/api/products/', product)
-    .then(() => dispatch(fetchProducts()))
+    .then(product => {
+      dispatch(fetchProducts());
+      return product;
+    }); 
 };
 
 export const updateProduct = (id, product) => dispatch => {

@@ -63,6 +63,7 @@ class App extends Component{
                     <Route exact path = '/productList/:idx' component={ProductList}/>
                     <Route exact path = '/productList' component={ProductList}/>
                     <Route exact path = '/manageProduct/addCategory' component={CategoryForm} />
+                    <Route exact path = '/manageProduct/addProduct' component={SingleProductForm} />
                     <Route exact path = '/manageProduct/single/:productId' component={SingleProductForm} />
                     <Route exact path = '/manageProduct' component={ManageProduct}/>
                     <Route exact path = '/product/:id' component={Product}/>

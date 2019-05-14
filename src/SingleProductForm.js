@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Errors from './Errors';
-import { updateProduct, delProduct, delProductCategory, addProductCategory } from './store/product';
+import { updateProduct, delProduct, delProductCategory, addProductCategory, addProduct } from './store/product';
 import { getProductCats } from './store/category'; 
 
 class SingleProductForm extends Component {
@@ -58,9 +58,23 @@ class SingleProductForm extends Component {
 
     handleSubmit = evt => {
         evt.preventDefault();
-        this.props.updateProduct(this.state.id, this.state)
-            .then(() => this.props.history.push('/manageProduct'))
-            .catch(e => this.setState({ errors: e.response.data.errors }));
+        if (this.props.location.pathname.includes('single')){
+            this.props.updateProduct(this.state.id, this.state)
+                .then(() => this.props.history.push('/manageProduct'))
+                .catch(e => this.setState({ errors: e.response.data.errors }));
+        } else {
+            this.props.addProduct({
+                name: this.state.name,
+                description: this.state.description,
+                price: this.state.price,
+                quantity: this.state.quantity,
+                imgUrl: this.state.imgUrl,
+                productNumber: this.state.productNumber
+            })
+            .then(product =>{
+                this.props.history.push(`/manageProduct/single/${product.data.id}`)
+            })
+        }
     };
 
     handleDeleteProduct = evt => {
@@ -85,7 +99,7 @@ class SingleProductForm extends Component {
 
     render() {
         const product = this.state;
-        if(product.productNumber){
+        if(this.props.location.pathname.includes('single') && product.productNumber){
             return (
                 <div className='container'>
                     <form onSubmit={this.handleSubmit}>
@@ -111,7 +125,7 @@ class SingleProductForm extends Component {
                             Array.isArray(this.state.categories) ? this.state.categories.map(category => <li 
                                     key={category.id} 
                                     className='list-group-item'
-                                    >{category.name} <button className='btn btn-danger' onClick={() => this.handleDeleteCategory(category.id)}></button>
+                                    >{category.name} <button className='btn btn-danger btn-sm' onClick={() => this.handleDeleteCategory(category.id)}>X</button>
                                 </li>) : null
                         }
                     </ul>
@@ -125,11 +139,32 @@ class SingleProductForm extends Component {
                                 : null
                         }
                     </select>
-                    <button type="button" onClick={this.addCategoryToProduct}>Add Category</button>
+                    <button type="button" className='btn btn-primary' onClick={this.addCategoryToProduct}>Add Category</button>
+                    <Errors errors={this.state.errors} />
                 </div>
             );
         } else {
-            return null;
+            if (this.props.location.pathname.includes('single')) return null;
+            else return(
+                <div className='container'>
+                    <form onSubmit={this.handleSubmit}>
+                        <label htmlFor='name'>Name: </label>
+                        <input type='text' className='form-control' onChange={this.handleChange} name='name' value={product.name}/>
+                        <label htmlFor='quantity'>Quantity: </label>
+                        <input type='text' className='form-control' onChange={this.handleChange} name='quantity' value={product.quantity}/>
+                        <label htmlFor='price'>Price: </label>
+                        <input type='text' className='form-control' onChange={this.handleChange} name='price' value={product.price}/>
+                        <label htmlFor='description'>Description: </label>
+                        <input type='text' className='form-control' onChange={this.handleChange} name='description' value={product.description}/>
+                        <label htmlFor='imgUrl'>Image URL: </label>
+                        <input type='text' className='form-control' onChange={this.handleChange} name='imgUrl' value={product.imgUrl}/>
+                        <label htmlFor='productNumber'>ProductNumber: </label>
+                        <input type='text' className='form-control' onChange={this.handleChange} name='productNumber' value={product.productNumber}/>
+                        <button className='btn btn-primary' type='submit'>Save</button>
+                        <button className='btn btn-info' onClick={() => this.props.history.push('/manageProduct')}>Cancel</button>
+                    </form>
+                </div>
+            );
         }
     }
 }
@@ -142,6 +177,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     updateProduct: (id, data) => dispatch(updateProduct(id, data)),
     delProduct: id => dispatch(delProduct(id)),
+    addProduct: product => dispatch(addProduct(product))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SingleProductForm);
