@@ -15,9 +15,40 @@ router.get('/session', (req, res, next) => {
     else res.status(404);
 });
 
+router.get('/users', (req, res, next) => {
+    User.findAll()
+    .then((users)=>res.json(users))
+    .catch(next);
+});
+
 router.delete('/logout', (req, res, next) => {
     req.session.destroy();
     res.status(204).end();
+});
+
+router.delete('/:userId', (req, res, next) => {
+    User.findOne({where: {id: req.session.userId}})
+    .then((user)=>{
+        if(user.role==='admin'){
+            User.delete({where: {id: req.params.userId}})
+            .then(()=>res.status(204).end())
+        }
+    })
+    .catch(next);
+});
+
+router.post('/user', (req, res, next) => {
+    
+    User.findOne({where: {id: req.session.userId}})
+    .then((user)=>{
+        if(user.role==='admin'){
+            User.create(req.body)
+                .then((user) => {
+                    res.json(user);
+            })
+        }
+    })
+    .catch(next);
 });
 
 router.post('/login', (req, res, next) => {
@@ -50,5 +81,16 @@ router.put('/login', (req, res, next) => {
     .catch(next);
     
 });
+
+router.put('/:userId', (req, res, next) => {
+    User.findOne({where: {id: req.session.userId}})
+    .then((user)=>{
+        if(user.role==='admin'){
+            User.update(req.body, {returning: true, where: {id: req.params.Id}})
+            .then(([updatedRows, [updatedUser]])=>res.json(updatedUser))
+        }
+    })
+    .catch(next);
+})
 
 module.exports = router;
