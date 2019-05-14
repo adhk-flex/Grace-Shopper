@@ -56,4 +56,8 @@ export const delProduct = id => dispatch => {
 
 export const delProductCategory = (productId, categoryId) => {
   return axios.delete(`/api/products/category/${productId}/${categoryId}`)
-}
+};
+
+export const addProductCategory = (productId, categoryId) => {
+  return axios.put(`api/products/category/${productId}/${categoryId}`)
+};

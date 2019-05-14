@@ -115,6 +115,15 @@ router.put('/:id', (req, res, next) => {
     .catch(next);
 });
 
+router.put('/category/:productId/:categoryId', (req, res, next) => {
+    Product.findByPk(req.params.productId)
+        .then(product => Promise.all([product.getCategories(), Category.findByPk(req.params.categoryId)])
+            .then(([prevCats, newCat]) => product.setCategories([...prevCats, newCat]))
+            .then(() => res.json())
+        )
+        .catch(next);
+});
+
 router.delete('/category/:productId/:categoryId', (req, res, next) => {
     Product.findByPk(req.params.productId)
         .then(product => product.removeCategory(req.params.categoryId)

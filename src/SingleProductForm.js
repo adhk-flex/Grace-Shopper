@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Errors from './Errors';
-import { updateProduct, delProduct, delProductCategory } from './store/product';
+import { updateProduct, delProduct, delProductCategory, addProductCategory } from './store/product';
 import { getProductCats } from './store/category'; 
 
 class SingleProductForm extends Component {
@@ -15,6 +15,7 @@ class SingleProductForm extends Component {
             imgUrl: '',
             productNumber:  '',
             categories: [],
+            selectedAddCatId: '',
             id: null,
             errors: []
         };
@@ -74,6 +75,14 @@ class SingleProductForm extends Component {
             .catch(e=>this.setState({ ...this.state, errors: e.response.data.errors }));
     }
 
+    addCategoryToProduct = () => {
+        if(this.state.selectedAddCatId.length){
+            addProductCategory(this.state.id, this.state.selectedAddCatId)
+            .then(categories => this.setState({ categories, errors: [] }))
+            .catch(e => this.setState({ errors: e.response.data.errors }));
+        }
+    }
+
     render() {
         const product = this.state;
         if(product.productNumber){
@@ -96,7 +105,7 @@ class SingleProductForm extends Component {
                         <button className='btn btn-info' onClick={() => this.props.history.push('/manageProduct')}>Cancel</button>
                         <button className='btn btn-danger' onClick={this.handleDeleteProduct}>Delete</button>
                     </form>
-                    Categories
+                    Categories:
                     <ul className='list-group'>
                         {
                             Array.isArray(this.state.categories) ? this.state.categories.map(category => <li 
@@ -106,6 +115,17 @@ class SingleProductForm extends Component {
                                 </li>) : null
                         }
                     </ul>
+                    Add Category:
+                    <select value={this.state.selectedAddCatId} name='selectedAddCatId' onChange={this.handleChange}>
+                        <option value=''>Select Category</option>
+                        {
+                            this.props.allCategories && Array.isArray(this.state.categories) ?
+                                this.props.allCategories.filter(cat => !this.state.categories.map(_cat => _cat.id).includes(cat.id))
+                                    .map(filteredCat => <option value={filteredCat.id} key={filteredCat.id}>{filteredCat.name}</option>)
+                                : null
+                        }
+                    </select>
+                    <button type="button" onClick={this.addCategoryToProduct}>Add Category</button>
                 </div>
             );
         } else {
