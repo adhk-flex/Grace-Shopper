@@ -33,7 +33,6 @@ class UserForm extends Component{
       imgUrl: this.state.imgUrl,
       role: this.state.role
     }
-    console.log('insaveHandler', user)
     this.props.updateUser(user)
       .then(()=>this.setState({...this.state, errors: []}))
       .catch(e=>this.setState({...this.state, errors: e.response.data.errors}));
@@ -42,7 +41,6 @@ class UserForm extends Component{
   deleteHandler = e => {
     e.preventDefault();
     this.props.deleteUser(this.state.id)
-    .then(() => console.log('deleting'))
     .then(()=>this.setState({...this.state, errors: []}))
     .catch(e=>this.setState({...this.state, errors: e.response.data.errors}));
   }
@@ -64,7 +62,7 @@ class UserForm extends Component{
           </select>
         </td>
         <td> <button className='btn btn-primary' type='submit' onClick={saveHandler}/></td>
-        <td> <button className='btn btn-primary' onClick={deleteHandler}/></td>
+        <td> <button className='btn btn-danger' onClick={deleteHandler}/></td>
       </tr>
     )
   }
