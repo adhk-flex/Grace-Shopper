@@ -32,16 +32,13 @@ class Cart extends Component {
         e.preventDefault()
         item.quantity = Number(this.state.quantity)
         const productQuantity = this.props.products.find(p => p.id === item.productId).quantity
-        console.log(productQuantity)
-        console.log('item on Update', item)
         if (item.quantity === 0) {
-            console.log('deleting')
             this.props.delLineItem(item)
                 .catch(e => {this.setState({errors: e.response.data.errors})})
         } else {
-            console.log('updating')
             if (item.quantity <= productQuantity) {
                 this.props.updateLineItem(item)
+                    .then(()=>this.setState({...this.state, errors: []}))
                     .catch(e => {this.setState({errors: e.response.data.errors})})
             } else {
                 this.setState({errors: [`entered quantity must less or equal to the stock available quantity: ${productQuantity}`]})
