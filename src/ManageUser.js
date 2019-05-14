@@ -20,7 +20,7 @@ class ManageUser extends Component {
   componentDidUpdate(prevProps){
     if (JSON.stringify(prevProps.users) !== JSON.stringify(this.props.users)){
       this.props.getAllUsers()
-        .then(() => this.setState({users: this.props.users}))
+      .then(() => this.setState({users: this.props.users}))
     }
   }
 
