@@ -16,6 +16,11 @@ class ManageProduct extends Component {
     render(){
         const history = this.props.history;
         const products = this.props.products;
+        if(this.props.user.role !== 'admin') {
+            return (
+              <h1>Admin User Access Only!</h1>
+            )
+          }
         return(
             <div>
                 {/* <Pager history={history} match ={this.props.match}/> */}
@@ -54,6 +59,7 @@ class ManageProduct extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        user: state.user,
         products: state.products,
         categories: state.categories
     }
