@@ -28,10 +28,10 @@ router.delete('/logout', (req, res, next) => {
 
 router.delete('/:userId', (req, res, next) => {
     User.findOne({where: {id: req.session.userId}})
-    .then((user) => {
-        if (user.role === 'admin'){
+    .then((user)=>{
+        if(user.role==='admin'){
             User.destroy({where: {id: req.params.userId}})
-                .then(() => res.status(204).end())
+            .then(()=>res.status(204).end())
         }
     })
     .catch(next);
