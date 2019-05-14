@@ -77,14 +77,13 @@ class Product extends Component{
         }
         const {onChange, onSave} = this
         return (
-            <div>
+            <div className='product-page'>
                 <h1>
-                    Showing individual Product
+                    {name}
                 </h1>
-                <span>{`Name: ${name}, Price: ${price}`}</span>
-                <br/>
                 <img className = 'product-image' src={imgUrl}/>
-                <br/>
+                <br />
+                <div>Price: {price}</div>
                 <p>{description}</p>
                 <p>
                     {lineItemExist() !== false ? `There ${lineItemExist().quantity >1 ? 'are' : 'is'} ${lineItemExist().quantity} ${lineItemExist().name} in cart`: null}
@@ -99,10 +98,10 @@ class Product extends Component{
                             })
                         }
                     </select>
-                    <button className='btn btn-primary' type='submit'>Add to Cart</button>
+                    <button className='btn btn-primary' type='submit' style={{ marginTop: '5px' }}>Add to Cart</button>
                 </form>
-                <img className = 'shopping-cart' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKorRm0enmL_tFIgvKcNcOjb_3YkWnny-CIK0BW5F9DoGocc7DkA' onClick={()=>{this.props.history.push('/cart')}}/>
-                <span className = 'shopping-item-quantity'>{totalItems}</span>
+                {/* <img className = 'shopping-cart' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKorRm0enmL_tFIgvKcNcOjb_3YkWnny-CIK0BW5F9DoGocc7DkA' onClick={()=>{this.props.history.push('/cart')}}/>
+                <span className = 'shopping-item-quantity'>{totalItems}</span> */}
             <Errors errors={this.state.errors} />
             <Review productId={this.props.match.params.id}/>
             </div>
