@@ -39,7 +39,7 @@ export const getAllUsers = () => dispatch => {
 }
 
 export const addUser = user => dispatch => {
-  return axios.post('/auth/login', user)
+  return axios.post('/auth/user', user)
     .then(() => dispatch(getAllUsers()))
 }
 
