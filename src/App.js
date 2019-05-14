@@ -24,6 +24,7 @@ import BillAddress from './BillAddress'
 import Review from './Review';
 import SingleOrderForm from './SingleOrderForm';
 import AddUser from './AddUser';
+import SingleProductForm from './SingleProductForm';
 
 class App extends Component{
     
@@ -64,6 +65,8 @@ class App extends Component{
                     <Route exact path = '/productList/:idx' component={ProductList}/>
                     <Route exact path = '/productList' component={ProductList}/>
                     <Route exact path = '/manageProduct/addCategory' component={CategoryForm} />
+                    <Route exact path = '/manageProduct/addProduct' component={SingleProductForm} />
+                    <Route exact path = '/manageProduct/single/:productId' component={SingleProductForm} />
                     <Route exact path = '/manageProduct' component={ManageProduct}/>
                     <Route exact path = '/product/:id' component={Product}/>
                     <Route exact path = '/manageUser' component={ManageUser}/>

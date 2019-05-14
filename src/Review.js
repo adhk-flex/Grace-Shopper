@@ -11,7 +11,7 @@ class Review extends Component{
         this.state = {
             reviews: [],
             content: '',
-            stars: 0,
+            stars: 1,
             errors: []
         }
     }

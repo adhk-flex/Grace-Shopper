@@ -47,21 +47,28 @@ class BillAddress extends Component{
 
     checkAddress = (address) => {
         const errorArr = []
+        let hasError = false
         if(address.zip.length !== 5){
             let error = new Error();
             error.name = 'custom error1';
             error.errors = [{message: 'zip code must be 5 digits'}]
-            this.setState({...this.state, errors: [...this.state.errors, error]})
+            hasError = true
             errorArr.push(error)
+            this.setState({...this.state, errors: [...this.state.errors, error]})
         }
         if(address.state.length !==2){
             let error = new Error();
             error.name = 'custom error2';
             error.errors = [{message: 'state must contain exact two letters'}]
-            this.setState({...this.state, errors: [...this.state.errors, error]})
+            hasError = true
             errorArr.push(error)
+            this.setState({...this.state, errors: [...this.state.errors, error]})
         }
-        if(errorArr.length){throw errorArr}      
+        if(hasError){throw errorArr}     
+        else{
+            this.setState({...this.setState, errors: []})
+        } 
+        return hasError
     }
 
     onChange = (e) => {
@@ -70,10 +77,9 @@ class BillAddress extends Component{
     
     onSave = (e) => {
         e.preventDefault()
-        this.checkAddress(this.state)
+        let retError = this.checkAddress(this.state)
         const userId = this.props.user.id;
-        if(!this.state.errors.length){
-            console.log('logging onSave', this.state, userId)
+        if(!retError){
             this.props.postAddress(this.state, userId, 'billing')
             .then(()=>{
                 let order={};
@@ -85,10 +91,8 @@ class BillAddress extends Component{
                     .then(()=> this.props.convertLineItem(order.id))
                     .then(()=> this.props.convertAddresses())
                     .then((arr)=>{
-                        console.log('line items from store', this.props.lineItems)
                         let totalAmount = this.props.lineItems.reduce((orderTotal, item)=>
                             item.quantity*item.price, 0);
-                        console.log('totalAmount', totalAmount)
                         return this.props.updateGuestOrder(order.id, {...order, 
                                                                         totalAmount: totalAmount*1, 
                                                                         shippingAddressId: arr[0].id, 
@@ -98,12 +102,10 @@ class BillAddress extends Component{
                     .catch(e=>this.setState({errors: e?e.response.data.errors:[]    }))
                 }
                 else{
-                    console.log('logging userId', userId)
                     this.props.postOrder(userId)
                         .then(() => this.props.lineItems.forEach(item => {
                             item.orderId = this.props.order.id
                             item.cartId = null
-                            console.log("item: ", item)
                             this.props.updateLineItem(item)
                         }))
                         .then(() => console.log('lineitems', this.props.lineItems))

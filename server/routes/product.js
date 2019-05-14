@@ -98,14 +98,16 @@ router.delete('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next)=>{
-    return Promise.all([ Product.create(req.body),
-                         Category.findOne({where: {name: req.body.categoryName}}) ])
-    .then(([product, category]) => {
-        product.update({categoryId: category.id});
-        return product;
-    })
-    .then((product) => res.json(product))
-    .catch((error) => console.log(error));
+    // return Promise.all([ Product.create(req.body),
+    //                      Category.findOne({where: {name: req.body.categoryName}}) ])
+    // .then(([product, category]) => {
+    //     product.update({categoryId: category.id});
+    //     return product;
+    // })
+    req.body.stockStatus = req.body.quantity ? 'in stock' : 'out of stock'
+    Product.create(req.body)
+        .then((product) => res.json(product))
+        .catch((error) => console.log(error));
 });
 
 router.put('/:id', (req, res, next) => {
@@ -113,6 +115,24 @@ router.put('/:id', (req, res, next) => {
         {returning: true, where: {id: req.params.id}})
     .then(([ rowsUpdate, [updatedProduct] ]) => res.json(updatedProduct))
     .catch(next);
+});
+
+router.put('/category/:productId/:categoryId', (req, res, next) => {
+    Product.findByPk(req.params.productId)
+        .then(product => Promise.all([product.getCategories(), Category.findByPk(req.params.categoryId)])
+            .then(([prevCats, newCat]) => product.setCategories([...prevCats, newCat]))
+            .then(() => res.json())
+        )
+        .catch(next);
+});
+
+router.delete('/category/:productId/:categoryId', (req, res, next) => {
+    Product.findByPk(req.params.productId)
+        .then(product => product.removeCategory(req.params.categoryId)
+            .then(() => product.getCategories())
+            .then(categories => res.json(categories))
+        )
+        .catch(next);
 });
 
 module.exports = router;
