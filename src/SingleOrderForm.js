@@ -41,11 +41,27 @@ class SingleOrder extends Component {
 
     render() {
         const { order } = this.props;
+        const created = new Date(order.createdAt);
+        const updated = new Date(order.updatedAt);
         if(order){
             return (
                 <div>
-                    <div>{order.orderNumber}</div>
-                    {order.user ? <div>{order.user.firstName} {order.user.lastName}</div> : ''}
+                    <ul className='list-group'>
+                        <li className='list-group-item'>Order Number: {order.orderNumber}</li>
+                        {
+                            order.user ? <li className='list-group-item'>Customer: {order.user.firstName} {order.user.lastName}</li> : null
+                        }
+                        <li className='list-group-item'>Order Number: {order.orderNumber}</li>
+                        <li className='list-group-item'>Order Date: {created.getFullYear()}-{created.getMonth() + 1}-{created.getDate()}</li>
+                        <li className='list-group-item'>Last Updated: {updated.getFullYear()}-{updated.getMonth() + 1}-{updated.getDate()}</li>
+                        <li className='list-group-item'> Line Items
+                            <ul className='list-group'>
+                                {
+                                    this.props.order.lineItems ? this.props.order.lineItems.map(item => <li key={item.id} className='list-group-item'>{item.productNumber}</li>) : ''
+                                }
+                            </ul>
+                        </li>
+                    </ul>
                     <form onSubmit={this.handleSubmit}>
                         <select value={this.state.status} onChange={this.handleChange}>
                             <option value="created">Created</option>
@@ -55,11 +71,6 @@ class SingleOrder extends Component {
                         </select>
                         <button type="submit" className="btn btn-primary">submit</button>
                     </form>
-                    <ul>
-                        {
-                            this.props.order.lineItems ? this.props.order.lineItems.map(item => <li key={item.id}>{item.productNumber}</li>) : ''
-                        }
-                    </ul>
                 </div>
             );
         } else {
