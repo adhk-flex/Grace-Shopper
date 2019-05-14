@@ -34,6 +34,24 @@ router.get('/:id', (req, res, next) => {
         .catch(next);
 });
 
+router.get('/user/single/:orderId/:adminUserId', (req, res, next) => {
+    if(req.params.adminUserId !== req.session.userId){
+        res.send(500);
+    }
+    User.findOne({where: {id: req.params.adminUserId}})
+    .then((user)=>{
+        if(user.role==='admin'){
+            Order.findOne({where: { id: req.params.orderId }, include: [LineItem, User], order: [['orderNumber', 'ASC']]})
+            .then((order)=>res.json(order))
+            .catch(next)
+        }
+        else{
+            throw new Error('NOT AN ADMIN');
+        }
+    })
+    .catch(next);
+});
+
 router.get('/status/:status/:userId', (req, res, next) => {
     if(req.params.userId !== req.session.userId){
         res.send(500);
@@ -139,6 +157,7 @@ router.post('/user/:userId', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
     Order.update(req.body, 
         {returning: true, where: {id: req.params.id}})
+        .then(order => res.json(order))
     .catch(next);
 });
 

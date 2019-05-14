@@ -28,9 +28,14 @@ export const fetchLineItems = cartId => dispatch => {
   }
 };
 
+
+export const fetchLineItemsByOrder = orderId => {
+  return axios.get(`/api/lineitems/order/${orderId}`)
+};
 const cleanLineItems = () => dispatch => {
   return Promise.resolve(dispatch(setLineItems([])))
 }
+
 
 
 export const addLineItem = (item) => dispatch => {

@@ -33,14 +33,14 @@ class ManageOrder extends Component {
 
     componentDidUpdate(prevProps){
         if(JSON.stringify(prevProps)!==JSON.stringify(this.props)){
-            if(this.props.user.id){
+            if(this.props.user){
                 this.load();
             }
         }
     }
         
     render(){
-        const orders = this.props.orders;
+        const orders = Array.isArray(this.props.orders) ? this.props.orders : [];
         return (
             <div>
                 <h3>Order Page</h3>
@@ -69,9 +69,9 @@ class ManageOrder extends Component {
                     </thead>
                     <tbody>
                         {
-                            orders.map(o => {
-                                return (<OrderForm order={o} key={o.id}/>)
-                            })
+                            orders ? orders.map(o => {
+                                return (<OrderForm order={o} location={this.props.location} key={o.id}/>)
+                            }) : ''
                         }
                     </tbody>
                 </table>
@@ -81,7 +81,6 @@ class ManageOrder extends Component {
 } 
 
 const mapStateToProps = state => {
-    console.log(state)
     return {
         user: state.user? state.user:false,
         orders: state.order? state.order:false

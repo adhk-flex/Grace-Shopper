@@ -16,6 +16,13 @@ router.get('/:id', (req, res, next) => {
         .catch(next);
 });
 
+router.get('./product/:productId', (req, res, next) => {
+    Product.findOne({ where: { id: productId } })
+        .then(product => product.getCategories({ order: [["name", "asc"]] }))
+        .then(categories => res.json(categories))
+        .catch(next);
+});
+
 router.post('/', (req, res, next) => {
     Category.create(req.body)
     .then((category) => res.json(category))

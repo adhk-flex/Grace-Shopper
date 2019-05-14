@@ -9,8 +9,8 @@ const CreditCard = require("./CreditCard");
 const Review = require("./Review");
 
 //associations
-Product.belongsTo(Category);
-Category.hasMany(Product);
+Product.belongsToMany(Category, { through: "ProductCategory" });
+Category.belongsToMany(Product, { through: "ProductCategory" });
 
 Product.hasMany(LineItem);
 LineItem.belongsTo(Product);

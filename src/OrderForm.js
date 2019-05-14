@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { updateOrder } from './store/order';
 import Errors from './Errors';
 
@@ -7,14 +8,7 @@ class OrderForm extends Component{
     constructor(props){
         super(props)
         this.state = {
-            orderNumber: this.props.order&&this.props.order.orderNumber || '',
             status: this.props.order&&this.props.order.status || '',
-            totalAmount: this.props.order&&this.props.order.totalAmount || 0,
-            id: this.props.order&&this.props.order.id || null,
-            firstName: this.props.order&&this.props.order.user.firstName || '',
-            lastName: this.props.order&&this.props.order.user.lastName || '',
-            createdDate: this.props.order&& new Date(this.props.order.createdAt) || '',
-            lastUpdated: this.props.order&& new Date(this.props.order.updatedAt) || '',
             errors: []
         }
         this.handleChange = this.handleChange.bind(this);
@@ -29,26 +23,25 @@ class OrderForm extends Component{
         ev.preventDefault();
         let o = this.state;
         let final = {   
-            orderNumber: o.orderNumber,
-            totalAmount: o.totalAmount*1,
+            orderNumber: this.props.order.orderNumber,
             status: o.status
         }
-        this.props.updateOrder(o.id, final)
-        .then(()=>this.setState({...this.state, errors: []}))
-        .catch(e=>this.setState({...this.state, errors: e.response.data.errors}));
+        this.props.updateOrder(this.props.order.id, final)
+            .then(()=>this.setState({...this.state, errors: []}))
+            .catch(e=>this.setState({...this.state, errors: e.response.data.errors}));
     }
    
     render(){
-        const { handleChange, handleSubmit } = this;
-        let o = this.state;
-        return(
-        
+        let o = this.props.order;
+        o.createdDate = new Date(o.createdAt);
+        o.lastUpdated = new Date(o.updatedAt);
+        return(        
         <tr key={o.id}>
-            <td> {o.orderNumber} </td>
-            <td> {o.firstName} </td>
-            <td> {o.lastName} </td>
-            <td> {o.totalAmount} </td>
-            <td> <select onChange={this.handleChange} name='status' value={o.status}>
+            <td> <Link to={`/manageOrder/single/${o.id}`}>{o.orderNumber}</Link> </td>
+            <td> {o.user ? o.user.firstName : 'No User'} </td>
+            <td> {o.user ? o.user.lastName : 'No User'} </td>
+            <td> ${o.totalAmount} </td>
+            <td> <select onChange={this.handleChange} name='status' value={this.state.status}>
                     <option value="created">Created</option>
                     <option value="processing">Processing</option>
                     <option value="cancelled">Cancelled</option>
@@ -58,7 +51,7 @@ class OrderForm extends Component{
             <td> {o.createdDate.getFullYear()}-{(o.createdDate.getMonth() + 1)}-{o.createdDate.getDate()}  {o.createdDate.getHours()}:{o.createdDate.getMinutes()}:{o.createdDate.getSeconds()} </td>
             <td> {o.lastUpdated.getFullYear()}-{(o.lastUpdated.getMonth() + 1)}-{o.lastUpdated.getDate()}  {o.lastUpdated.getHours()}:{o.lastUpdated.getMinutes()}:{o.lastUpdated.getSeconds()} </td>
             <td> <button className='btn btn-primary' type='submit' onClick={this.handleSubmit}/></td>
-            <td> <Errors errors={this.state.errors} /></td>
+            <td> <Errors errors={this.state.errors || [] } /></td>
         </tr>
         )
     }

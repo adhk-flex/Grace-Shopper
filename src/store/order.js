@@ -22,7 +22,7 @@ export const getOrderByUser = userId => dispatch => {
     .then(orders => dispatch(setOrder(orders.data)))
 };
 
-const getOrderById = orderId => dispatch => {
+export const getOrderById = orderId => dispatch => {
   return axios.get(`/api/orders/${orderId}`)
     .then(order => dispatch(setOrder(order.data)))
 };
@@ -35,6 +35,11 @@ export const getOrdersByStatus = (status, userId) => dispatch => {
 export const getOrdersWithUsers = userId => dispatch => {
   return axios.get(`/api/orders/include/users/${userId}`)
     .then(orders => dispatch(setOrder(orders.data)))
+}
+
+export const getSingleOrderItemsUsers = (userId, orderId) => dispatch => {
+  return axios.get(`/api/orders/user/single/${orderId}/${userId}`)
+    .then(order => dispatch(setOrder(order.data)))
 }
 
 export const createOrder = (userId) => dispatch => {

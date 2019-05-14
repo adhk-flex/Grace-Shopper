@@ -35,7 +35,8 @@ router.get('/search/:srchVal/:pgIdx?', (req, res, next) => {
 });
 
 router.get('/category/:catId/:pgIdx?', (req, res, next) => {
-    Product.findAll({ where: { categoryId: req.params.catId }, order: [["name", "asc"]] })
+    Category.findOne({ where: { id: req.params.catId } })
+        .then(category => category.getProducts({ order: [["name", "asc"]] }))
         .then((products) => {
             if(req.params.pgIdx){
                 const end = req.params.pgIdx * 10;
@@ -46,20 +47,22 @@ router.get('/category/:catId/:pgIdx?', (req, res, next) => {
              }
         })
         .catch(next);
+        
 });
 
 router.get('/category/:catId/search/:srchVal/:pgIdx?', (req, res, next) => {
     const { srchVal, pgIdx } = req.params;
-    Product.findAll({ where: { 
-            categoryId: req.params.catId,
-            [Op.or] : [
-                { name: { [Op.iLike]: `%${srchVal}%` } },
-                { description: { [Op.iLike]: `%${srchVal}%` } },
-                { productNumber: { [Op.iLike]: `%${srchVal}%` } }
-            ] 
-            }, 
-            order: [["name", "asc"]] 
-        })
+    Category.findOne({ where: { id: req.params.catId } })
+        .then(category => category.getProducts({ where: 
+                { 
+                    [Op.or] : [
+                        { name: { [Op.iLike]: `%${srchVal}%` } },
+                        { description: { [Op.iLike]: `%${srchVal}%` } },
+                        { productNumber: { [Op.iLike]: `%${srchVal}%` } }
+                    ]    
+                }
+            })
+        )
         .then((products) => {
             if(pgIdx){
                 const end = req.params.pgIdx * 10;
