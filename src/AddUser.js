@@ -29,6 +29,11 @@ class AddUser extends Component{
   render () {
     const user = this.state;
     const {changeHandler, saveHandler} = this;
+    if(this.props.user.role !== 'admin') {
+      return (
+        <h1>Admin User Access Only!</h1>
+      )
+    }
     return (
       <form onSubmit={saveHandler}>
         <label htmlFor='firstName'>FirstName</label>
@@ -51,10 +56,16 @@ class AddUser extends Component{
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  }
+}
+
 const mapDispatchToProps = dispatch => {
   return {
     addUser: user => dispatch(addUser(user))
   }
 }
 
-export default connect(null, mapDispatchToProps)(AddUser);
+export default connect(mapStateToProps, mapDispatchToProps)(AddUser);

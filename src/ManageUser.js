@@ -27,6 +27,11 @@ class ManageUser extends Component {
   render () {
     const {users} = this.state
     console.log(this.props)
+    if(this.props.user.role !== 'admin') {
+      return (
+        <h1>Admin User Access Only!</h1>
+      )
+    }
     return (
       <div>
         <h1>Manage All Users</h1>
@@ -63,6 +68,7 @@ class ManageUser extends Component {
 
 const mapStateToProps = state => {
   return {
+    user: state.user,
     users: state.allUsers
   }
 };
