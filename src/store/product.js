@@ -37,9 +37,12 @@ export const getProductByPg = pgIdx => dispatch => {
     .then(products => dispatch(setProducts(products.data)))
 }
 
-const addProduct = product => dispatch => {
+export const addProduct = product => dispatch => {
   return axios.post('/api/products/', product)
-    .then(() => dispatch(fetchProducts()))
+    .then(product => {
+      dispatch(fetchProducts());
+      return product;
+    }); 
 };
 
 export const updateProduct = (id, product) => dispatch => {
@@ -52,4 +55,12 @@ export const updateProduct = (id, product) => dispatch => {
 export const delProduct = id => dispatch => {
   return axios.delete(`/api/products/${id}`)
     .then(() => dispatch(fetchProducts()))
+};
+
+export const delProductCategory = (productId, categoryId) => {
+  return axios.delete(`/api/products/category/${productId}/${categoryId}`)
+};
+
+export const addProductCategory = (productId, categoryId) => {
+  return axios.put(`api/products/category/${productId}/${categoryId}`)
 };

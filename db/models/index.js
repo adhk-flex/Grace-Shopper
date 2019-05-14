@@ -152,6 +152,13 @@ CreditCard.createCard = card => {
   });
 };
 
+//remove category from product
+Product.prototype.removeCategory = function(categoryId) {
+  return this.getCategories()
+    .then(categories => categories.filter(category => category.id !== categoryId))
+    .then(filteredCategories => this.setCategories(filteredCategories))
+};
+
 module.exports = {
   Product,
   Category,
