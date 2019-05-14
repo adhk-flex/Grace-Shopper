@@ -81,13 +81,14 @@ export const delLineItem = (item) => dispatch => {
 
 export const updateLineItem = (item) => dispatch => {
   console.log('item pass in store is: ', item)
-  if(item.clean){
-    return Promise.resolve(dispatch(cleanLineItems()))
-  }
-  if (item.cartId === null || undefined) {
+  // if(item.clean){
+  //   return Promise.resolve(dispatch(cleanLineItems()))
+  // }
+  console.log('store update', item.cartId)
+  if (item.cartId === undefined) {
     let items = JSON.parse(localStorage.getItem('lineItems'))
     console.log('items after localStorage is: ', items)
-    if(!items){
+    if (!items){
       items = []
     } 
     let newitems = items.filter(i => i.productId !== item.productId)
