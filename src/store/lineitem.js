@@ -88,7 +88,7 @@ export const updateLineItem = (item) => dispatch => {
     let items = JSON.parse(localStorage.getItem('lineItems'))
     console.log('items after localStorage is: ', items)
     if(!items){
-      newitems = []
+      items = []
     } 
     let newitems = items.filter(i => i.productId !== item.productId)
     if (!newitems) {
