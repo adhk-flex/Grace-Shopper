@@ -51,7 +51,7 @@ class Login extends Component{
             })
             .then(() => localStorage.clear())
             .then(()=>this.props.history.push('/home'))
-            .catch((e)=>{this.setState({errors: e.response.data.errors})})
+            .catch((e)=>{this.setState({errors: ['Incorrect Email/password']})})
         }   
     }
 
@@ -89,11 +89,11 @@ class Login extends Component{
                                     <input name = 'lastName' value = {lastName} onChange = {onChange}/>
                                     <label htmlFor = 'imgUrl'>ImageUrl</label>
                                     <input name = 'imgUrl' value = {imgUrl} onChange = {onChange}/>
-                                    <label htmlFor = 'role'>Role</label>
+                                    {/* <label htmlFor = 'role'>Role</label>
                                     <select name = 'role' value = {role} onChange = {onChange}>
                                         <option defaultValue = 'shopper' >shopper</option>
                                         <option value = 'admin'>admin</option>
-                                    </select>
+                                    </select> */}
                                     </div>
                                 )  
                                 : null

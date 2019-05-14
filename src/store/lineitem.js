@@ -19,6 +19,7 @@ export const lineItems = (state = [], action) => {
 export const fetchLineItems = cartId => dispatch => {
   if (cartId === undefined) {
     const items = JSON.parse(localStorage.getItem('lineItems'))
+    console.log('items in fetchLineItems in store: ', items)
     return Promise.resolve(dispatch(setLineItems(items)))
   } 
   else {
@@ -27,9 +28,14 @@ export const fetchLineItems = cartId => dispatch => {
   }
 };
 
+
 export const fetchLineItemsByOrder = orderId => {
   return axios.get(`/api/lineitems/order/${orderId}`)
 };
+const cleanLineItems = () => dispatch => {
+  return Promise.resolve(dispatch(setLineItems([])))
+}
+
 
 
 export const addLineItem = (item) => dispatch => {
@@ -53,6 +59,7 @@ export const convertLineItem = (orderId) => dispatch => {
   let items = JSON.parse(localStorage.getItem('lineItems'))  
   if (!items){
     items = []
+    console.log('items in convert', items)
   }
   let itemsFromDB = []
   items.forEach((item)=>{
@@ -78,8 +85,17 @@ export const delLineItem = (item) => dispatch => {
 };
 
 export const updateLineItem = (item) => dispatch => {
+  console.log('item pass in store is: ', item)
+  // if(item.clean){
+  //   return Promise.resolve(dispatch(cleanLineItems()))
+  // }
+  console.log('store update', item.cartId)
   if (item.cartId === undefined) {
     let items = JSON.parse(localStorage.getItem('lineItems'))
+    console.log('items after localStorage is: ', items)
+    if (!items){
+      items = []
+    } 
     let newitems = items.filter(i => i.productId !== item.productId)
     if (!newitems) {
       newitems = []
