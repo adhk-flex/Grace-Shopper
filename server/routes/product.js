@@ -107,7 +107,7 @@ router.post('/', (req, res, next)=>{
     req.body.stockStatus = req.body.quantity ? 'in stock' : 'out of stock'
     Product.create(req.body)
         .then((product) => res.json(product))
-        .catch((error) => console.log(error));
+        .catch(next);
 });
 
 router.put('/:id', (req, res, next) => {

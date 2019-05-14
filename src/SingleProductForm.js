@@ -26,18 +26,12 @@ class SingleProductForm extends Component {
             const product = this.props.products.find(_product => _product.id === this.props.match.params.productId);
             if(product){
                 this.setState({
-                    name: product.name,
-                    price: product.price,
-                    quantity: product.quantity,
-                    description: product.description,
-                    imgUrl: product.imgUrl,
-                    productNumber: product.productNumber,
-                    id: product.id,
+                    ...product,
                     errors:[]
                 });
                 getProductCats(product.id)
                         .then(categories => this.setState({ categories }))
-                        .catch(e => e.response.data.errors);
+                        .catch(e => this.setState({ errors: e.response.data.errors }));
             }
         }
     };
